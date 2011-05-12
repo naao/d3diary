@@ -1,0 +1,27 @@
+<{if $block.yd_friends}>
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody">
+<ul class="<{$block.mydirname}>yd_rightarea">
+<{foreach from=$block.yd_friends item=friend}>
+<li>
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?req_uid=<{$friend.uid}>">
+<{if $block.mod_config.use_name==1 && $friend.name}><{$friend.name}>
+	<{else}><{$friend.uname}>
+	<{/if}></a>(<{$friend.count}>)
+</li>
+<{/foreach}>
+</ul>
+</div><!-- /itemBody -->
+<{if $block.yd_friendsnavi}>
+<div class="itemInfo" style="text-align:center;">
+<{$block.yd_friendsnavi}>
+</div><!-- /itemInfo -->
+<{/if}>
+<div class="itemFoot">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" /> <a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?mode=friends&amp;req_uid=<{$block.yd_uid}>"><{$block.lang.more}></a>
+</div><!-- /itemFoot -->
+</div><!-- /item -->
+</div><!-- /itemSide -->
+<{/if}>

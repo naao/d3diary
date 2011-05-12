@@ -1,0 +1,83 @@
+<{if $block.full_view == true}>
+<table class="outer" cellspacing="1">
+<thead>
+<tr>
+	<{if $block.use_aggre}><th><{$block.lang_forum}></th><{/if}>
+	<th><{$block.lang_topic}></th>
+	<th align="center"><{$block.lang_replies}></th>
+	<th align="center"><{$block.lang_views}></th>
+	<th align="center" colspan="2"><{$block.lang_lastpost}></th>
+</tr>
+</thead>
+<{foreach item=topic from=$block.topics}>
+<{strip}>
+<{if $topic.can_display}>
+<tr class="<{cycle values="even,odd"}>">
+    <{if $block.use_aggre}>
+	<td><a href="<{$block.mod_url}>/index.php?forum_id=<{$topic.forum_id}>"><{$topic.forum_title}></a></td>
+    <{/if}>
+	<td>
+    <{if $topic.forum_id == $block.com_forum_id}>
+        <a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=detail&amp;bid=<{$topic.link_id}><{$block.unique_key}><{$topic.unique_path}>">
+    <{else}>
+        <a href="<{$block.mod_url}>/index.php?topic_id=<{$topic.id}>#post_id<{$topic.last_post_id}>">
+    <{/if}>
+	<{if $topic.u2t_marked}><img src="<{$block.mod_imageurl}>/block_marked.gif" alt="<{$block.lang_alt_marked}>" /><{/if}>
+	<{* displays the last post's subject or topic title *}>
+	<{if $block.disp_last_subject }>
+	<{$topic.last_subject}>
+	<{else}>
+	<{$topic.title}>
+	<{/if}></a>
+	<{if ! $topic.solved}><img src="<{$block.mod_imageurl}>/block_unsolved.gif" alt="<{$block.lang_alt_unsolved}>" /><{/if}></td>
+	<td align="center"><{$topic.replies}></td>
+	<td align="center"><{$topic.views}></td>
+	<td align="center" nowrap="nowrap">
+	<{if $block.mod_config.use_name==1 && $topic.last_name}><{$topic.last_name}>
+	<{elseif $topic.last_uname}><{$topic.last_uname}>
+	<{else}><{$topic.guest_name}>
+	<{/if}></td>
+	<td align="right" nowrap="nowrap"><{$topic.last_post_time_formatted}></td>
+</tr>
+<{/if}>
+<{/strip}>
+<{/foreach}>
+</table>
+
+<div style="text-align:right; padding: 5px;">
+<a href="<{$block.mod_url}>/index.php?page=search"><{$block.lang_linktosearch}></a>
+&nbsp;
+<{if $block.use_aggre}>
+<a href="<{$block.mod_url}>/index.php?cat_ids=0"><{$block.lang_linktolisttopics}></a>
+&nbsp;
+<a href="<{$block.mod_url}>/index.php"><{$block.lang_linktolistcategories}></a>
+&nbsp;
+
+<{else}>
+<a href="<{$block.mod_url}>/index.php?forum_id=<{$block.com_forum_id}>"><{$block.lang_linktolisttopics}></a>
+&nbsp;
+<{/if}>
+</div>
+
+
+<{else}>
+
+<ol style="padding:3px;margin:0;">
+<{foreach item=topic from=$block.topics}>
+  <{if $topic.can_display}>
+	<li>
+    <{if $topic.forum_id == $block.com_forum_id}>
+        <a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=detail&amp;bid=<{$topic.link_id}><{$block.unique_key}><{$topic.unique_path}>">
+    <{else}>
+        <a href="<{$block.mod_url}>/index.php?topic_id=<{$topic.id}>#post_id<{$topic.last_post_id}>">
+    <{/if}>
+	<{$topic.title}></a>(<{$topic.replies}>) 
+	<{if $block.mod_config.use_name==1 && $topic.last_name}><{$topic.last_name}>
+	<{elseif $topic.last_uname}><{$topic.last_uname}>
+	<{else}><{$topic.guest_name}>
+	<{/if}><{$topic.last_post_time_formatted}></li>
+  <{/if}>
+<{/foreach}>
+</ol>
+
+<{/if}>

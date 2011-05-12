@@ -1,0 +1,331 @@
+<!-- start module contents -->
+<{if $mod_config.show_breadcrumbs}>
+<div id="d3d_breadcrumbs">
+	<a href="<{$xoops_url}>/">TOP</a>
+	<{foreach from=$xoops_breadcrumbs key="i" item="item"}>
+	    <{* if $i!=0 *}>
+		&nbsp;>&nbsp;
+		<{if $item.url}>
+			<a href="<{$item.url}>"><{$item.name}></a>
+		<{else}>
+			<{$item.name}>
+		<{/if}>
+	    <{* /if *}>
+	<{/foreach}>
+</div>
+<{/if}>
+
+<p><a href="<{$xoops_url}>/userinfo.php?uid=<{$yd_uid}>">
+	<{if $mod_config.use_name==1 && $yd_name}><{$yd_name}>
+	<{else}><{$yd_uname}>
+	<{/if}>
+</a>
+<{if $yd_param.mode=="friends"}>
+	<{$smarty.const._MD_DIARY_FRIENDS}><{$smarty.const._MD_DIARY_TITLENAME}>
+<{else}>
+	<{$smarty.const._MD_DIARY_PERSON}>
+<{/if}>
+<{if $yd_editperm}>
+&nbsp;[&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=mailpost"><{$smarty.const._MD_CONF_USEMAIL}></a>&nbsp;]
+<{/if}>
+</p>
+<div id="d3dWrap">
+<div class="clear"></div> 
+
+<{if $yd_layout=="left"}>
+  <div id="d3dMainRight">
+  <div id="d3dMainBodyRight">
+<{elseif $yd_layout=="right"}>
+  <div id="d3dMainLeft">
+  <div id="d3dMainBodyLeft">
+<{else}>
+  <div id="d3dMainNoside">
+  <div id="d3dMainBodyNoside">
+<{/if}>
+
+<{if $yd_data|@count>0 && $yd_editperm==1}>
+<{if $yd_param.tag_mode==1}>
+<form name="MainForm" method="post" action="index.php?page=edit_tags">
+<{else}>
+<form name="MainForm" method="post" action="index.php?page=editcat_diaries">
+<{/if}>
+<{/if}>
+
+<{if $mod_config.use_tag>=1 && $mod_config.use_tag<=2 && $yd_param.mode!="friends"}>
+<div class="tagCloudColumn">
+<{$smarty.const._MD_TAG_CROUD}><br />
+<{foreach from=$tagCloud item=tags}>
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}><{if $yd_param.cid}>&amp;mode=category&amp;cid=<{$yd_param.cid}><{/if}>&amp;tag_name=<{$tags.tag_urlenc}>" style="font-size:<{$tags.size}>%"><{$tags.tag}></a> 
+<{/foreach}>
+</div><!-- /tagCloudColumn -->
+<{/if}>
+
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<{if $yd_pagenavi}>
+<ul class="itemBody">
+<{foreach from=$yd_pagenavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+<{/if}>
+</div><!-- /boxNavi -->
+
+<div class="itemHead">
+<{if $yd_param.mode=="date"}>
+<{$yd_param.year}><{$smarty.const._MD_DATE_YEAR}><{$yd_param.month}><{$smarty.const._MD_DATE_MONTH}><{$yd_param.day}><{$smarty.const._MD_DATE_DAY}>&nbsp;<{$smarty.const._MD_LIST_VIEW}>
+<{elseif $yd_param.mode=="month"}>
+<{$yd_param.year}><{$smarty.const._MD_DATE_YEAR}><{$yd_param.month}><{$smarty.const._MD_DATE_MONTH}>&nbsp;<{$smarty.const._MD_LIST_VIEW}>
+<{elseif $yd_param.mode=="category"}>
+<{$smarty.const._MD_CATEGORY}>:<{$yd_param.cname}>&nbsp;<{$smarty.const._MD_LIST_VIEW}>
+<{else}>
+&nbsp;<{$smarty.const._MD_DIARY_RECENT}>
+<{/if}>
+<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$yd_openarea}>.gif" border=0 style="float:right;" />
+</div><!-- /itemHead -->
+
+<{if $yd_data}>
+<{foreach from=$yd_data item=entry}>
+
+<div class="boxdate_base">
+<span class="boxdate_s">
+<div class="itemHead"><span class="itemText"><{$entry.b_month}></span></div>
+<div class="itemInfo"><span class="<{$entry.dclass}>"><{$entry.day}><{* $smarty.const._MD_DATE_DAY *}></span>
+<span class="<{$entry.wclass}>">(<{$entry.week}>)</span></div>
+</span>
+</div><!-- /boxdate_base -->
+
+<{* div class="boxdate_spacer"></div *}>
+
+<div class="itemList">
+<div class="item">
+
+<div class="itemHead">
+<span class="itemTitle">
+<{if $entry.other>0}>
+<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" />
+<a href="<{$entry.url}>" target="_blank">
+<{$entry.title}></a>
+
+&nbsp;<{if $entry.cname|count_characters>0}>[<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entry.uid}>&amp;mode=category&amp;cid=<{$entry.cid}>"><{$entry.cname}></a>]
+<{/if}>
+<{else}>
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$entry.bid}>&req_uid=<{$entry.uid}>
+<{if $yd_param.mode=="date"}>
+&amp;mode=date&amp;year=<{$yd_param.year}>&amp;month=<{$yd_param.month}>&amp;day==<{$yd_param.day}>
+<{elseif $yd_param.mode=="month"}>
+&amp;mode=month&amp;year=<{$yd_param.year}>&amp;month=<{$yd_param.month}>
+<{elseif $yd_param.mode=="category"}>
+&amp;mode=category&amp;cid=<{$yd_param.cid}>
+<{/if}>">
+<{$entry.title}></a>
+<{/if}>
+</span>
+<{if $entry.openarea <> 0}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="float:right;" />
+<{/if}>
+</div><!-- /itemHead -->
+
+<div class="itemInfo" style="text-align:left;">
+<{if $yd_param.mode=="friends"}>
+by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entry.uid}>">
+	<{if $mod_config.use_name ==1 && $entry.name}><{$entry.name}>
+	<{else}><{$entry.uname}><{/if}></a>
+<{/if}>
+<{if $entry.cname|count_characters>0}>
+<span class="itemPermaLink">
+<{$smarty.const._MD_CATEGORY}>&nbsp;
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entry.uid}>&amp;mode=category&amp;cid=<{$entry.cid}>"><{$entry.cname}></a>
+</span>
+<{/if}>
+
+<{if $mod_config.use_tag>0 && $entry.tag_num>0}>
+<br />
+<{$smarty.const._MD_TAG}>&nbsp;
+<{foreach from=$entry.tag item=tags}>
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;tag_name=<{$tags.tag_urlenc}>"><{$tags.tag}></a> 
+<{/foreach}>
+<{/if}>
+</div><!-- /itemInfo -->
+
+<div class="itemBody">
+<div class="itemText">
+<{$entry.diary}>
+</div>
+<{if $entry.photo.0.pname|count_characters>0}>
+<div align="center">
+ <{foreach from=$entry.photo key="num2" item="photo" name="list"}>
+  <{if $num2<2}>
+  <{if $entry.photo|@count==1}>
+    <div class="d3dPhotoCenter">
+  <{elseif $num2==0}>
+    <div class="d3dPhotoLeft">
+  <{else}>
+    <div class="d3dPhotoRight">
+  <{/if}>
+  <a href="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$photo.pname}>" target="_blank">
+  <img src="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$photo.thumbnail}>" style="border:1px solid gray;" /></a>
+  </div>
+  <{/if}>
+<{/foreach}>
+</div>
+<{/if}>
+<div class="clear"></div>
+</div><!-- /itemBody -->
+
+<div class="itemFoot">
+<span class="itemPermaLink">
+<{if $entry.com_num > 0}>
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;req_uid=<{$entry.uid}>&amp;bid=<{$entry.bid}><{$yd_com_key}><{$entry.unique_path}>" 
+	title="<{if $mod_config.use_name==1 && $entry.com_name}>(<{$entry.com_name}>)<{elseif $entry.com_uname}>(<{$entry.com_uname}>)<{else}>(<{$entry.com_guest_name}>)<{/if}>&nbsp;<{$entry.com_title}>&nbsp;[<{$entry.com_datetime|formatTimestamp:'Y-m-d H:i'}>]">
+	<{if $smarty.now-2*24*3600 < $entry.com_datetime }>
+		<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/new.gif" border=0 style="vertical-align:middle;" title="new" alt="new" />
+	<{elseif $smarty.now-7*24*3600 < $entry.com_datetime }>
+		<font color="blue"><b>new!</b></font>
+ 	 <{/if}>
+	<img src="images/comments.png" border=0 style="vertical-align:middle;" alt="<{$smarty.const._MD_EXIST_COMMENTS}>" /> <{$entry.com_num}></a>
+	&nbsp;|&nbsp;
+<{/if}>
+<{if $entry.other == 0}>
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$entry.bid}>&req_uid=<{$yd_uid}>">
+<{$smarty.const._MD_DIARY_READDESC}></a>
+<{if $yd_editperm==1 && $entry.blogtype==0}>
+&nbsp;|&nbsp;
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=edit&amp;bid=<{$entry.bid}><{if $yd_owner!=1}>&amp;req_uid=<{$yd_uid}><{/if}>">
+<{$smarty.const._MD_T_EDIT}></a>&nbsp;
+<{/if}>
+
+<{if $entry.blogtype==0}>|&nbsp;<{$smarty.const._MD_T_VIEW}>(<{$entry.view}>)<{/if}>
+<{if ($yd_param.mode=="category" || $yd_param.tag_mode==1) && $yd_editperm==1}>
+&nbsp;|&nbsp;
+<input name="chk_bids[]" value="<{$entry.bid}>" type="checkbox">
+<{else}>&nbsp;
+<{/if}>
+<{/if}> <!-- / end entry.other == 0 -->
+</span>
+</div><!-- /itemFoot -->
+</div> <!--end item -->
+</div> <!--end itemList -->
+
+<{/foreach}>
+<{else}>
+<{$smarty.const._MD_NOENTRY}>
+<{/if}>
+
+<{if $entry && $yd_editperm==1}>
+<{if $yd_param.tag_mode==1}>
+
+<div class="itemInfo">
+<{$smarty.const._MD_TAG}>&nbsp;:&nbsp;<{$yd_param.req_tag}>&nbsp;
+<select name="tagaction" onchange="chgtagaction(this.value)">
+<option value="0"><{$smarty.const._MD_CATEGORY_NOSELECTED}></option>
+<{if $yd_param.req_tag|count_characters>0}>
+<option value="1"><{$smarty.const._MD_TAG_SELECTDEL}></option>
+<option value="2"><{$smarty.const._MD_TAG_SELECTEDIT}></option>
+<{/if}>
+<option value="3"><{$smarty.const._MD_TAG_SELECTADD}></option>
+</select>
+<input type="hidden" name="req_uid" value="<{$yd_uid}>" />
+<input type="hidden" name="old_tag" value="<{$yd_param.req_tag}>" />
+<input type="hidden" name="q_string" value="<{$yd_param.query_string}>" />
+
+<div id="rev_tag" style="display:none"><{strip}>
+	<{$smarty.const._MD_TAG_EDIT}>&nbsp;:&nbsp;<input type="text" name="rev_tag" value="<{$yd_param.req_tag}>" /><{/strip}>
+</div>
+
+<div id="tags_list" style="display:none;">
+	<p><{$smarty.const._MD_TAG_DESC}><br />
+        <input type=text name=tags id=tags value="<{foreach from=$bTagArr item=b_tag}>[<{$b_tag.tag}>]<{/foreach}>" size=40 maxlength=255><br />
+	<div id="popularTags">
+		<{$smarty.const._MD_LANG_MY_TAGS}>
+		<{foreach from=$myTagArr item=mytag}>
+			<span onclick="addTag(this);"><{$mytag}></span>
+		<{/foreach}>
+	</p>
+	<p><{$smarty.const._MD_LANG_POPULAR_TAGS}>
+	<span id="rgn_button" style="cursor:pointer;font-weight:normal;font-size:100%;border:gray 1px solid;"
+	onclick="chgtagotherdisp()">+ OPEN</span><br />
+	
+	<div id="rgn_content" style="display:none;">
+			<{foreach from=$popTagArr item=poptag}>
+				<span onclick="addTag(this);"><{$poptag}></span>
+			<{/foreach}>
+	</div>
+	</p>
+	</div><!-- /popularTags -->
+</div><!-- /tags_list -->
+
+<div id="tags_submit" class="tags_submit" style="display:none"><{strip}>
+	<input type="submit" name="submit1" value="<{$smarty.const._MD_SUBMIT}>"/><{/strip}>
+	<{$smarty.const._MD_DIARY_CHKALL}><input title="<{$smarty.const._MD_DIARY_CHKALLDESC}>" onclick="with(document.MainForm){for(i=0;i<length;i++){if(elements[i].type=='checkbox'&amp;&amp;elements[i].name.indexOf('chk_bids')>=0){elements[i].checked=this.checked;}}}" type="checkbox">
+</div>
+</div><!-- /itemInfo -->
+
+<{elseif $yd_param.mode=="category"}>
+<div class="itemInfo">
+<{$smarty.const._MD_DIARY_SWAPCAT}>
+&nbsp;|&nbsp;<{$smarty.const._MD_DIARY_SWAPTO}>
+<select name="swap_cid" id="swap_cid">
+<option value="0"><{$smarty.const._MD_NOCNAME}></option>
+<{section name=num loop=$catopt}>
+<option <{if $yd_cid==$catopt[num].cid}>selected<{/if}> value="<{$catopt[num].cid}>"><{if $catopt[num].subcat == 1}>&nbsp;--&nbsp;<{/if}><{$catopt[num].cname}><{if $catopt[num].dohtml=="1"}> HTML<{/if}></option>
+<{/section}>
+</select>
+
+<input type="hidden" name="req_uid" value="<{$yd_uid}>" />
+<input type="hidden" name="cid" value="<{$yd_cid}>" />
+<input type="hidden" name="q_string" value="<{$yd_param.query_string}>" />
+<input type="submit" name="submit1" value="<{$smarty.const._MD_SUBMIT}>"/>
+<{$smarty.const._MD_DIARY_CHKALL}><input title="<{$smarty.const._MD_DIARY_CHKALLDESC}>" onclick="with(document.MainForm){for(i=0;i<length;i++){if(elements[i].type=='checkbox'&amp;&amp;elements[i].name.indexOf('chk_bids')>=0){elements[i].checked=this.checked;}}}" type="checkbox">
+<{if $mod_config.use_tag>=1}><p><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?<{$yd_param.query_string}>&amp;tag_mode=1"><{$smarty.const._MD_TAG_MODETO}></a></p><{/if}>
+</div><!-- /itemInfo -->
+<{/if}>
+<{/if}>
+
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<{if $yd_pagenavi}>
+<ul class="itemBody">
+<{foreach from=$yd_pagenavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+<{/if}>
+</div><!-- /boxNavi -->
+
+</form>
+</div><!-- /d3MainBodyxxx -->
+</div><!-- /d3Mainxxxx -->
+
+<{if $yd_layout=="left"}>
+  <div id="d3dSideLeft">
+  <{include file="db:`$mydirname`_rightarea.html"}>
+  </div><!-- /d3dSidexxxx --> 
+<{elseif $yd_layout=="right"}>
+  <div id="d3dSideRight">
+  <{include file="db:`$mydirname`_rightarea.html"}>
+  </div><!-- /d3dSidexxxx --> 
+<{/if}>
+
+</div><!-- /d3dWrap --> 
+<div class="clear"></div>
+
+<font color="#FF0000"><{$err_msg}></font>
+<font color="#005555"><{$scc_msg}></font>
+
+<{include file='db:system_notification_select.html'}>
+
+<{if $debug_time}>
+ <{foreach from=$debug_time item="debug"}>
+	<{$debug.time}>:<{$debug.caller}><br />
+ <{/foreach}>
+<{/if}>

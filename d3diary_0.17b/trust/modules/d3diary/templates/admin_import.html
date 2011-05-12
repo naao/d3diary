@@ -1,0 +1,44 @@
+<h3><{$mod_name}></h3>
+<h2 class="head"><{$smarty.const._MD_D3DIARY_H2_IMPORTFROM}></h2>
+<h3 class="head"><{$smarty.const._MD_D3DIARY_H3_IMPORTDATABASE}></h3>
+
+	<div style="color:inherit;border: 1px inset #CCC;padding: 6px;with: 80%;font-size: small;">
+		<{$smarty.const._MD_D3DIARY_HELP_IMPORTFROM}>
+		<br />
+	</div>
+
+<form name="importfrom" action="<{$mod_url}>/admin/index.php?page=import" method="post">
+	<{$gticket_hidden}>
+	<label for="import_mid"><{$smarty.const._MD_D3DIARY_LABEL_SELECTMODULE}></label>
+	<select name="import_mid" id="import_mid"><{html_options options=$import_from_options}></select>
+	<br />
+	<input type="submit" name="do_import" value="<{$smarty.const._MD_D3DIARY_BTN_DOIMPORT}>" onclick="return confirm('<{$smarty.const._MD_D3DIARY_CONFIRM_DOIMPORT}>')" />
+</form>
+
+<h3 class="head"><{$smarty.const._MD_D3DIARY_H3_IMPORTCOM}></h3>
+
+	<div style="color:red; border: 1px inset #C00;padding: 6px;with: 80%;font-size: small;">
+		<{$smarty.const._MD_D3DIARY_HELP_COMIMPORT}>
+		<br />
+	</div>
+<form name="comimportfrom" action="<{$mod_url}>/admin/index.php?page=import" method="post">
+	<{$gticket_hidden}>
+	<label for="comimport_mid"><{$smarty.const._MD_D3DIARY_LABEL_SELECTMODULE}></label>
+	<select name="comimport_mid" id="comimport_mid"><{html_options options=$comimport_from_options}></select>
+	<br />
+	<input type="submit" name="do_comimport" value="<{$smarty.const._MD_D3DIARY_BTN_DOIMPORT}>" onclick="return confirm('<{$smarty.const._MD_D3DIARY_CONFIRM_DOCOMIMPORT}>')" />
+</form>
+
+<h3 class="head"><{$smarty.const._MD_D3DIARY_H3_IMPORTNOTIF}></h3>
+
+	<div style="color:red; border: 1px inset #C00;padding: 6px;with: 80%;font-size: small;">
+		<{$smarty.const._MD_D3DIARY_HELP_NOTIFIMPORT}>
+		<br />
+	</div>
+<form name="notifimportfrom" action="<{$mod_url}>/admin/index.php?page=import" method="post">
+	<{$gticket_hidden}>
+	<label for="notifimport_mid"><{$smarty.const._MD_D3DIARY_LABEL_SELECTMODULE}></label>
+	<select name="notifimport_mid" id="notifimport_mid"><{html_options options=$notifimport_from_options}></select>
+	<br />
+	<input type="submit" name="do_notifimport" value="<{$smarty.const._MD_D3DIARY_BTN_DOIMPORT}>" onclick="return confirm('<{$smarty.const._MD_D3DIARY_CONFIRM_DONOTIFIMPORT}>')" />
+</form>

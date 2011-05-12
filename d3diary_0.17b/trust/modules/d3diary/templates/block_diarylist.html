@@ -1,0 +1,59 @@
+<!-- start block contents -->
+
+<{* if $block.categories}>[<{$block.categories}>]<br /><{/if *}>
+<{* if $block.tags}>[<{$block.tags}>]<br /><{/if *}>
+<table>
+<{foreach item=entry from=$block.entry}>
+	<tr>
+	<td class="even" style="border:5px white solid;padding-left:5px;">
+	<table><tr><td style="width:120px;white-space:nowrap;" rowspan=2>
+	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/pencil.gif" border=0 style="vertical-align:middle;" />
+	<{$entry.tstamp|formatTimestamp:"Y-m-d"}><br/>
+	<{if $entry.photo|count_characters>0}>
+	<div style="text-align:center;">
+	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/include/imgresize.php?maxsize=80&amp;fname=modules/<{$block.mydirname}>/upimg/<{$entry.photo}>" style="height:60px;max-width:80px;border:1px gray solid;" />
+	</div>
+	<{/if}>
+	</td>
+	<td><img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="vertical-align:middle; float:right;" />
+	<{if $entry.other>0}>
+	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
+	<{/if}>
+	<a href="<{$entry.url}>" <{if $entry.other>0}>target="_blank"<{/if}>>
+	<{$entry.title}></a><br />
+	<{if $entry.cname|count_characters>0}><{if $block.yd_uid==0 && $entry.cid>10000}>[<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=diarylist&amp;mode=category&amp;cid=<{$entry.cid}>"><{$entry.cname}></a>]
+	<{else}>[<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?mode=category&amp;cid=<{$entry.cid}>&amp;req_uid=<{$entry.uid}>"><{$entry.cname}></a>]
+	<{/if}><{/if}>
+	by<a href="<{$xoops_url}>/userinfo.php?uid=<{$entry.uid}>">
+	<{if $block.mod_config.use_name==1 && $entry.name}><{$entry.name}>
+	<{else}><{$entry.uname}>
+	<{/if}></a>
+	</td></tr>
+	<tr><td><{$entry.diary}>
+  <{if $entry.com_num > 0}>
+	<div style="float:right;">
+	<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=detail&amp;req_uid=<{$entry.uid}>&amp;bid=<{$entry.bid}><{$block.yd_com_key}><{$entry.unique_path}>" 
+	title="(<{if $block.mod_config.use_name==1 && $entry.com_name}><{$entry.com_name}><{else}><{$entry.com_uname}><{/if}>)&nbsp;<{$entry.com_title}>&nbsp;[<{$entry.com_datetime|formatTimestamp:'Y-m-d H:i'}>]">
+	<{if $smarty.now-2*24*3600 < $entry.com_datetime }>
+		<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/new.gif" border=0 style="vertical-align:middle;" title="new" alt="new" />
+	<{elseif $smarty.now-7*24*3600 < $entry.com_datetime }>
+		<font color="blue"><b>new!</b></font>
+ 	 <{/if}>
+ 	 <img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/comments.png" border=0 style="vertical-align:middle;" alt="<{$lang.exist_comments}>" />
+	<{$entry.com_num}></a>
+	</div>
+  <{/if}>
+	</td></tr>
+
+	</table>
+	</td>
+	</tr>
+<{/foreach}>
+	<tr>
+	<td style="text-align:right;">
+	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" />
+	<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=diarylist">
+	<{$block.lang.more}></a>
+	</td>
+	</tr>
+</table>

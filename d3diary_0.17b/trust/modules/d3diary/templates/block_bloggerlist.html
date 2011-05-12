@@ -1,0 +1,31 @@
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody">
+<ul class="<{$block.mydirname}>yd_rightarea">
+	<{foreach item=blogger from=$block.blogger}>
+	    <{if $blogger.uname}>
+	  	<li><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?req_uid=<{$blogger.uid}>">
+	  	<{if $block.mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
+	  	<{else}><{$blogger.uname}>
+	  	<{/if}></a>(<{$blogger.count}>)</li>
+	    <{/if}>
+	<{/foreach}>
+</ul>
+
+<div style="text-align: right;"><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=bloggerlist"><{$block.lang.more}></a></div>
+
+<{if $block.blogger2}><p><{$block.lang.other}></p><{/if}>
+<ul class="<{$block.mydirname}>yd_rightarea">
+	<{foreach item=blogger from=$block.blogger2}>
+	    <{if $blogger.uname}>
+	  	<li><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?req_uid=<{$blogger.uid}>">
+	  	<{if $block.mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
+	  	<{else}><{$blogger.uname}>
+	  	<{/if}></a></li>
+	    <{/if}>
+	<{/foreach}>
+</ul>
+</div><!-- /itemBody -->
+</div><!-- /item -->
+</div><!-- /itemSide -->

@@ -1,0 +1,126 @@
+<!-- start module contents -->
+<{if $mod_config.show_breadcrumbs}>
+<div id="d3d_breadcrumbs">
+	<a href="<{$xoops_url}>/">TOP</a>
+	<{foreach from=$xoops_breadcrumbs key="i" item="item"}>
+	    <{* if $i!=0 *}>
+		&nbsp;>&nbsp;
+		<{if $item.url}>
+			<a href="<{$item.url}>"><{$item.name}></a>
+		<{else}>
+			<{$item.name}>
+		<{/if}>
+	    <{* /if *}>
+	<{/foreach}>
+</div>
+<{/if}>
+
+<{if $yd_uid>0}>
+<p><a href="<{$xoops_url}>/userinfo.php?uid=<{$yd_uid}>">
+	<{if $mod_config.use_name==1 && $yd_name}><{$yd_name}>
+	<{else}><{$yd_uname}>
+	<{/if}></a><{$smarty.const._MD_DIARY_PERSON}></p>
+<br/>
+
+<div id="d3dWrap">
+<div class="clear"></div> 
+
+<{if $yd_layout=="left"}>
+  <div id="d3dMainRight">
+  <div id="d3dMainBodyRight">
+<{elseif $yd_layout=="right"}>
+  <div id="d3dMainLeft">
+  <div id="d3dMainBodyLeft">
+<{else}>
+  <div id="d3dMainNoside">
+  <div id="d3dMainBodyNoside">
+<{/if}>
+
+<{/if}>
+
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<{if $yd_pagenavi}>
+<ul class="itemBody">
+<{foreach from=$yd_pagenavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+<{/if}>
+</div><!-- /boxNavi -->
+<table style="width:100%;" cellspacing="1">
+<tr>
+<th align="left" colspan=2>
+<{$smarty.const._MD_COM_RECENT}>
+</th>
+</tr>
+
+<{if $com_list.0.year>0}>
+<{section name=num loop=$com_list}>
+<tr>
+<td class="even" style="white-space:nowrap;width:30%;">
+<img src="images/pencil.gif" border=0 />
+<{$com_list[num].year}><{$smarty.const._MD_DATE_YEAR}><{$com_list[num].month}><{$smarty.const._MD_DATE_MONTH}><{$com_list[num].day}><{$smarty.const._MD_DATE_DAY}>&nbsp;<{$com_list[num].time}>
+</td>
+<td class="even" style="">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$com_list[num].bid}><{$yd_com_key}><{$com_list[num].unique_path}>">
+<{$com_list[num].title}></a> (
+<{if $mod_config.use_name==1 && $com_list[num].name}><{$com_list[num].name}>
+	<{else}><{$com_list[num].uname}>
+	<{/if}>)
+</td></tr>
+<{/section}>
+<{else}>
+<tr><td>
+<{$smarty.const._MD_NOCOMMENT}>
+</td></tr>
+<{/if}>
+
+</table>
+
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<{if $yd_pagenavi}>
+<ul class="itemBody">
+<{foreach from=$yd_pagenavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+<{/if}>
+</div><!-- /boxNavi -->
+
+<{if $yd_uid>0}>
+</div>
+</div>
+
+<{if $yd_layout=="left"}>
+  <div id="d3dSideLeft">
+  <{include file="db:`$mydirname`_rightarea.html"}>
+  </div><!-- /d3dSidexxxx --> 
+<{elseif $yd_layout=="right"}>
+  <div id="d3dSideRight">
+  <{include file="db:`$mydirname`_rightarea.html"}>
+  </div><!-- /d3dSidexxxx --> 
+<{/if}>
+
+</div><!-- /d3dWrap --> 
+<{/if}>
+<div class="clear"></div>
+
+<{include file='db:system_notification_select.html'}>
+
+<{if $debug_time}>
+ <{foreach from=$debug_time item="debug"}>
+	<{$debug.time}>:<{$debug.caller}><br />
+ <{/foreach}>
+<{/if}>

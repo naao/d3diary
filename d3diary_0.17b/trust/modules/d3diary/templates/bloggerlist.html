@@ -1,0 +1,42 @@
+<!-- start module contents -->
+<{if $mod_config.show_breadcrumbs}>
+<div id="d3d_breadcrumbs">
+	<a href="<{$xoops_url}>/">TOP</a>
+	<{foreach from=$xoops_breadcrumbs key="i" item="item"}>
+	    <{* if $i!=0 *}>
+		&nbsp;>&nbsp;
+		<{if $item.url}>
+			<a href="<{$item.url}>"><{$item.name}></a>
+		<{else}>
+			<{$item.name}>
+		<{/if}>
+	    <{* /if *}>
+	<{/foreach}>
+</div><br/>
+<{/if}>
+
+<ul>
+	<{foreach item=blogger from=$blogger}>
+	    <{if $blogger.uname}>
+	  	<li><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>">
+	  	<{if $mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
+	  	<{else}><{$blogger.uname}>
+	  	<{/if}></a>(<{$blogger.count}>)</li>
+	    <{/if}>
+	<{/foreach}>
+</ul>
+
+<p><{$lang.other}></p>
+<ul>
+	<{foreach item=blogger from=$blogger2}>
+	    <{if $blogger.uname}>
+	  	<li><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>"><{$blogger.uname}></a></li>
+	    <{/if}>
+	<{/foreach}>
+</ul>
+
+<{if $debug_time}>
+ <{foreach from=$debug_time item="debug"}>
+	<{$debug.time}>:<{$debug.caller}><br />
+ <{/foreach}>
+<{/if}>

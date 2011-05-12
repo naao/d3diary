@@ -1,0 +1,18 @@
+<ol style="padding:3px;margin:0;">
+<{foreach item=post from=$block.posts}>
+  <{if $post.can_display}>
+	<li style="margin:1px;">
+    <{if $post.forum_id == $block.com_forum_id}>
+        <a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=detail&amp;bid=<{$post.link_id}><{$block.unique_key}><{$post.unique_path}>">
+    <{else}>
+        <a href="<{$block.mod_url}>/index.php?post_id=<{$post.id}>">
+    <{/if}>
+	<{$post.subject}></a>
+	<{if $block.mod_config.use_name==1 && $post.name}><{$post.name}>
+	<{elseif $post.uname}><{$post.uname}>
+	<{else}><{$post.guest_name}>
+	<{/if}><{$post.post_time_formatted}></li>  <{/if}>
+<{/foreach}>
+</ol>
+
+<{* $post.forum_id, $post.forum_title *}>
