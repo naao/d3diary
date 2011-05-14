@@ -587,3 +587,13 @@ div.personnel span.exist_highlight {
 	background-color: #FFC1C1;
 	cursor: pointer;
 }
+
+.d3dlinkEntry {
+	padding:2px 2px 2px 20px;
+	background: url(images/pencil.gif) top left no-repeat;
+}
+
+.d3dlinkImage {
+	padding:2px 2px 2px 20px;
+	background: url(images/camera.gif) top left no-repeat;
+}

@@ -17,6 +17,13 @@ var $myts ;
 var $uid = 0 ; 		// intval
 var $uname = null ;
 var $req_uid = 0 ; 	// intval
+var $page ;
+var $q_mode ;
+var $q_cid ;
+var $q_tag ;
+var $q_year ;
+var $q_month ;
+var $q_day ;
 var $shared = array() ;	// like a shared memry .. should be private variables
 var $caller ;
 var $calledNo = 1 ;
@@ -132,6 +139,14 @@ function D3diaryConf($mydirname, $req_uid=0, $caller="")
 
 		$this->debug_appendtime('d3dConf_construct');
 	//}
+
+	$this->page = htmlspecialchars( $this->func->getpost_param('page'), ENT_QUOTES ) ;
+	$this->q_mode = htmlspecialchars( $this->func->getpost_param('mode'), ENT_QUOTES ) ;
+	$this->q_cid = (int)$this->func->getpost_param('cid') ;
+	$this->q_tag = htmlspecialchars( $this->func->getpost_param('tag_name'), ENT_QUOTES ) ;
+	$this->q_year = (int)$this->func->getpost_param('year') ;
+	$this->q_month = (int)$this->func->getpost_param('month') ;
+	$this->q_day = (int)$this->func->getpost_param('day') ;
 
 	$this->debug_mode = $xoopsConfig['debug_mode'] ;	// for debugging
 	$this->server_TZ = (int)$xoopsConfig['server_TZ'];

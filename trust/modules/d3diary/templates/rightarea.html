@@ -69,7 +69,7 @@
 	<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
 	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=other&amp;req_uid=<{$yd_uid}>&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}></a>
 	<{else}>
-	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?<{if $smarty.get.page=="photolist"}>page=photolist&amp;<{/if}>req_uid=<{$yd_uid}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
 	<{/if}>
 	</li>
    <{/if}>
@@ -82,7 +82,7 @@
 	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=other&amp;req_uid=<{$yd_uid}>&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}></a>
 	<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
 	<{else}>
-	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?<{if $smarty.get.page=="photolist"}>page=photolist&amp;<{/if}>req_uid=<{$yd_uid}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
 	<{/if}>
 	</li>
    <{/if}>

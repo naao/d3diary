@@ -1,0 +1,130 @@
+<!-- start module contents -->
+<{if $mod_config.show_breadcrumbs}>
+<div id="d3d_breadcrumbs">
+	<a href="<{$xoops_url}>/">TOP</a>
+	<{foreach from=$xoops_breadcrumbs key="i" item="item"}>
+	    <{* if $i!=0 *}>
+		&nbsp;>&nbsp;
+		<{if $item.url}>
+			<a href="<{$item.url}>"><{$item.name}></a>
+		<{else}>
+			<{$item.name}>
+		<{/if}>
+	    <{* /if *}>
+	<{/foreach}>
+</div>
+<{/if}>
+
+<{if $yd_uid>0}><br /><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>">
+<{if $mod_config.use_name==1 && $yd_name}><{$yd_name}>
+<{else}><{$yd_uname}>
+<{/if}></a><{$smarty.const._MD_DIARY_PERSON}></p>
+
+<div id="d3dWrap">
+<{if $yd_layout=="left"}>
+<div id="d3dMainRight">
+<div id="d3dMainBodyRight">
+<{elseif $yd_layout=="right"}>
+<div id="d3dMainLeft">
+<div id="d3dMainBodyLeft">
+<{else}>
+<div id="d3dMainNoside">
+<div id="d3dMainBodyNoside">
+<{/if}>
+
+<{/if}>
+
+<{if $yd_pagenavi}>
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<ul class="itemBody">
+<{foreach from=$yd_pagenavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+</div><!-- /boxNavi -->
+<{/if}>
+
+<div class="item" style="border:0px ;">
+<div class="itemInfo" style="text-align:left;">
+<{$smarty.const._MD_NEWPHOTO}>
+<{if $yd_uid>0}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$yd_openarea}>.gif" border=0 style="float:right;" /><{/if}><br />
+<{if $yd_param.day>0}>[<{$yd_param.year}>-<{$yd_param.month}>-<{$yd_param.day}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br />
+<{elseif $yd_param.month>0}>[<{$yd_param.year}>-<{$yd_param.month}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
+<{if $yd_param.mode=="category"}><{$smarty.const._MD_CATEGORY}>&nbsp;[<{$yd_param.cname}>]&nbsp;<a href="<{$url4ex_cat}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
+<{if $yd_param.tag}><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]&nbsp;<a href="<{$url4ex_tag}>"title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><{/if}>
+
+<div style="text-align:center;">
+<span>[<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+<span>[<{$smarty.const._MD_DIARY_TITLE}><a href="<{$sort_baseurl}>&amp;odr=title_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=title_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+<span>[<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+</div>
+</div><!-- /itemInfo -->
+</div><!-- /item -->
+
+<{if $yd_photolist.0.pid|count_characters>0}>
+<{if $yd_editperm}>
+<form name="MainForm" method="post" action="index.php?page=photolist<{if $yd_uid>0}>&amp;req_uid=<{$yd_uid}><{/if}><{if $smarty.get.cid}>&amp;cid=<{$smarty.get.cid}><{/if}><{if $smarty.get.tag_name}>&amp;tag_name=<{$smarty.get.tag_name}><{/if}>">
+<select name="action" id="action">
+<option value="0"><{$smarty.const._MD_CATEGORY_NOSELECTED}></option>
+<option value="1"><{$smarty.const._MD_T_DEL}></option>
+<option value="2"><{$smarty.const._MD_LROTATE}></option>
+<option value="3"><{$smarty.const._MD_RROTATE}></option>
+</select>
+<input type="submit" name="submit1" value="<{$smarty.const._MD_SUBMIT}>"/>
+
+<{/if}>
+<div class="itemBody">
+<div class="PhotoBox">
+	<{foreach from=$yd_photolist key="num" item="entry" name="list"}>
+   		<{if $entry|@count==1}>
+   		 <div class="d3dPhotoCenter" style="margin:6px;">
+   		<{else}>
+   		 <div class="d3dPhotoLeft" style="margin:6px;">
+   		<{/if}>
+		<a href="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$entry.pname}>" target="_blank">
+		<img src="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$entry.thumbnail}>" /></a>
+	  	<{if $yd_uid<=0}><br /><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=photolist&amp;req_uid=<{$entry.uid}>">
+	  	<{if $mod_config.use_name==1 && $entry.name}><{$entry.name}>
+	  	<{else}><{$entry.uname}>
+	  	<{/if}></a>
+	  	<{/if}>
+	  	<br /><{$entry.tstamp|formatTimestamp:'Y-m-d H:i'}><{if $yd_editperm}>&nbsp;<input type='checkbox' name='pdel[]' value='<{$entry.pid}>::<{$entry.pname}>' /><{/if}>
+	  	<br /><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$entry.bid}>&amp;req_uid=<{$entry.uid}>"><{$entry.title}></a>
+	  	<br /><{$entry.info}>
+	  	</div>
+	<{/foreach}>
+<div class="clear"></div>
+</div><!-- /PhotoBox -->
+</div><!-- /itemBody -->
+
+</form>
+<{/if}><!-- enf if yd_photolist -->
+
+<{if $yd_uid>0}>
+</div>
+</div>
+
+<{if $yd_layout=="left"}>
+  <div id="d3dSideLeft">
+  <{include file="db:`$mydirname`_rightarea.html"}>
+  </div><!-- /d3dSidexxxx --> 
+<{elseif $yd_layout=="right"}>
+  <div id="d3dSideRight">
+  <{include file="db:`$mydirname`_rightarea.html"}>
+  </div><!-- /d3dSidexxxx --> 
+<{/if}>
+
+</div><!-- /d3dWrap --> 
+<{/if}>
+<div class="clear"></div>
+
+<{include file='db:system_notification_select.html'}>

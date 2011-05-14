@@ -24,12 +24,26 @@ function b_d3dside_mlist_show( $options ){
 		return ;
 	}
 
-	if( $req_uid > 0 ) {
-		$base_url = XOOPS_URL."/modules/".$mydirname."/index.php?page=index";
+	// create base url
+	$page = & $d3dConf->page ;
+	$q_mode = & $d3dConf->q_mode ;
+	$q_cid = & $d3dConf->q_cid ;
+	$q_tag = & $d3dConf->q_tag ;
+
+	if ( $page == "photolist") {
+		$base_url = "page=photolist" ;
+		if ( $req_uid > 0 ) { $base_url .= "&amp;req_uid=".$req_uid ;}
 	} else {
-		$base_url = XOOPS_URL."/modules/".$mydirname."/index.php?page=diarylist";
+		if ( $req_uid > 0 ) {
+			$base_url = "req_uid=".$req_uid ;
+		} else {
+			$base_url = "page=diarylist" ;
+		}
 	}
-		
+	if ( strcmp( $q_mode, "category" ) == 0 ) { $base_url .= "&amp;mode=category&amp;cid=".$q_cid; }
+	if ( !empty( $q_tag ) ) { $base_url .= "&amp;tag_name=".$q_tag; }
+	$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?".$base_url."&amp;";
+
 		list( $yd_monlist, $yd_monthnavi ) =  $d3dConf->func->get_monlist ($req_uid, $uid, $max_entry );
 
 		$lang = array();

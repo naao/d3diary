@@ -100,3 +100,13 @@ ul.<{$mydirname}>yd_rightarea li {
 	margin:1px;
 	float:none;
 }
+
+.<{$mydirname}>d3dlinkEntry {
+	padding:2px 2px 2px 20px;
+	background: url(images/pencil.gif) top left no-repeat;
+}
+
+.<{$mydirname}>d3dlinkImage {
+	padding:2px 2px 2px 20px;
+	background: url(images/camera.gif) top left no-repeat;
+}

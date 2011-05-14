@@ -267,4 +267,8 @@ define("_MD_MAILTO",":Mail to");
 define("_MD_MAIL_CASEMANUAL","[In manual Import]");
 define("_MD_MAIL_TOSTEP0","Return to STEP0");
 
+define("_MD_NEWDIARY","Diary List");
+define("_MD_NEWPHOTO","Image List");
+define("_MD_QUERYOFF","Query Off");
+
 ?>

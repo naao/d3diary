@@ -13,6 +13,7 @@ define($constpref."_DIARY_NAME","D3diary");
 define($constpref."_DIARY_DESC","D3diary");
 
 define($constpref."_DIARYLIST","New Diaries");
+define($constpref."_PHOTOLIST","New Images");
 define($constpref."_FRIENDSDIARY","Friends Diaries");
 define($constpref."_EDIT","Write Diary");
 define($constpref."_CATEGORY","Category");

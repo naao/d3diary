@@ -2,18 +2,27 @@
 <div class="<{$block.mydirname}>itemSide" style="border:0px ;">
 <div class="item" style="border:0px ;">
 <div class="itemBody">
+<{* if $smarty.get.page=='photolist'}>
+<p><{$block.lang.newphoto}></p>
+<{else}>
+<p><{$block.lang.newdiary}></p>
+<{/if *}>
+
 <ul class="<{$block.mydirname}>yd_rightarea">
-	<{foreach item=blogger from=$block.blogger}>
-	    <{if $blogger.uname}>
-	  	<li><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?req_uid=<{$blogger.uid}>">
-	  	<{if $block.mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
-	  	<{else}><{$blogger.uname}>
-	  	<{/if}></a>(<{$blogger.count}>)</li>
-	    <{/if}>
-	<{/foreach}>
+ <{foreach item=blogger from=$block.blogger}>
+  <{if $blogger.uname}>
+  <li>
+<{if $block.mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
+<{else}><{$blogger.uname}>
+<{/if}>
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?req_uid=<{$blogger.uid}>" title="<{$block.lang.newdiary}>" class="<{$block.mydirname}>d3dlinkEntry">(<{$blogger.count}>)</a>
+<{if $blogger.p_count>0}><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=photolist&amp;req_uid=<{$blogger.uid}>" title="<{$block.lang.newphoto}>" class="<{$block.mydirname}>d3dlinkImage">(<{$blogger.p_count}>)</a><{/if}>
+</li>
+  <{/if}>
+ <{/foreach}>
 </ul>
 
-<div style="text-align: right;"><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=bloggerlist"><{$block.lang.more}></a></div>
+<div style="text-align: right;"><a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=bloggerlist<{if $smarty.get.page=='photolist'}>&amp;target=photolist<{/if}>"><{$block.lang.more}></a></div>
 
 <{if $block.blogger2}><p><{$block.lang.other}></p><{/if}>
 <ul class="<{$block.mydirname}>yd_rightarea">
@@ -26,6 +35,13 @@
 	    <{/if}>
 	<{/foreach}>
 </ul>
+<div class="<{$block.mydirname}>clear"></div>
 </div><!-- /itemBody -->
+
+<{if $block.bloggernavi}>
+<div class="itemInfo" style="text-align:center;">
+<{$block.bloggernavi}>
+</div><!-- /itemInfo -->
+<{/if}>
 </div><!-- /item -->
 </div><!-- /itemSide -->

@@ -29,11 +29,28 @@ function b_d3dside_tagcroud_show( $options ){
 	}
 
 	if ((int)$d3dConf->mod_config['use_tag'] >= 1) {
-		if( $req_uid > 0 ) {
-			$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?page=index&req_uid=".$req_uid;
+		// create base url
+		$page = & $d3dConf->page ;
+		$q_mode = & $d3dConf->q_mode ;
+		$q_cid = & $d3dConf->q_cid ;
+		$q_year = & $d3dConf->q_year ;
+		$q_month = & $d3dConf->q_month ;
+		$q_day = & $d3dConf->q_day ;
+		
+		if ( $page == "photolist") {
+			$base_url = "page=photolist" ;
+			if ( $req_uid > 0 ) { $base_url .= "&amp;req_uid=".$req_uid ;}
 		} else {
-			$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?page=diarylist";
+			if ( $req_uid > 0 ) {
+				$base_url = "req_uid=".$req_uid ;
+			} else {
+				$base_url = "page=diarylist" ;
+			}
 		}
+		if ( strcmp( $q_mode, "category" ) == 0 ) { $base_url .= "&amp;mode=category&amp;cid=".$q_cid; }
+		if ( $q_month > 0 ) { $base_url .= "&amp;year=".$q_year."&amp;month=".$q_month; }
+		if ( $q_day > 0 ) { $base_url .= "&amp;day=".$q_day; }
+		$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?".$base_url."&amp;";
 
 		$where = "";
 		if($req_uid > 0 ){
@@ -61,7 +78,6 @@ function b_d3dside_tagcroud_show( $options ){
 
 		// getTagCloud ($where, $min_size, $max_size, $max_displays, $offset_page)
 		list( $tagCloud, $tagnavi ) = $d3dConf->func->getTagCloud($where, $min_size, $max_size, $max_entry, $tofst, $params);
-		$cid = (int)$d3dConf->getpost_param('cid') ;
 
 		$lang = array();
 		//$lang['title'] = constant('_MD_CTITLE');
@@ -74,7 +90,7 @@ function b_d3dside_tagcroud_show( $options ){
 		$block['lang'] = $lang;
 		$block['mydirname'] = $mydirname;
 		$block['base_url'] = $base_url;
-		$block['cid'] = $cid ;
+		$block['cid'] = $q_cid ;
 		$block['tofst'] = $tofst ;
 	}
 

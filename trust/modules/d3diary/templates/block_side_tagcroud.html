@@ -4,7 +4,7 @@
 <div class="itemBody">
 <{if $block.use_tag>=1}>
 <{foreach from=$block.tagCloud item=tags}>
-	<a href="<{$block.base_url}><{if $block.cid>0}>&amp;mode=category&amp;cid=<{$block.cid}><{/if}>&amp;tag_name=<{$tags.tag_urlenc}><{if $block.tofst>0}>&amp;tofst=<{$block.tofst}><{/if}>" style="font-size:<{$tags.size}>%"><{$tags.tag}></a> 
+	<a href="<{$block.base_url}>tag_name=<{$tags.tag_urlenc}><{if $block.tofst>0}>&amp;tofst=<{$block.tofst}><{/if}>" style="font-size:<{$tags.size}>%"><{$tags.tag}></a> 
 <{/foreach}>
 <{/if}>
 </div><!-- /itemBody -->

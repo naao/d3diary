@@ -158,24 +158,23 @@ if(strcmp($yd_param['mode'], "category")==0){
 	}
 	$yd_param['cname'] = $myts->makeTboxData4Show($category->cname);
 
-	
-}elseif(strcmp($yd_param['mode'], "date")==0){
-	$yd_param['year']=intval($d3dConf->func->getpost_param('year'));
-	$yd_param['month']=intval($d3dConf->func->getpost_param('month'));
-	$yd_param['day']=intval($d3dConf->func->getpost_param('day'));
+}
+
+$yd_param['year']=intval($d3dConf->func->getpost_param('year'));
+$yd_param['month']=intval($d3dConf->func->getpost_param('month'));
+$yd_param['day']=intval($d3dConf->func->getpost_param('day'));
+if(!empty($yd_param['day'])){
 	if (!empty($yd_param['year'])){$url_tag.="&amp;year=".$yd_param['year'];}
 	if (!empty($yd_param['month'])){$url_tag.="&amp;month=".$yd_param['month'];}
-	if (!empty($yd_param['day'])){$url_tag.="&amp;day=".$yd_param['day'];}
-}elseif(strcmp($yd_param['mode'], "month")==0){
-	$yd_param['year']=intval($d3dConf->func->getpost_param('year'));
-	$yd_param['month']=intval($d3dConf->func->getpost_param('month'));
+	$url_tag.="&amp;day=".$yd_param['day'];
+}elseif(!empty($yd_param['month'])){
 	if (!empty($yd_param['year'])){$url_tag.="&amp;year=".$yd_param['year'];}
-	if (!empty($yd_param['month'])){$url_tag.="&amp;month=".$yd_param['month'];}
+	$url_tag.="&amp;month=".$yd_param['month'];
 }elseif(strcmp($yd_param['mode'], "all")==0){
 	$yd_param['mode']="all";
 }
 
-$temp_openarea = !empty($category->openarea) ? intval($category->openarea) :$yd_param['openarea'] ;
+$temp_openarea = !empty($category->openarea) ? intval($category->openarea) : $yd_param['openarea'] ;
 
 $xoops_pagetitle = ($d3dConf->mod_config['use_name']==1) ? $yd_name.constant("_MD_DIARY_PERSON") : 
 				$yd_uname.constant("_MD_DIARY_PERSON") ;
@@ -200,13 +199,6 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 // **		**
 	$noavatar_exists = file_exists(XOOPS_ROOT_PATH."/modules/user/images/no_avatar.gif");
 	$whr_openarea = " (d.openarea <>100 OR d.uid = $uid)";
-
-	// check edit permission by group
-//	$editperm=0;
-//	if(in_array($d3dConf->uid, $d3dConf->mPerm->gpermissions['allow_edit']) or $d3dConf->mPerm->isadmin==true) {
-//		$editperm=1;
-//		$whr_openarea = " ";
-//	}
 
 	$mid = $d3dConf->mid;
 	
@@ -255,12 +247,14 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
     		if (!empty($d3dConf->mPerm->req_friends)) {
 			$whr_uids="d.uid IN (".implode(',',$d3dConf->mPerm->req_friends).")";
 		}
-	}elseif(strcmp($yd_param['mode'], "date")==0){
+	}
+
+	if(!empty($yd_param['day'])){
 		$whr_time.=" and d.create_time>='".$yd_param['year']."-".$yd_param['month']
 			."-".$yd_param['day']." 00:00:00"."' ";
 		$whr_time.=" and d.create_time<='".$yd_param['year']."-".$yd_param['month']
 			."-".$yd_param['day']." 23:59:59"."' ";
-	}elseif(strcmp($yd_param['mode'], "month")==0){
+	}elseif(!empty($yd_param['month'])){
 		if($yd_param['month']==12){
 			$next_year=$yd_param['year']+1;
 			$next_month=1;
@@ -279,6 +273,67 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 		$whr_nofuture = "";
 	}
 
+	$params = array() ;
+	$params['order'] = htmlspecialchars( $d3dConf->func->getpost_param('odr'), ENT_QUOTES ) ;
+	$params['order'] = $params['order'] ? $params['order'] :'time' ; 
+
+		$dosort = false ; $resort_odr = "" ;
+		switch ($params['order']) {
+			case 'random' :
+				$odr = "rand()" ;
+				break;
+			case 'title_asc' :
+				$odr = "cast(d.title as char) ASC" ;
+				break;
+			case 'title_dsc' :
+				$odr = "cast(d.title as char) DESC" ;
+				break;
+			case 'hit_asc' :
+				$odr = "d.view ASC" ;
+				break;
+			case 'hit_dsc' :
+				$odr = "d.view DESC" ;
+				break;
+			case 'time_asc' :
+				$odr = "d.create_time ASC" ;
+				break;
+			case 'time_dsc' :
+			case 'time' :
+			default :
+				$odr = "d.create_time DESC" ;
+				$dosort = true ;
+		}
+
+	$url = ''; $url4ex_cat = ''; $url4ex_tag = ''; $url4ex_date = '';
+	if( !empty($_SERVER['QUERY_STRING'])) {
+		// create url for sort
+		$url = preg_replace("/^(.*)\&odr=[0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
+		// create url for exclude date
+		$url4ex_date = preg_replace("/^(.*)\&mode=month/", "$1", $_SERVER['QUERY_STRING']);
+		$url4ex_date = preg_replace("/^(.*)\&mode=date/", "$1", $url4ex_date);
+		$url4ex_date = preg_replace("/^(.*)\&year=[0-9]+/", "$1", $url4ex_date);
+		$url4ex_date = preg_replace("/^(.*)\&month=[0-9]+/", "$1", $url4ex_date);
+		$url4ex_date = preg_replace("/^(.*)\&day=[0-9]+/", "$1", $url4ex_date);
+		// create url for exclude category
+		$url4ex_cat = preg_replace("/^(.*)\&mode=category/", "$1", $_SERVER['QUERY_STRING']);
+		$url4ex_cat = preg_replace("/^(.*)\&cid=[0-9]+/", "$1", $url4ex_cat);
+		// create url for exclude tag
+		$url4ex_tag = preg_replace("/^(.*)\&tag_name=[%A-Z0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
+	}
+        $sort_baseurl = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url;
+        $url4ex_date = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_date;
+        $url4ex_cat =  XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_cat;
+        $url4ex_tag = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_tag;
+
+	$url = '';
+	if( !empty($_SERVER['QUERY_STRING'])) {
+		$url = preg_replace("/^(.*)\&odr=[0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
+	}
+        $sort_baseurl = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url;
+
+
+
+
 	$d3dConf->debug_appendtime('index_tag');
 
 	// *********** SQL base
@@ -287,7 +342,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
 			ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) ".$sql_tag." 
 			WHERE ".$whr_openarea.$whr_time.$whr_tag.$whr_nofuture." 
-			 ORDER BY d.create_time DESC";
+			 ORDER BY ".$odr ;
 
 	// *********** SQL for
 	// get count of total entries
@@ -439,7 +494,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 
 	// *********** SQL for
 	// other enrties
-	if (empty($b_tag) || $d3dConf->mod_config['use_tag']==0) {
+	if ( $dosort == true && (empty($b_tag) || $d3dConf->mod_config['use_tag']==0) ) {
 		$sql = "SELECT  d.diary, d.create_time, d.title, d.url, u.uname, u.name, u.uid, u.user_avatar, 
 			c.cid, c.cname, c.openarea AS openarea_cat 
 			FROM ".$xoopsDB->prefix($mydirname.'_newentry')." d 
@@ -447,7 +502,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
 			ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) 
 			WHERE d.blogtype>'0' ".$whr_openarea.$whr_date.$whr_time." 
-			ORDER BY d.create_time DESC";
+			ORDER BY ".$odr;
 
 		//var_dump($sql);
 		$result = $xoopsDB->query($sql);
@@ -547,7 +602,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 	}
 
 	// sort by timestamp
-	if (!empty($mytstamp) && !empty($entry)) {
+	if ( $dosort == true && !empty($mytstamp) && !empty($entry)) {
 		array_multisort($mytstamp, SORT_DESC, $entry );
 	}
 
@@ -563,19 +618,22 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 	if((strcmp($bc_para['mode'], "category")==0)){
 		$bc_para['cid'] = $yd_param['cid'];
 		$bc_para['cname'] = $yd_param['cname'] ? $yd_param['cname'] : constant('_MD_NOCNAME');
-	} elseif(strcmp($bc_para['mode'], "month")==0){ 
-		$bc_para['year'] = $yd_param['year'];
-		$bc_para['month'] = $yd_param['month'];
-	} elseif(strcmp($bc_para['mode'], "date")==0){
-		$bc_para['year'] = $yd_param['year'];
-		$bc_para['month'] = $yd_param['month'];
-		$bc_para['day'] = $yd_param['day'];
 	} elseif(strcmp($bc_para['mode'], "friends")==0){
 		$bc_para['bc_name'] = constant('_MD_DIARY_FRIENDSVIEW');;
 	}
+
+	if($yd_param['month'] > 0){
+		$bc_para['year'] = $yd_param['year'];
+		$bc_para['month'] = $yd_param['month'];
+	} elseif($yd_param['day'] > 0){
+		$bc_para['year'] = $yd_param['year'];
+		$bc_para['month'] = $yd_param['month'];
+		$bc_para['day'] = $yd_param['day'];
+	}
 	
 	if(!empty($b_tag) && $d3dConf->mod_config['use_tag']>0) {
-		$bc_para['tag'] = htmlSpecialChars(urldecode($d3dConf->func->getpost_param('tag_name')), ENT_QUOTES);
+		$yd_param['tag'] = htmlSpecialChars(urldecode($d3dConf->func->getpost_param('tag_name')), ENT_QUOTES);
+		$bc_para['tag'] = $yd_param['tag'];
 	}
 	
 	if(!empty($yd_param['year'])) {
@@ -637,6 +695,10 @@ if($d3dConf->mod_config['menu_layout']<=1){
 			"lang_datanum" => constant('_MD_DATANUM1').$num_rows. constant('_MD_DATANUM2').
 						$startnum. constant('_MD_DATANUM3').$endnum.
 						constant('_MD_DATANUM4'),
+			"sort_baseurl" => $sort_baseurl,
+		        "url4ex_cat" => $url4ex_cat,
+		        "url4ex_tag" => $url4ex_tag,
+		        "url4ex_date" => $url4ex_date,
 			"mydirname" => $mydirname,
 			"xoops_pagetitle" => $xoops_pagetitle,
 			"xoops_breadcrumbs" => $breadcrumbs,

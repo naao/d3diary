@@ -98,6 +98,7 @@ function b_d3d_photolist_show( $options ){
 		$block['tags'] = implode(',', $params['tags']);
 		$block['mydirname'] = $mydirname;
 		$block['mod_config'] = $d3dConf->mod_config;
+		$block['max_length'] = $max_length;
 		$block['maxsize'] = $maxsize;
 		$block['show_pinfo'] = $params['show_pinfo'];
 		$block['show_entrylink'] = $show_entrylink;

@@ -8,10 +8,6 @@
 
 global $xoopsUser,$xoopsDB;
 
-//	$max_entry = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
-	$max_entry = 100;
-//	$now_order = empty( $options[2] ) ? 'time' : trim( $options[2] ) ;
-
 	if( preg_match( '/[^0-9a-zA-Z_-]/' , $mydirname ) ) die( 'Invalid mydirname' ) ;
 
 	$constpref = '_MB_' . strtoupper( $mydirname ) ;
@@ -20,48 +16,37 @@ $d3dConf =& D3diaryConf::getInstance($mydirname, 0, "bloggerlist");
 $myts =& $d3dConf->myts;
 
 	$uid = $d3dConf->uid;
+	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 
-	// first, get external blogger list
-	$sql = "SELECT DISTINCT cfg.uid, u.name, u.uname from "
-			.$xoopsDB->prefix($mydirname."_config")." cfg LEFT JOIN "
-			.$xoopsDB->prefix("users")
-			." u ON cfg.uid=u.uid WHERE cfg.blogtype>'0'" ;
-	$result = $xoopsDB->query($sql);
-	
-	$blogger2 = array(); $blogger2_ids = array(); 
-	while( $row = $xoopsDB->fetchArray( $result ) ) {
-		$blogger2[]=$row;
-		$blogger2_ids[]=$row['uid'];
-	}
-	
-	$now_order=intval($d3dConf->func->getpost_param('order'));
+	$params['ofst_key'] = "bgofst" ;
+	$_offset_ = $d3dConf->func->getpost_param($params['ofst_key']);
+	$offset = isset($_offset_) ?(int)$_offset_ : 0;
 
-	if ( $now_order == 'time' ) {
-		$whr_order = "max_create_time DESC";
-	} elseif ( $now_order == 'posted' ) {
-		$whr_order = "count DESC";
-	} else {
-		$whr_order = "max_create_time DESC";
-	}
+	//$max_entry = 100;
+	$max_entry = (int)$d3dConf->mod_config['block_diarynum'];
+	$params['getnav'] = true ;	// not render but get navi
 
-	$sql = "SELECT d.uid, count(d.uid) AS count, MAX(d.create_time) AS max_create_time, u.name, u.uname from "
-			.$xoopsDB->prefix($mydirname."_diary")." d LEFT JOIN "
-			.$xoopsDB->prefix("users")
-			." u ON d.uid=u.uid GROUP BY d.uid, u.name, u.uname ORDER BY ".$whr_order." LIMIT ".$max_entry ;
-	$blogger = array();
-	$result = $xoopsDB->query($sql);
-	while( $row = $xoopsDB->fetchArray( $result ) ) {
-		// exclude external bloggers
-		if(!in_array($row['uid'],$blogger2_ids)) $blogger[]=$row;
+	$params['order'] = htmlspecialchars( $d3dConf->func->getpost_param('odr'), ENT_QUOTES ) ;
+	$params['order'] = $params['order'] ? $params['order'] :'time' ; 
+
+	list( $blogger, $blogger2, $bloggernavi ) = $d3dConf->func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );
+	
+	// create url for sort
+	$url = '';
+	if( !empty($_SERVER['QUERY_STRING'])) {
+		if( !ereg("^odr=[0-9a-z_]+", $_SERVER['QUERY_STRING']) ) {
+			$url = preg_replace("/^(.*)\&odr=[0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
+		}
 	}
-	
-	//$mid = $d3dConf->mid;
-	$yd_config = $d3dConf->mod_config;
-	
+        $sort_baseurl = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url;
+
 // define Template
 $xoopsOption['template_main']= $mydirname.'_bloggerlist.html';
 
 include XOOPS_ROOT_PATH."/header.php";
+
+// assign module header for css
+$d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=main_css" />'."\r\n";
 
 // breadcrumbs
 	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');
@@ -76,7 +61,11 @@ include XOOPS_ROOT_PATH."/header.php";
 	$xoopsTpl->assign(array(
 			'blogger' => $blogger,
 			'blogger2' => $blogger2,
+			'bloggernavi' => $bloggernavi,
 			'mydirname' => $mydirname,
+			'sort_baseurl' => $sort_baseurl,
+			'xoops_module_header' => 
+				$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
 			'mod_config' => $d3dConf->mod_config,
 			'xoops_breadcrumbs' => $breadcrumbs
 		));

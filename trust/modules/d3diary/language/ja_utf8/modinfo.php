@@ -21,6 +21,7 @@ define($constpref."_CONFIG","日記の設定");
 define($constpref."_CONFIG_CATEGORY","カテゴリーの設定");
 define($constpref."_YES","はい");
 define($constpref."_NO","いいえ");
+define($constpref."_PHOTOLIST","画像一覧");
 
 // Admin
 define($constpref.'_ADMENU_MYLANGADMIN','言語定数管理');

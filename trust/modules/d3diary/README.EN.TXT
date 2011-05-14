@@ -102,6 +102,13 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 5/ 6  ver0.18
+	- Fixed bug of photo info is not trancated in photolist block.
+	- Added photolist page and changed links in blocks of category, tagcroud, and blogger.
+	Å@Added submenu "Photo List" in main menu.
+	- Sorted view function is added in index, diarylist, bloggerlist, photolist pages.
+	Å@It sorts with keeping category or tag query condition.
+
 2010/ 5/ 6  ver0.17b
 	- Category swap function was very complecated in category edit screen because only swap each column.
 	  Now it's modified that you can input the sequence number directry.

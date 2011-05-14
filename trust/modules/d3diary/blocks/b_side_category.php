@@ -24,12 +24,36 @@ function b_d3dside_category_show( $options ){
 		return ;
 	}
 
-	if( $req_uid > 0 ) {
-		$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?page=index";
+	// create base url
+	$page = & $d3dConf->page ;
+	$q_tag = & $d3dConf->q_tag ;
+	$q_year = & $d3dConf->q_year ;
+	$q_month = & $d3dConf->q_month ;
+	$q_day = & $d3dConf->q_day ;
+	
+	if ( $page == "photolist") {
+		$base_url = "page=photolist" ;
+		if ( $req_uid > 0 ) { $base_url .= "&amp;req_uid=".$req_uid ;}
 	} else {
-		$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?page=diarylist";
+		if ( $req_uid > 0 ) {
+			$base_url = "req_uid=".$req_uid ;
+		} else {
+			$base_url = "page=diarylist" ;
+		}
 	}
+	if ( $q_month > 0 ) { $base_url .= "&amp;year=".$q_year."&amp;month=".$q_month; }
+	if ( $q_day > 0 ) { $base_url .= "&amp;day=".$q_day; }
+	if ( !empty( $q_tag ) ) { $base_url .= "&amp;tag_name=".$q_tag; }
+	$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?".$base_url."&amp;";
 
+/*	// create url
+	$base_url = '';
+	if( !empty($_SERVER['QUERY_STRING'])) {
+		$base_url = preg_replace("/^(.*)\&mode=category/", "$1", $_SERVER['QUERY_STRING']);
+		$base_url = preg_replace("/^(.*)\&cid=[0-9]+/", "$1", $base_url);
+	}
+	$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?".$base_url;
+*/
 		$catopt = $d3dConf->func->get_categories($req_uid,$uid,true);
 		$tag_name = rawurlencode(rawurldecode($d3dConf->getpost_param('tag_name'))) ;
 		//$tag_name = $d3dConf->getpost_param('tag_name') ;

@@ -652,6 +652,7 @@ if (is_object(@$GLOBALS['xoopsUser'])) {
 		}
 	}
 }
+$modversion['sub'][] = array('name' => constant($constpref.'_PHOTOLIST'), 'url' => 'index.php?page=photolist');
 $modversion['sub'][] = array('name' => constant($constpref.'_COMMENT'), 'url' => 'index.php?page=viewcomment');
 if (is_object(@$GLOBALS['xoopsUser'])) {
 	$modversion['sub'][] = array('name' => constant($constpref.'_EDIT'), 'url' => 'index.php?page=edit');

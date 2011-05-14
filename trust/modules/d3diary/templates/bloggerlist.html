@@ -15,25 +15,65 @@
 </div><br/>
 <{/if}>
 
-<ul>
+<div class="itemSide" style="border:0px ;">
+<{if $bloggernavi}>
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<ul class="itemBody">
+<{foreach from=$bloggernavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+</div><!-- /boxNavi -->
+<{/if}>
+
+<div class="item" style="border:0px ;">
+<div class="itemInfo" style="text-align:center;">
+<span>[<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+<span>[<{$smarty.const._MD_DIARY_NAME}><a href="<{$sort_baseurl}>&amp;odr=name_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=name_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+<span>[<{$smarty.const._MD_DIARY_COUNT}><a href="<{$sort_baseurl}>&amp;odr=count_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=count_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+<span>[<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
+<a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+</div><!-- /itemInfo -->
+<div class="itemInfo" style="text-align:left;">
+<{$smarty.const._MD_POSTER_LIST}>
+</div><!-- /itemInfo -->
+
+<div class="itemBody">
+<ul class="yd_rightarea">
 	<{foreach item=blogger from=$blogger}>
 	    <{if $blogger.uname}>
-	  	<li><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>">
-	  	<{if $mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
+	  	<li><{if $mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
 	  	<{else}><{$blogger.uname}>
-	  	<{/if}></a>(<{$blogger.count}>)</li>
+	  	<{/if}>
+	  	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>" title="<{$block.lang.newdiary}>" class="d3dlinkEntry">(<{$blogger.count}>)</a>
+	  	<{if $blogger.p_count>0}><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=photolist&amp;req_uid=<{$blogger.uid}>" title="<{$block.lang.newphoto}>" class="d3dlinkImage">(<{$blogger.p_count}>)</a><{/if}>
+	  	</li>
+
 	    <{/if}>
 	<{/foreach}>
 </ul>
 
 <p><{$lang.other}></p>
-<ul>
+<ul class="yd_rightarea">
 	<{foreach item=blogger from=$blogger2}>
 	    <{if $blogger.uname}>
 	  	<li><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>"><{$blogger.uname}></a></li>
 	    <{/if}>
 	<{/foreach}>
 </ul>
+
+</div><!-- /itemBody -->
+</div><!-- /item -->
+</div><!-- /itemSide -->
 
 <{if $debug_time}>
  <{foreach from=$debug_time item="debug"}>

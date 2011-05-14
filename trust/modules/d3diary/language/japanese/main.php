@@ -78,6 +78,8 @@ define("_MD_DATE_YEAR","年");
 define("_MD_DATE_MONTH","月");
 define("_MD_DATE_DAY","日");
 define("_MD_DATE_EACHMONTH","各月");
+define("_MD_DIARY_COUNT","記事数");
+define("_MD_DIARY_NAME","名前");
 
 define("_MD_DIARY_SWAPCAT","記事一括カテゴリー移動");
 define("_MD_DIARY_SWAPTO","移動先:");
@@ -267,5 +269,9 @@ define("_MD_MAIL_VIEWDIARY","タイトルをクリックすると取込んだ投稿を開きます。");
 define("_MD_MAILTO","宛メールを送信");
 define("_MD_MAIL_CASEMANUAL","[手動設定の場合]");
 define("_MD_MAIL_TOSTEP0","STEP0へ戻る");
+
+define("_MD_NEWDIARY","日記一覧");
+define("_MD_NEWPHOTO","画像一覧");
+define("_MD_QUERYOFF","抽出条件解除");
 
 ?>
