@@ -2051,7 +2051,7 @@ function &get_d3com_object( $forum_dirname, $external_link_format )
 	@list( $params['external_dirname'] , $params['classname'] , $params['external_trustdirname'] ) 
 		= explode( '::' , $external_link_format ) ;
 
-	$obj =& D3commentObj::getInstance ( $params ) ;
+	$obj =& d3dD3commentObj::getInstance ( $params ) ;
 	
 	return $obj->d3comObj ;
 }
@@ -2060,19 +2060,21 @@ function &get_d3com_object( $forum_dirname, $external_link_format )
 }
 
  // a class for Attachfile plugin D3comment Authorization
-if( ! class_exists( 'D3commentObj' ) ) {
-class D3commentObj {
+if( ! class_exists( 'd3dD3commentObj' ) ) {
+class d3dD3commentObj {
 
 var $d3comObj = null ;
 
-function D3commentObj($params )
+function d3dD3commentObj($params )
 //  $params['forum_dirname'] , $params['external_dirname'] , $params['classname'] , $params['external_trustdirname']
 {
 	//$this->mPlug = & $parentObj;
-	$mytrustdirpath = !empty($params['external_trustdirname']) ? XOOPS_TRUST_PATH.'/modules/'.$params['external_trustdirname'] : XOOPS_TRUST_PATH.'/modules/d3forum' ;
+	//$mytrustdirpath = !empty($params['external_trustdirname']) ? XOOPS_TRUST_PATH.'/modules/'.$params['external_trustdirname'] : XOOPS_TRUST_PATH.'/modules/d3forum' ;
+
+	$mytrustdirpath = XOOPS_TRUST_PATH.'/modules/d3forum';
 
 	if( empty( $params['classname'] ) ) {
-		include_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
+		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
 		$this->d3comObj =& new D3commentAbstract( $forum_dirname , '' ) ;
 	}
 
@@ -2085,6 +2087,7 @@ function D3commentObj($params )
 
 	foreach( $class_bases as $class_base ) {
 		if( file_exists( $class_base.'/'.$params['classname'].'.class.php' ) ) {
+			require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
 			require_once $class_base.'/'.$params['classname'].'.class.php' ;
 			break ;
 		}
@@ -2092,7 +2095,7 @@ function D3commentObj($params )
 
 	// check the class
 	if( ! $params['classname'] || ! class_exists( $params['classname'] ) ) {
-		include_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
+		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
 		$this->d3comObj =& new D3commentAbstract( $params['forum_dirname'] , $params['external_dirname'] ) ;
 	}
 
@@ -2106,7 +2109,7 @@ function & getInstance( $params )
 
 	static $instance ;
 	if( ! isset( $instance[$external_dirname] ) ) {
-		$instance[$external_dirname] = & new D3commentObj( $params ) ;
+		$instance[$external_dirname] = & new d3dD3commentObj( $params ) ;
 	}
 	return $instance[$external_dirname] ;
 }
