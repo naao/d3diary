@@ -1053,6 +1053,7 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
 			case 'count_asc' :
 				$odr = "count ASC" ;
 				break;
+			case 'posted' :
 			case 'count_dsc' :
 				$odr = "count DESC" ;
 				break;
@@ -1063,11 +1064,12 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
 				$odr = "hit DESC" ;
 				break;
 			case 'time_asc' :
-				$odr = "d.create_time ASC" ;
+				$odr = "max_create_time ASC" ;
 				break;
+			case 'time' :
 			case 'time_dsc' :
 			default :
-				$odr = "d.create_time DESC" ;
+				$odr = "max_create_time DESC" ;
 			}
 		}
 
