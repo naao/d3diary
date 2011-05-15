@@ -102,11 +102,11 @@ ul.<{$mydirname}>yd_rightarea li {
 }
 
 .<{$mydirname}>d3dlinkEntry {
-	padding:2px 2px 2px 20px;
+	padding:2px 0px 2px 18px;
 	background: url(images/pencil.gif) top left no-repeat;
 }
 
 .<{$mydirname}>d3dlinkImage {
-	padding:2px 2px 2px 20px;
+	padding:2px 0px 2px 18px;
 	background: url(images/camera.gif) top left no-repeat;
 }
