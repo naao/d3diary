@@ -133,11 +133,11 @@
 <{$entry.title}></a>
 <{/if}>
 </span>
-<{if $entry.openarea <> 0}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="float:right;" />
-<{/if}>
 </div><!-- /itemHead -->
 
 <div class="itemInfo" style="text-align:left;">
+<{if $entry.openarea <> 0}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="float:right;" />
+<{/if}>
 <{if $yd_param.mode=="friends"}>
 by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entry.uid}>">
 	<{if $mod_config.use_name ==1 && $entry.name}><{$entry.name}>
