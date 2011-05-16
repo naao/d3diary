@@ -119,7 +119,7 @@
 </div><!-- /itemHead -->
 
 <div class="itemInfo" style="text-align:left;">
-	<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="vertical-align:middle; float:right;" />
+	<{if $entry.openarea>0}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="vertical-align:middle; float:right;" /><{/if}>
 <span class="itemPermaLink">
 	<{$smarty.const._MD_CATEGORY}>&nbsp;
 	<{if $entry.cname|count_characters>0}><{if $entry.other>0}><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=other&amp;req_uid=<{$entry.uid}>&amp;mode=category&amp;cid=<{$entry.cid}>">

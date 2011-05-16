@@ -15,7 +15,7 @@
 	</div>
 	<{/if}>
 	</td>
-	<td><img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="vertical-align:middle; float:right;" />
+	<td><{if $entry.openarea>0}><img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="vertical-align:middle; float:right;" /><{/if}>
 	<{if $entry.other>0}>
 	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
 	<{/if}>
