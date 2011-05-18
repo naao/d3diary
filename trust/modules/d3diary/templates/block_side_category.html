@@ -3,6 +3,7 @@
 <div class="item" style="border:0px ;">
 <div class="itemBody">
 <ul class="<{$block.mydirname}>yd_rightarea">
+<{if $block.fr!=1}>
 <{section name=num loop=$block.catopt}>
    <{if $block.catopt[num].cid<=10000}>
 	<li<{if $block.catopt[num].subcat==1}> style="margin-left:12px !important;"<{/if}>>
@@ -14,7 +15,7 @@
 	<{/if}>
 	</li>
    <{/if}>
-<{/section}>
+<{/section}><{/if}>
 <hr />
 <{section name=num loop=$block.catopt}>
    <{if $block.catopt[num].cid>10000}>

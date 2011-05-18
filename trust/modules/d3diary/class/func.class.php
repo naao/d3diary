@@ -145,7 +145,7 @@ function get_count_diary($uid)
 	return $row['cnt'];
 }
 
-// カウンタ
+// coutup
 function countup_diary($uid, $bid=0)
 {
 	$db = & $this->d3dConf->db;
@@ -159,7 +159,7 @@ function countup_diary($uid, $bid=0)
 			SET view = (view + 1) WHERE bid = '".$bid."'");
 	}
 
-	$interval=5*60; // 5父Jウント
+	$interval=5*60; // 5 min * 60 sec
 	
 	$NowTime = time() + 9 * 60 * 60;
 	$NowYMD = date('Y-m-d', $NowTime);
@@ -213,10 +213,10 @@ function get_categories($req_uid, $uid, $block=false){
 		$no_category = constant("_MD_NOCNAME");
 	}
 
-	$whr_openarea = "(openarea <>100 OR uid = $uid) AND";
+	//$whr_openarea = "(openarea <>100 OR uid = $uid) AND";
 	if($this->mPerm->isadmin){
 		$editperm=1;
-		$whr_openarea = "";
+	//	$whr_openarea = "";
 	}
 	if($req_uid==$uid){$owner=1;}
 
@@ -1087,10 +1087,6 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
             		$whr_tag = rtrim( $whr_tag, "OR " ). ")" ;
 		}
 	}
-	
-		if(strcmp($page, "photolist")==0){
-		} else {
-		}
 		// first, get external blogger list
 		$sql = "SELECT DISTINCT cfg.uid, u.name, u.uname from "
 				.$db->prefix($this->mydirname."_config")." cfg LEFT JOIN "
@@ -1998,6 +1994,19 @@ function htmlPurifier( $text )
 	return $text ;
 }
 
+// function to exclude req_uid and change diarylist page for modified req_uid
+function get_baseurl_modify( $base_url ) {
+	// exclude req_uid
+	$base_url = preg_replace("/^(.*)\?req_uid=[0-9]+/", "$1?page=diarylist", $base_url);
+	$base_url = preg_replace("/^(.*)\&amp\;req_uid=[0-9]+/", "$1", $base_url);
+	if ( $this->d3dConf->q_fr==1 ) {
+		// exclude fr
+		return preg_replace("/^(.*)\&amp\;fr=[0-9]+/", "$1", $base_url);
+	} else {
+		return $base_url;
+	}
+}
+
 function get_d3comforums_can_read( $com_dirname, $uid=0 )
 {
 	global $xoopsUser ;
@@ -2051,7 +2060,7 @@ function &get_d3com_object( $forum_dirname, $external_link_format )
 	@list( $params['external_dirname'] , $params['classname'] , $params['external_trustdirname'] ) 
 		= explode( '::' , $external_link_format ) ;
 
-	$obj =& d3dD3commentObj::getInstance ( $params ) ;
+	$obj =& d3diaryD3commentObj::getInstance ( $params ) ;
 	
 	return $obj->d3comObj ;
 }
@@ -2061,11 +2070,11 @@ function &get_d3com_object( $forum_dirname, $external_link_format )
 
  // a class for Attachfile plugin D3comment Authorization
 if( ! class_exists( 'd3dD3commentObj' ) ) {
-class d3dD3commentObj {
+class d3diaryD3commentObj {
 
 var $d3comObj = null ;
 
-function d3dD3commentObj($params )
+function d3diaryD3commentObj($params )
 //  $params['forum_dirname'] , $params['external_dirname'] , $params['classname'] , $params['external_trustdirname']
 {
 	//$this->mPlug = & $parentObj;
@@ -2109,7 +2118,7 @@ function & getInstance( $params )
 
 	static $instance ;
 	if( ! isset( $instance[$external_dirname] ) ) {
-		$instance[$external_dirname] = & new d3dD3commentObj( $params ) ;
+		$instance[$external_dirname] = & new d3diaryD3commentObj( $params ) ;
 	}
 	return $instance[$external_dirname] ;
 }

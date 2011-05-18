@@ -26,35 +26,31 @@ function b_d3dside_tagcroud_show( $options ){
 		return ;
 	} elseif( $limit_self == 3 && $req_uid == 0 ) {		// not show except for personal page
 		return ;
+	} elseif( $limit_self == 3 && $req_uid > 0 && $d3dConf->q_fr==1 ) {	// case of show friend page
+		$req_uid = 0 ;
 	}
 
 	if ((int)$d3dConf->mod_config['use_tag'] >= 1) {
 		// create base url
-		$page = & $d3dConf->page ;
-		$q_mode = & $d3dConf->q_mode ;
-		$q_cid = & $d3dConf->q_cid ;
-		$q_year = & $d3dConf->q_year ;
-		$q_month = & $d3dConf->q_month ;
-		$q_day = & $d3dConf->q_day ;
+		//$page = $d3dConf->page ;
+		//$q_mode = $d3dConf->q_mode ;
+		$q_cid = $d3dConf->q_cid ;
+		//$q_year = $d3dConf->q_year ;
+		//$q_month = $d3dConf->q_month ;
+		//$q_day = $d3dConf->q_day ;
+		$q_fr = $d3dConf->q_fr ;
 		
-		if ( $page == "photolist") {
-			$base_url = "page=photolist" ;
-			if ( $req_uid > 0 ) { $base_url .= "&amp;req_uid=".$req_uid ;}
-		} else {
-			if ( $req_uid > 0 ) {
-				$base_url = "req_uid=".$req_uid ;
-			} else {
-				$base_url = "page=diarylist" ;
-			}
-		}
-		if ( strcmp( $q_mode, "category" ) == 0 ) { $base_url .= "&amp;mode=category&amp;cid=".$q_cid; }
-		if ( $q_month > 0 ) { $base_url .= "&amp;year=".$q_year."&amp;month=".$q_month; }
-		if ( $q_day > 0 ) { $base_url .= "&amp;day=".$q_day; }
-		$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?".$base_url."&amp;";
-
 		$where = "";
 		if($req_uid > 0 ){
-			$where= 'uid='. intval($req_uid);
+			if ( $q_fr==1 ) {
+				$_friends = $d3dConf->mPerm->get_friends( $req_uid ) ;
+					$where= "uid IN (". implode(',', $_friends).")";
+			} else {
+				$where= 'uid='. intval($req_uid);
+			}
+			$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_tag."&amp;";
+		} else {
+			$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_tag. "&amp;";
 		}
 
 		$params['ofst_key'] = "tofst" ;
@@ -92,6 +88,7 @@ function b_d3dside_tagcroud_show( $options ){
 		$block['base_url'] = $base_url;
 		$block['cid'] = $q_cid ;
 		$block['tofst'] = $tofst ;
+		$block['fr'] = $q_fr ;
 	}
 
 	$d3dConf->debug_appendtime('b_side_tagcroud');

@@ -25,26 +25,19 @@ function b_d3dside_mlist_show( $options ){
 	}
 
 	// create base url
-	$page = & $d3dConf->page ;
-	$q_mode = & $d3dConf->q_mode ;
-	$q_cid = & $d3dConf->q_cid ;
-	$q_tag = & $d3dConf->q_tag ;
+	//$page = $d3dConf->page ;
+	//$q_mode = $d3dConf->q_mode ;
+	//$q_cid = $d3dConf->q_cid ;
+	//$q_tag = $d3dConf->q_tag ;
+	$q_fr = $d3dConf->q_fr ;
 
-	if ( $page == "photolist") {
-		$base_url = "page=photolist" ;
-		if ( $req_uid > 0 ) { $base_url .= "&amp;req_uid=".$req_uid ;}
+	if ( $req_uid == 0 ) {
+		$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_date. "&amp;";
 	} else {
-		if ( $req_uid > 0 ) {
-			$base_url = "req_uid=".$req_uid ;
-		} else {
-			$base_url = "page=diarylist" ;
-		}
+		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
 	}
-	if ( strcmp( $q_mode, "category" ) == 0 ) { $base_url .= "&amp;mode=category&amp;cid=".$q_cid; }
-	if ( !empty( $q_tag ) ) { $base_url .= "&amp;tag_name=".$q_tag; }
-	$base_url=XOOPS_URL."/modules/".$mydirname."/index.php?".$base_url."&amp;";
 
-		list( $yd_monlist, $yd_monthnavi ) =  $d3dConf->func->get_monlist ($req_uid, $uid, $max_entry );
+	list( $yd_monlist, $yd_monthnavi ) =  $d3dConf->func->get_monlist ($req_uid, $uid, $max_entry );
 
 		$lang = array();
 		$constpref = "_MB_" . strtoupper( $mydirname ) ;

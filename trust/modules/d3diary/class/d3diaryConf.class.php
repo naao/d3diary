@@ -11,19 +11,34 @@ var $gPerm = null ;	// Group and Member Permission instance
 var $func = null ;	// function
 var $dcfg  = null ;	// diary config instance
 var $mPost  = null ;	// mail post instance
-var $mid ;
+var $mid = 0 ;
 var $mod_config ;
 var $myts ;
 var $uid = 0 ; 		// intval
 var $uname = null ;
 var $req_uid = 0 ; 	// intval
-var $page ;
-var $q_mode ;
-var $q_cid ;
-var $q_tag ;
-var $q_year ;
-var $q_month ;
-var $q_day ;
+var $page = null ;
+var $q_mode = null ;
+var $q_cid = 0 ;
+var $q_tag = null ;
+var $q_tag_noquote = null ;
+var $q_year = 0 ;
+var $q_month = 0 ;
+var $q_day = 0 ;
+var $q_odr = null ;
+var $q_fr = 0 ;
+var $urluppr = null ;
+var $urlbase = null ;
+var $urlbase_dlst = null ;
+var $urlbase_exph = null ;
+var $urlbase_exfr = null ;
+var $sort_baseurl = null ;
+var $url4ex_cat = null ;
+var $url4ex_tag = null ;
+var $url4ex_date = null ;
+var $url4ex_fr = null ;
+var $url4ex_ph = null ;
+
 var $shared = array() ;	// like a shared memry .. should be private variables
 var $caller ;
 var $calledNo = 1 ;
@@ -143,10 +158,75 @@ function D3diaryConf($mydirname, $req_uid=0, $caller="")
 	$this->page = htmlspecialchars( $this->func->getpost_param('page'), ENT_QUOTES ) ;
 	$this->q_mode = htmlspecialchars( $this->func->getpost_param('mode'), ENT_QUOTES ) ;
 	$this->q_cid = (int)$this->func->getpost_param('cid') ;
-	$this->q_tag = htmlspecialchars( $this->func->getpost_param('tag_name'), ENT_QUOTES ) ;
+	$this->q_tag_noquote = rawurldecode( $this->func->getpost_param('tag_name') ) ;
+	$this->q_tag = htmlspecialchars( $this->q_tag_noquote , ENT_QUOTES ) ;
 	$this->q_year = (int)$this->func->getpost_param('year') ;
 	$this->q_month = (int)$this->func->getpost_param('month') ;
 	$this->q_day = (int)$this->func->getpost_param('day') ;
+	$this->q_odr = htmlspecialchars( $this->func->getpost_param('odr'), ENT_QUOTES ) ;
+	$this->q_fr = (int)$this->func->getpost_param('fr') ;
+
+	// create url for sort and common links
+	$this->urluppr = XOOPS_URL.'/modules/'.$this->mydirname.'/index.php?' ;
+	$this->urlbase_dlst = "page=diarylist" ;
+	$this->urlbase_exph = "" ;
+	if ( strcmp( $this->page, "photolist" ) == 0 ) {
+		if ( $this->req_uid > 0 ) {
+			$this->urlbase = "page=photolist&amp;req_uid=".$this->req_uid ;
+		} else {
+			$this->urlbase = "page=photolist" ;
+		}
+		if ( $this->req_uid > 0 ) { $this->urlbase_exph = "req_uid=".$this->req_uid ; }
+	} else {
+		if ( $this->req_uid > 0 ) {
+			$this->urlbase = "req_uid=".$this->req_uid ;
+		} else {
+			$this->urlbase = "page=diarylist" ;
+		}
+	}
+		$this->urlbase_exfr = $this->urlbase ;
+	if ( $this->q_fr > 0 && $this->req_uid > 0 ) {
+		$_tmp_para = "&amp;fr=1" ;
+		$this->urlbase .= $_tmp_para ;
+		$this->urlbase_ph .= $_tmp_para ;
+	}
+	
+	if ( strcmp( $this->q_mode, "category" ) == 0) {
+		$this->sort_baseurl = "&amp;mode=category&amp;cid=".$this->q_cid ;
+		$this->url4ex_tag = $this->url4ex_date = $this->url4ex_fr = $this->url4ex_ph = $this->sort_baseurl ;
+	}
+	if ( $this->q_month > 0) {
+		$_tmp_para = "&amp;year=". $this->q_year. "&amp;month=".$this->q_month ;
+		$this->sort_baseurl .= $_tmp_para ;
+		$this->url4ex_cat .= $_tmp_para ;
+		$this->url4ex_tag .= $_tmp_para ;
+		$this->url4ex_fr .= $_tmp_para ;
+		$this->url4ex_ph .= $_tmp_para ;
+	}
+	if ( $this->q_day > 0) {
+		$_tmp_para = "&amp;day=". $this->q_day ;
+		$this->sort_baseurl .= $_tmp_para ;
+		$this->url4ex_cat .= $_tmp_para ;
+		$this->url4ex_tag .= $_tmp_para ;
+		$this->url4ex_fr .= $_tmp_para ;
+		$this->url4ex_ph .= $_tmp_para ;
+	}
+	if ( !empty($this->q_tag) ) {
+		$_tmp_para = "&amp;tag_name=". $this->q_tag ;
+		$this->sort_baseurl .= $_tmp_para ;
+		$this->url4ex_date .= $_tmp_para ;
+		$this->url4ex_cat .= $_tmp_para ;
+		$this->url4ex_fr .= $_tmp_para ;
+		$this->url4ex_ph .= $_tmp_para ;
+	}
+	if ( !empty($this->q_odr) ) {
+		$_tmp_para = "&amp;odr=". $this->q_odr ;
+		$this->url4ex_date .= $_tmp_para ;
+		$this->url4ex_cat .= $_tmp_para ;
+		$this->url4ex_tag .= $_tmp_para ;
+		$this->url4ex_fr .= $_tmp_para ;
+		$this->url4ex_ph .= $_tmp_para ;
+	}
 
 	$this->debug_mode = $xoopsConfig['debug_mode'] ;	// for debugging
 	$this->server_TZ = (int)$xoopsConfig['server_TZ'];

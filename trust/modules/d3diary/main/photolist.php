@@ -20,8 +20,18 @@ $yd_list=array(); $yd_com_key=""; $yd_monthnavi="";
 $d3dConf =& D3diaryConf::getInstance($mydirname, 0, "photolist");
 $myts =& $d3dConf->myts;
 
+// query values
 $uid = $d3dConf->uid;
 $req_uid = $d3dConf->req_uid;
+$b_tag_noquote = $d3dConf->q_tag_noquote;
+$b_tag = $d3dConf->q_tag;
+$yd_param = array() ;
+$yd_param['cid'] = $req_cid = $d3dConf->q_cid;
+$yd_param['mode'] = $d3dConf->q_mode;
+$yd_param['year'] = $d3dConf->q_year;
+$yd_param['month'] = $d3dConf->q_month;
+$yd_param['day'] = $d3dConf->q_day;
+$yd_param['order'] = $d3dConf->q_odr ;
 
 if ($req_uid > 0) {
 	$rtn = $d3dConf->func->get_xoopsuname($req_uid);
@@ -40,8 +50,8 @@ if(isset($_tempGperm['allow_edit'])){
 		if($d3dConf->mPerm->check_isadmin()){$editperm=1;}
 	}	//unset($_tempGperm);
 }
-	$params['ofst_key'] = "phofst" ;
-	$_offset_ = $d3dConf->func->getpost_param($params['ofst_key']);
+	$yd_param['ofst_key'] = "phofst" ;
+	$_offset_ = $d3dConf->func->getpost_param($yd_param['ofst_key']);
 	$offset = isset($_offset_) ?(int)$_offset_ : 0;
 	
 	if ($req_uid > 0) {
@@ -50,47 +60,37 @@ if(isset($_tempGperm['allow_edit'])){
 		$yd_name = $ret['name'];
 	}
 	
-	$params['order'] = htmlspecialchars( $d3dConf->func->getpost_param('odr'), ENT_QUOTES ) ;
-	$params['order'] = $params['order'] ? $params['order'] :'time' ; 
-	$params['getnav'] = true ;	// not render but get navi
+	$yd_param['order'] = $yd_param['order'] ? $yd_param['order'] :'time' ; 
+	$yd_param['getnav'] = true ;	// not render but get navi
 
-	$params['mode'] = htmlspecialchars( $d3dConf->func->getpost_param('mode'), ENT_QUOTES );
-	$cid = (int)$d3dConf->func->getpost_param('cid') ;
-	$cname = "";
-	if ( strcmp($params['mode'], "category")==0 ) {
-		if ( $cid > 0 ) {
+	$yd_param['cname'] = "";
+	if ( strcmp($yd_param['mode'], "category")==0 ) {
+		if ( $req_cid > 0 ) {
 			$category->uid = $req_uid ;
-			$category->cid = $cid ;
+			$category->cid = $req_cid ;
 			$category->getchildren($mydirname) ;
-			$params['cname'] = htmlspecialchars( $category->cname, ENT_QUOTES ) ;
-			$params['cids'] = $category->children ;
+			$yd_param['cname'] = htmlspecialchars( $category->cname, ENT_QUOTES ) ;
+			$yd_param['cids'] = $category->children ;
 		} else {
 			// for no-category's diary
-			$params['cname'] = constant("_MD_NOCNAME") ;
-			$params['cids'] = array(0) ;
+			$yd_param['cname'] = constant("_MD_NOCNAME") ;
+			$yd_param['cids'] = array(0) ;
 		}
 	}
 
-	$tag_name = $d3dConf->func->getpost_param('tag_name');
-	if (!empty($tag_name)) {
+	if (!empty($b_tag_noquote)) {
 		if (!get_magic_quotes_gpc()) {
-			$params['tags'] = array( addslashes($d3dConf->func->getpost_param('tag_name')) ) ;
+			$yd_param['tags'] = array( addslashes($b_tag_noquote) ) ;
 		} else {
-			$params['tags'] = array( $d3dConf->func->getpost_param('tag_name') ) ;
+			$yd_param['tags'] = array( $b_tag_noquote ) ;
 		}
 	}
-
-	$params['year'] = (int)$d3dConf->func->getpost_param('year');
-	$params['month'] = (int)$d3dConf->func->getpost_param('month');
-	$params['day'] = (int)$d3dConf->func->getpost_param('day');
 
 	list( $photolist, $photonavi ) = $d3dConf->func->get_photolist
-		( $req_uid, $uid, $d3dConf->mod_config['block_diarynum'], $offset, $params );
+		( $req_uid, $uid, $d3dConf->mod_config['block_diarynum'], $offset, $yd_param );
 
 	$yd_param['openarea']=intval($d3dConf->dcfg->openarea);
 	$yd_openarea = !empty($category->openarea) ? intval($category->openarea) :$yd_param['openarea'] ;
-
-	$params['cid'] = $cid ;
 
 	$num_rows = 0;
 	if ( count($photonavi) > 1 ) {
@@ -110,29 +110,6 @@ if(isset($_tempGperm['allow_edit'])){
 	if(empty($num_rows)){$startnum = 0;	$endnum = 0;}
 	if ($endnum > $num_rows) { $endnum = $num_rows;	}
 
-	// create url for sort
-	$url = ''; $url4ex_cat = ''; $url4ex_tag = ''; $url4ex_date = '';
-	if( !empty($_SERVER['QUERY_STRING'])) {
-		// create url for sort
-		$url = preg_replace("/^(.*)\&odr=[0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
-		// create url for exclude date
-		$url4ex_date = preg_replace("/^(.*)\&mode=month/", "$1", $_SERVER['QUERY_STRING']);
-		$url4ex_date = preg_replace("/^(.*)\&mode=date/", "$1", $url4ex_date);
-		$url4ex_date = preg_replace("/^(.*)\&year=[0-9]+/", "$1", $url4ex_date);
-		$url4ex_date = preg_replace("/^(.*)\&month=[0-9]+/", "$1", $url4ex_date);
-		$url4ex_date = preg_replace("/^(.*)\&day=[0-9]+/", "$1", $url4ex_date);
-		// create url for exclude category
-		$url4ex_cat = preg_replace("/^(.*)\&mode=category/", "$1", $_SERVER['QUERY_STRING']);
-		$url4ex_cat = preg_replace("/^(.*)\&cid=[0-9]+/", "$1", $url4ex_cat);
-		// create url for exclude tag
-		$url4ex_tag = preg_replace("/^(.*)\&tag_name=[%A-Z0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
-	}
-        $sort_baseurl = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url;
-        $url4ex_date = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_date;
-        $url4ex_cat =  XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_cat;
-        $url4ex_tag = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_tag;
-
-
 // define Template
 $xoopsOption['template_main']= $mydirname.'_photolist.html';
 
@@ -145,8 +122,6 @@ $yd_avaterurl = $d3dConf->func->get_user_avatar(array($req_uid));
 $xoops_pagetitle = ($d3dConf->mod_config['use_name']==1) ? $yd_name.constant("_MD_DIARY_PERSON") : 
 			$yd_uname.constant("_MD_DIARY_PERSON") ;
 
-$yd_param = $params ;
-	
 // menu
 if($d3dConf->mod_config['menu_layout']==1){
 	$yd_layout = "left";
@@ -185,10 +160,9 @@ if($d3dConf->mod_config['menu_layout']==1){
 	} */
 	
 	// added requested tag_name
-	$b_tag=rawurldecode($d3dConf->func->getpost_param('tag_name'));
 	if(!empty($b_tag) && $d3dConf->mod_config['use_tag']>0) {
-		$yd_param['tag'] = htmlSpecialChars(urldecode($d3dConf->func->getpost_param('tag_name')), ENT_QUOTES);
-		//$bc_para['tag'] = $yd_param['tag'];
+		$yd_param['tag'] = $b_tag;
+		//$bc_para['tag'] = $b_tag;
 	}
 
 	$breadcrumbs = $d3dConf->func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
@@ -231,18 +205,19 @@ if ($req_uid>0){
 		"yd_param" => $yd_param,
 		"yd_com_key"  => $yd_com_key,			
 		"catopt"  => $d3dConf->func->get_categories($req_uid,$uid),
-		"yd_cid" => $cid,
+		"yd_cid" => $req_cid,
 		"yd_cname" => $yd_param['cname'],
-		"tag_name" => htmlspecialchars( $tag_name, ENT_QUOTES ),
+		"tag_name" => $b_tag,
 		"yd_photolist" => $photolist,
 		"yd_pagenavi" => $photonavi,
 		"lang_datanum" => constant('_MD_DATANUM1').$num_rows. constant('_MD_DATANUM2').
 					$startnum. constant('_MD_DATANUM3').$endnum.
 					constant('_MD_DATANUM4'),
-		"sort_baseurl" => $sort_baseurl,
-	        "url4ex_cat" => $url4ex_cat,
-	        "url4ex_tag" => $url4ex_tag,
-	        "url4ex_date" => $url4ex_date,
+		"sort_baseurl" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->sort_baseurl,
+	        "url4ex_cat" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat,
+	        "url4ex_tag" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_tag,
+	        "url4ex_date" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date,
+	        "url4ex_ph" => $d3dConf->urluppr.$d3dConf->urlbase_exph.$d3dConf->url4ex_ph,
 		"mydirname" => $mydirname,
 		"xoops_pagetitle" => $xoops_pagetitle,
 		"xoops_breadcrumbs" => $breadcrumbs,

@@ -460,8 +460,8 @@ function get_open_query( $caller, $params ) {
 	// friends perm stage
 	if ($this->d3d_conf['use_friend'] === true) {
 		switch ($caller) {
-			case "right_cat2":
-				break ;
+			//case "right_cat2":
+			//	break ;
 			case "right_cal_other":
 			case "right_blist_other":
 			case "index1_other":		// without d.openarea, cfg.openarea

@@ -20,7 +20,17 @@ $myts =& $d3dConf->myts;
 
 $myname = "diarylist.php";
 
+// query values
 $uid = $d3dConf->uid;
+$req_cid = $d3dConf->q_cid;
+$b_tag_noquote = $d3dConf->q_tag_noquote;
+$b_tag = $d3dConf->q_tag;
+$yd_param = array() ;
+$yd_param['mode'] = $d3dConf->q_mode;
+$yd_param['year'] = $d3dConf->q_year;
+$yd_param['month'] = $d3dConf->q_month;
+$yd_param['day'] = $d3dConf->q_day;
+$yd_param['order'] = $d3dConf->q_odr ;
 
 $xoopsOption['template_main']= $mydirname.'_diarylist.html';
 include XOOPS_ROOT_PATH."/header.php";
@@ -76,13 +86,12 @@ if($d3dConf->mod_config['menu_layout']==1){
 	}
 
 	// added requested tag_name
-	$b_tag=rawurldecode($d3dConf->func->getpost_param('tag_name'));
 	if (!empty($b_tag) && $d3dConf->mod_config['use_tag']>1) {
 		$sql_tag= "LEFT JOIN ".$xoopsDB->prefix($mydirname.'_tag')." t ON d.bid=t.bid ";
 	        if (!get_magic_quotes_gpc()) {
-			$whr_tag= " AND t.tag_name='".addslashes($b_tag)."'";
+			$whr_tag= " AND t.tag_name='".addslashes($b_tag_noquote)."'";
 		} else {
-			$whr_tag= " AND t.tag_name='".$b_tag."'";
+			$whr_tag= " AND t.tag_name='".$b_tag_noquote."'";
 		}
 		$url_tag= "&amp;tag_name=".$b_tag;
 	} else {
@@ -90,21 +99,15 @@ if($d3dConf->mod_config['menu_layout']==1){
 	}
 
 	// added common category query
-	$common_cid=intval($d3dConf->func->getpost_param('cid'));
-	if( 10000 < $common_cid ){
+	if( 10000 < $req_cid ){
 		$category->uid = 0;
-		$category->cid = $common_cid;
+		$category->cid = $req_cid;
 		$category->getchildren($mydirname);
 		$yd_param['cname'] = $category->cname;
-		$url_tag.="&amp;cid=".$common_cid;
+		$url_tag.="&amp;cid=".$req_cid;
 	}
 
 	$whr_time = ""; $whr_cat = ""; $whr_uids = "";
-
-	$yd_param['mode']=$d3dConf->func->getpost_param('mode');
-	$yd_param['year']=intval($d3dConf->func->getpost_param('year'));
-	$yd_param['month']=intval($d3dConf->func->getpost_param('month'));
-	$yd_param['day']=intval($d3dConf->func->getpost_param('day'));
 
 	if(!empty($yd_param['year'])) {
 		$yd_param['prev_year'] = $yd_param['year'] -1;
@@ -145,12 +148,10 @@ if($d3dConf->mod_config['menu_layout']==1){
 		$whr_nofuture = " AND d.create_time<'".$now."' ";
 	} else { $whr_nofuture = ""; }
 
-	$params = array() ;
-	$params['order'] = htmlspecialchars( $d3dConf->func->getpost_param('odr'), ENT_QUOTES ) ;
-	$params['order'] = $params['order'] ? $params['order'] :'time' ; 
+	$yd_param['order'] = $yd_param['order'] ? $yd_param['order'] :'time' ; 
 
 		$dosort = false ;
-		switch ($params['order']) {
+		switch ($yd_param['order']) {
 			case 'random' :
 				$odr = "rand()" ;
 				break;
@@ -175,28 +176,6 @@ if($d3dConf->mod_config['menu_layout']==1){
 				$odr = "d.create_time DESC" ;
 				$dosort = true ;
 		}
-
-	// create url for sort
-	$url = ''; $url4ex_cat = ''; $url4ex_tag = ''; $url4ex_date = '';
-	if( !empty($_SERVER['QUERY_STRING'])) {
-		// create url for sort
-		$url = preg_replace("/^(.*)\&odr=[0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
-		// create url for exclude date
-		$url4ex_date = preg_replace("/^(.*)\&mode=month/", "$1", $_SERVER['QUERY_STRING']);
-		$url4ex_date = preg_replace("/^(.*)\&mode=date/", "$1", $url4ex_date);
-		$url4ex_date = preg_replace("/^(.*)\&year=[0-9]+/", "$1", $url4ex_date);
-		$url4ex_date = preg_replace("/^(.*)\&month=[0-9]+/", "$1", $url4ex_date);
-		$url4ex_date = preg_replace("/^(.*)\&day=[0-9]+/", "$1", $url4ex_date);
-		// create url for exclude category
-		$url4ex_cat = preg_replace("/^(.*)\&mode=category/", "$1", $_SERVER['QUERY_STRING']);
-		$url4ex_cat = preg_replace("/^(.*)\&cid=[0-9]+/", "$1", $url4ex_cat);
-		// create url for exclude tag
-		$url4ex_tag = preg_replace("/^(.*)\&tag_name=[%A-Z0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
-	}
-        $sort_baseurl = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url;
-        $url4ex_date = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_date;
-        $url4ex_cat =  XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_cat;
-        $url4ex_tag = XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$url4ex_tag;
 
 	// arrays for BoxDate
 	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->initBoxArr();
@@ -458,9 +437,9 @@ if($d3dConf->mod_config['menu_layout']==1){
 	$bc_para['path'] = "index.php?page=diarylist";
 	$bc_para['uname'] = ""; $bc_para['name'] = "";
 	$bc_para['mode'] = $yd_param['mode'];
-	if($common_cid>=10000){
+	if($req_cid>=10000){
 		$bc_para['mode'] = "category";
-		$bc_para['cid'] = $common_cid;
+		$bc_para['cid'] = $req_cid;
 		$bc_para['cname'] = $yd_param['cname'] ? $yd_param['cname'] : constant('_MD_NOCNAME');
 	}
 	if((strcmp($bc_para['mode'], "category")==0)){
@@ -481,7 +460,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 	
 	
 	if(!empty($b_tag) && $d3dConf->mod_config['use_tag']>0) {
-		$yd_param['tag'] = htmlSpecialChars(urldecode($d3dConf->func->getpost_param('tag_name')), ENT_QUOTES);
+		$yd_param['tag'] = $b_tag;
 		$bc_para['tag'] = $yd_param['tag'];
 	}
 	$breadcrumbs = $d3dConf->func->get_breadcrumbs( 0, $bc_para['mode'], $bc_para );
@@ -496,16 +475,16 @@ if($d3dConf->mod_config['menu_layout']==1){
 			"yd_com_key"  => $yd_com_key,			
 			"yd_pagenavi" => $yd_pagenavi,
 			"catopt" => d3diary_assign_common_category ($mydirname),
-			"common_cid" => $common_cid,
+			"common_cid" => $req_cid,
 			"yd_tag" => $b_tag,
 			"tagCloud" => $tagCloud,
 			"lang_datanum" => constant('_MD_DATANUM1').$num_rows. constant('_MD_DATANUM2').
 						$startnum. constant('_MD_DATANUM3').$endnum.
 						constant('_MD_DATANUM4'),
-			"sort_baseurl" => $sort_baseurl,
-		        "url4ex_cat" => $url4ex_cat,
-		        "url4ex_tag" => $url4ex_tag,
-		        "url4ex_date" => $url4ex_date,
+			"sort_baseurl" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->sort_baseurl,
+		        "url4ex_cat" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat,
+		        "url4ex_tag" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_tag,
+		        "url4ex_date" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date,
 			"mydirname" => $mydirname,
 		//	"xoops_pagetitle" => $xoops_pagetitle,
 			"xoops_breadcrumbs" => $breadcrumbs,

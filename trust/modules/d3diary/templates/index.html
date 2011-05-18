@@ -20,7 +20,7 @@
 	<{else}><{$yd_uname}>
 	<{/if}>
 </a>
-<{if $yd_param.mode=="friends"}>
+<{if $yd_param.friend==1}>
 	<{$smarty.const._MD_DIARY_FRIENDS}><{$smarty.const._MD_DIARY_TITLENAME}>
 <{else}>
 	<{$smarty.const._MD_DIARY_PERSON}>
@@ -51,7 +51,7 @@
 <{/if}>
 <{/if}>
 
-<{if $mod_config.use_tag>=1 && $mod_config.use_tag<=2 && $yd_param.mode!="friends"}>
+<{if $mod_config.use_tag>=1 && $mod_config.use_tag<=2}>
 <div class="tagCloudColumn">
 <{$smarty.const._MD_TAG_CROUD}><br />
 <{foreach from=$tagCloud item=tags}>
@@ -76,9 +76,9 @@
 <{/if}>
 </div><!-- /boxNavi -->
 
-
 <div class="item" style="border:0px ;">
 <div class="itemInfo" style="text-align:left;">
+<{if $yd_param.friend==1}><{$smarty.const._MD_DIARY_FRIENDSVIEW}>&nbsp;<a href="<{$url4ex_fr}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
 <{if $yd_param.day>0}>[<{$yd_param.year}>-<{$yd_param.month}>-<{$yd_param.day}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br />
 <{elseif $yd_param.month>0}>[<{$yd_param.year}>-<{$yd_param.month}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
 <{if $yd_param.mode=="category"}><{$smarty.const._MD_CATEGORY}>&nbsp;[<{$yd_param.cname}>]&nbsp;<a href="<{$url4ex_cat}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
@@ -138,7 +138,7 @@
 <div class="itemInfo" style="text-align:left;">
 <{if $entry.openarea <> 0}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="float:right;" />
 <{/if}>
-<{if $yd_param.mode=="friends"}>
+<{if $yd_param.friend==1}>
 by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entry.uid}>">
 	<{if $mod_config.use_name ==1 && $entry.name}><{$entry.name}>
 	<{else}><{$entry.uname}><{/if}></a>
@@ -154,7 +154,7 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <br />
 <{$smarty.const._MD_TAG}>&nbsp;
 <{foreach from=$entry.tag item=tags}>
-	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;tag_name=<{$tags.tag_urlenc}>"><{$tags.tag}></a> 
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entry.uid}>&amp;tag_name=<{$tags.tag_urlenc}>"><{$tags.tag}></a> 
 <{/foreach}>
 <{/if}>
 </div><!-- /itemInfo -->
