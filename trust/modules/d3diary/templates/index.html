@@ -79,8 +79,8 @@
 <div class="item" style="border:0px ;">
 <div class="itemInfo" style="text-align:left;">
 <{if $yd_param.friend==1}><{$smarty.const._MD_DIARY_FRIENDSVIEW}>&nbsp;<a href="<{$url4ex_fr}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
-<{if $yd_param.day>0}>[<{$yd_param.year}>-<{$yd_param.month}>-<{$yd_param.day}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br />
-<{elseif $yd_param.month>0}>[<{$yd_param.year}>-<{$yd_param.month}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
+<{if $yd_day>0}>[<{$yd_year}>-<{$yd_month}>-<{$yd_day}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br />
+<{elseif $yd_month>0}>[<{$yd_year}>-<{$yd_month}>]&nbsp;<a href="<{$url4ex_date}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
 <{if $yd_param.mode=="category"}><{$smarty.const._MD_CATEGORY}>&nbsp;[<{$yd_param.cname}>]&nbsp;<a href="<{$url4ex_cat}>" title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><br /><{/if}>
 <{if $yd_param.tag}><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]&nbsp;<a href="<{$url4ex_tag}>"title="<{$smarty.const._MD_QUERYOFF}>"><image src="<{$xoops_url}>/modules/<{$mydirname}>/images/turnoff.gif"></a><{/if}>
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$yd_openarea}>.gif" border=0 style="float:right;" />

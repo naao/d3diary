@@ -220,14 +220,20 @@ function get_categories($req_uid, $uid, $block=false){
 	}
 	if($req_uid==$uid){$owner=1;}
 
-	if($req_uid==0){	// for diarylist
-		$on_uid = "ON ( c.uid='0' AND d.cid=c.cid) " ;
-		$whr_uid1 = " (c.uid='0' OR c.uid IS NULL) " ;
-		$whr_uid2 = " c.uid='0' " ;
-	} else {		// for personal index
-		$on_uid = "ON ((d.uid=c.uid  OR c.uid='0') AND d.cid=c.cid) " ;
-		$whr_uid1 = " d.uid='".intval($req_uid)."' " ;
-		$whr_uid2 = " (c.uid='".intval($req_uid)."' OR c.uid='0') " ;
+	if ( $this->d3dConf->q_fr==1 && $req_uid>0 ) {
+			$on_uid = "ON ((d.uid=c.uid  OR c.uid='0') AND d.cid=c.cid) " ;
+			$whr_uid1 = " d.uid IN (". implode(',', $this->mPerm->req_friends).")" ;
+			$whr_uid2 = " (c.uid IN (". implode(',', $this->mPerm->req_friends).") OR c.uid='0') " ;
+	} else {
+		if($req_uid==0){	// for diarylist
+			$on_uid = "ON ( c.uid='0' AND d.cid=c.cid) " ;
+			$whr_uid1 = " (c.uid='0' OR c.uid IS NULL) " ;
+			$whr_uid2 = " c.uid='0' " ;
+		} else {		// for personal index
+			$on_uid = "ON ((d.uid=c.uid  OR c.uid='0') AND d.cid=c.cid) " ;
+			$whr_uid1 = " d.uid='".intval($req_uid)."' " ;
+			$whr_uid2 = " (c.uid='".intval($req_uid)."' OR c.uid='0') " ;
+		}
 	}
 
 	if($this->mPerm->isadmin){
@@ -269,7 +275,7 @@ function get_categories($req_uid, $uid, $block=false){
 	$sql = "SELECT * 
 			FROM ".$db->prefix($this->mydirname.'_category')." c 
 	          	WHERE ".$whr_uid2." AND ".$whr_openarea." ORDER BY c.corder ASC";
-	//var_dump($sql);
+
 	$result = $db->query($sql);
 	while ( $dbdat = $db->fetchArray($result) ) {
 		if (isset($arr_entry[intval($dbdat['cid'])])) {	$catopt['num']=$arr_entry[intval($dbdat['cid'])]; }
@@ -309,11 +315,14 @@ function get_calender( $req_uid, $year, $month, $uid, $base_url="", $block=false
 	}
 
 	$editperm=0;
-
-	if($req_uid==0){	// for diarylist
-		$whr_uid = " 1 " ;
-	} else {		// for personal index
-		$whr_uid = " d.uid='".intval($req_uid)."'" ;
+	if ( $this->d3dConf->q_fr==1 && $req_uid>0 ) {
+		$whr_uid= " d.uid IN (". implode(',', $this->mPerm->req_friends).")" ;
+	} else {
+		if($req_uid==0){	// for diarylist
+			$whr_uid = " 1 " ;
+		} else {		// for personal index
+			$whr_uid = " d.uid='".intval($req_uid)."'" ;
+		}
 	}
 	$on_uid = "ON ((d.uid=c.uid  OR c.uid='0') AND d.cid=c.cid) " ;
 
@@ -496,10 +505,14 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 		$_month = (int)$this->getpost_param('month');
 	}
 
-	if($req_uid==0){	// for diarylist
-		$whr_uid = " 1 " ;
-	} else {		// for personal index
-		$whr_uid = " d.uid='".intval($req_uid)."'" ;
+	if ( $this->d3dConf->q_fr==1 && $req_uid>0 ) {
+		$whr_uid= " d.uid IN (". implode(',', $this->mPerm->req_friends).")" ;
+	} else {
+		if($req_uid==0){	// for diarylist
+			$whr_uid = " 1 " ;
+		} else {		// for personal index
+			$whr_uid = " d.uid='".intval($req_uid)."'" ;
+		}
 	}
 
 	$now = date("Y-m-d H:i:s");

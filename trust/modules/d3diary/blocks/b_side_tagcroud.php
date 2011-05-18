@@ -43,8 +43,7 @@ function b_d3dside_tagcroud_show( $options ){
 		$where = "";
 		if($req_uid > 0 ){
 			if ( $q_fr==1 ) {
-				$_friends = $d3dConf->mPerm->get_friends( $req_uid ) ;
-					$where= "uid IN (". implode(',', $_friends).")";
+				$where= "uid IN (". implode(',', $d3dConf->mPerm->req_friends).")";
 			} else {
 				$where= 'uid='. intval($req_uid);
 			}

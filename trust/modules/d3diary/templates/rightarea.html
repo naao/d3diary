@@ -44,9 +44,9 @@
 <div class="item">
 <div class="itemHead" style="text-align:center;">
 <span class="itemTitle">
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;mode=month&amp;year=<{$yd_param.prev_year}>&amp;month=<{$yd_param.month}>" title="<{$yd_param.prev_year}>-<{$yd_param.month}>">&lt;&lt;</a>&nbsp;
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&mode=month&year=<{$yd_param.year}>&month=<{$yd_param.month}>"><{$yd_param.year}>-<{$yd_cal_month}></a>&nbsp;
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;mode=month&amp;year=<{$yd_param.next_year}>&amp;month=<{$yd_param.month}>" title="<{$yd_param.next_year}>-<{$yd_param.month}>">&gt;&gt;</a>
+<a href="<{$url4ex_date}>&amp;year=<{$yd_param.prev_year}>&amp;month=<{$yd_param.month}>" title="<{$yd_param.prev_year}>-<{$yd_param.month}>">&lt;&lt;</a>&nbsp;
+<a href="<{$url4ex_date}>&amp;year=<{$yd_param.year}>&month=<{$yd_param.month}>"><{$yd_param.year}>-<{$yd_cal_month}></a>&nbsp;
+<a href="<{$url4ex_date}>&amp;year=<{$yd_param.next_year}>&amp;month=<{$yd_param.month}>" title="<{$yd_param.next_year}>-<{$yd_param.month}>">&gt;&gt;</a>
 </span>
 </div><!-- /itemHead -->
 <div class="d3dCalender">
@@ -62,6 +62,7 @@
 </div><!-- /itemHead -->
 <div class="itemBody">
 <ul class="yd_rightarea">
+<{if $yd_param.fr_mode!=1}>
 <{section name=num loop=$catopt}>
    <{if $catopt[num].cid<=10000}>
 	<li<{if $catopt[num].subcat==1}> style="margin-left:12px !important;"<{/if}>>
@@ -69,11 +70,12 @@
 	<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
 	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=other&amp;req_uid=<{$yd_uid}>&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}></a>
 	<{else}>
-	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?<{if $smarty.get.page=="photolist"}>page=photolist&amp;<{/if}>req_uid=<{$yd_uid}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
+	<a href="<{$url4ex_cat}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
 	<{/if}>
 	</li>
    <{/if}>
 <{/section}>
+<{/if}>
 <hr />
 <{section name=num loop=$catopt}>
    <{if $catopt[num].cid>10000}>
@@ -82,7 +84,7 @@
 	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=other&amp;req_uid=<{$yd_uid}>&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}></a>
 	<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
 	<{else}>
-	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?<{if $smarty.get.page=="photolist"}>page=photolist&amp;<{/if}>req_uid=<{$yd_uid}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
+	<a href="<{$url4ex_cat}>&amp;mode=category&amp;cid=<{$catopt[num].cid}>"><{$catopt[num].cname}>(<{$catopt[num].num}>)</a>
 	<{/if}>
 	</li>
    <{/if}>
@@ -159,7 +161,7 @@
 <ul class="yd_rightarea">
 <{section name=num loop=$yd_monlist}>
 	<li>
-	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}>&amp;mode=month&amp;year=<{$yd_monlist[num].year}>&amp;month=<{$yd_monlist[num].month}>">
+	<a href="<{$url4ex_date}>&amp;year=<{$yd_monlist[num].year}>&amp;month=<{$yd_monlist[num].month}>">
 	<{$yd_monlist[num].year}><{$smarty.const._MD_DATE_YEAR}><{$yd_monlist[num].month}><{$smarty.const._MD_DATE_MONTH}>
 	</a>(<{$yd_monlist[num].count}>)
 </li>
@@ -198,7 +200,7 @@
 </div><!-- /itemInfo -->
 <{/if}>
 <div class="itemFoot">
-<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" /> <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?mode=friends&req_uid=<{$yd_uid}>"><{$smarty.const._MD_DIARY_FRIENDSVIEW}></a>
+<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" /> <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?fr=1&req_uid=<{$yd_uid}>"><{$smarty.const._MD_DIARY_FRIENDSVIEW}></a>
 </div><!-- /itemFoot -->
 </div><!-- /item -->
 <{/if}>

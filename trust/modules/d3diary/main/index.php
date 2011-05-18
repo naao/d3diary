@@ -34,10 +34,11 @@ $b_tag = $d3dConf->q_tag;
 $yd_param = array() ;
 $yd_param['mode'] = $d3dConf->q_mode;
 $yd_param['friend'] = strcmp($yd_param['mode'], "friends")==0 ? 1 : $d3dConf->q_fr ;
-$yd_param['year'] = $d3dConf->q_year;
-$yd_param['month'] = $d3dConf->q_month;
-$yd_param['day'] = $d3dConf->q_day;
+$yd_param['year'] = $yd_year = $d3dConf->q_year;
+$yd_param['month'] = $yd_month = $d3dConf->q_month;
+$yd_param['day'] = $yd_day = $d3dConf->q_day;
 $yd_param['order'] = $d3dConf->q_odr ;
+$yd_param['fr_mode'] = $d3dConf->q_fr ;
 
 if ( $yd_param['friend']==1 && $req_uid==0 ) {
    		header("Location:".  XOOPS_URL.'/modules/'.$mydirname.'/index.php?req_uid='.$uid.'&fr=1');
@@ -140,8 +141,6 @@ $yd_name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
 
 $yd_avaterurl = $d3dConf->func->get_user_avatar(array($req_uid));
 
-//$yd_param['year']=intval(date("Y"));
-//$yd_param['month']=intval(date("n"));
 $yd_param['openarea']=intval($d3dConf->dcfg->openarea);
 $yd_param['query_string'] = !empty($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "" ;
 
@@ -583,6 +582,10 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->ini
 		array_multisort($mytstamp, SORT_DESC, $entry );
 	}
 
+$yd_param['year'] = !empty($yd_year) ? $yd_year : (int)date("Y") ;
+$yd_param['month'] = !empty($yd_month) ? $yd_month : (int)date("n") ;
+$yd_param['day'] = !empty($yd_day) ? $yd_day : 0 ;
+
 // ** end mainblist
 // **		**
 
@@ -654,6 +657,9 @@ if($d3dConf->mod_config['menu_layout']<=1){
 			"yd_layout" => $yd_layout,
 			"yd_data" => $entry,
 			"yd_param" => $yd_param,
+			"yd_year" => $yd_year,
+			"yd_month" => $yd_month,
+			"yd_day" => $yd_day,
 			"popTagArr" => $pop_tags,
 			"myTagArr" => $person_tags,
 			"yd_counter" =>  $yd_counter,
