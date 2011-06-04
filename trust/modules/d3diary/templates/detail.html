@@ -14,6 +14,19 @@
 </div>
 <{/if}>
 
+
+<div id="d3dWrap">
+<{if $yd_layout=="left"}>
+  <div id="d3dMainRight">
+  <div id="d3dMainBodyRight">
+<{elseif $yd_layout=="right"}>
+  <div id="d3dMainLeft">
+  <div id="d3dMainBodyLeft">
+<{else}>
+  <div id="d3dMainNoside">
+  <div id="d3dMainBodyNoside">
+<{/if}>
+
 <!-- start module contents -->
 <div class="item" style="border:0px ;">
 	<p><a href="<{$xoops_url}>/userinfo.php?uid=<{$yd_uid}>">
@@ -33,19 +46,7 @@
 <{if $yd_param.tag}><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]&nbsp;<{/if}>
 </div><!-- /itemInfo -->
 </div><!-- /item -->
-
-<div id="d3dWrap">
 <div class="clear"></div>
-<{if $yd_layout=="left"}>
-  <div id="d3dMainRight">
-  <div id="d3dMainBodyRight">
-<{elseif $yd_layout=="right"}>
-  <div id="d3dMainLeft">
-  <div id="d3dMainBodyLeft">
-<{else}>
-  <div id="d3dMainNoside">
-  <div id="d3dMainBodyNoside">
-<{/if}>
 
 <div class="boxdate_base">
 <span class="boxdate">
