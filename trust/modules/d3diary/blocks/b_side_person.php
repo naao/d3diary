@@ -12,15 +12,18 @@ function b_d3dside_person_show( $options ){
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_person");
+	$func =& $d3dConf->func ;
+	$mPerm =& $d3dConf->mPerm ;
+	$mod_config =& $d3dConf->mod_config ;
 
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	//if( $req_uid > 0 || $uid > 0 ) {
 	if( $req_uid > 0 ) {
-		$yd_avaterurl = $d3dConf->func->get_user_avatar( array( $req_uid ) ) ;
+		$yd_avaterurl = $func->get_user_avatar( array( $req_uid ) ) ;
 	
 		if ($req_uid > 0) {
-			$ret = $d3dConf->func->get_xoopsuname($req_uid) ;
+			$ret = $func->get_xoopsuname($req_uid) ;
 			$yd_uname = $ret['uname'];
 			$yd_name = $ret['name'];
 		}
@@ -39,13 +42,13 @@ function b_d3dside_person_show( $options ){
 		$block['yd_uid'] = $req_uid;
 		$block['yd_uname'] = $yd_uname;
 		$block['yd_name'] = $yd_name;
-		$block['yd_cid'] = (int)$d3dConf->func->getpost_param('cid');
-		$block['yd_counter'] = $d3dConf->func->get_count_diary($req_uid);
-		$block['yd_editperm'] = $d3dConf->mPerm->isauthor ? 1 : 0 ;
-		$block['yd_owner'] = $d3dConf->mPerm->isauthor ? 1 : 0 ;
+		$block['yd_cid'] = (int)$func->getpost_param('cid');
+		$block['yd_counter'] = $func->get_count_diary($req_uid);
+		$block['yd_editperm'] = $mPerm->isauthor ? 1 : 0 ;
+		$block['yd_owner'] = $mPerm->isauthor ? 1 : 0 ;
 		$block['lang'] = $lang;
 		$block['mydirname'] = $mydirname;
-		$block['mod_config'] = $d3dConf->mod_config ;
+		$block['mod_config'] = $mod_config ;
 	
 		$d3dConf->debug_appendtime('b_side_person');
 

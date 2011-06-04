@@ -1,7 +1,7 @@
 <?php
 include_once XOOPS_ROOT_PATH."/class/xoopstree.php";
 
-class Photo
+class D3diaryPhoto
 {
 	var $uid;
 	var $bid;
@@ -14,14 +14,14 @@ class Photo
 	var $photos = array();
 	var $pids   = array();	// for deletedb_mul
 
-	function Photo(){
+	function D3diaryPhoto(){
 	}
 
     function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
-            $instance = new Photo();
+            $instance = new D3diaryPhoto();
         }
         return $instance;
     }
@@ -46,6 +46,7 @@ class Photo
 		$num_rows = $xoopsDB->getRowsNum($result);
 		
 		while ( $dbdat = $xoopsDB->fetchArray($result) ) {
+			$this->uid = (int)$dbdat['uid'] ;
 			$this->ptype = $dbdat['ptype'];
 			$this->info = $dbdat['info'] ;
 			$this->tstamp = $dbdat['tstamp'] ;
@@ -74,15 +75,46 @@ class Photo
 		while ( $dbdat = $xoopsDB->fetchArray($result) ) {
 			if( $last_b != $dbdat['bid'] ){ $p=0;}
 			
-			$i= $dbdat['bid'];
-			$this->photos[$i][$p]['pid']   = $dbdat['pid'] ;
-			$this->photos[$i][$p]['ptype'] = $dbdat['ptype'] ;
-			$this->photos[$i][$p]['pname'] = $dbdat['pid'].$dbdat['ptype'] ;
-			$this->photos[$i][$p]['thumbnail'] = "t_".$dbdat['pid'].$dbdat['ptype'] ;
-			$this->photos[$i][$p]['info']  = $dbdat['info'] ;
+			$i= (int)$dbdat['bid'];
+			$photo = & $this->photos[$i][$p] ;
+			
+			$photo['uid']	= (int)$dbdat['uid'] ;
+			$photo['pid']   = $dbdat['pid'] ;
+			$photo['ptype'] = $dbdat['ptype'] ;
+			$photo['pname'] = $dbdat['pid'].$dbdat['ptype'] ;
+			$photo['thumbnail'] = "t_".$dbdat['pid'].$dbdat['ptype'] ;
+			$photo['info']  = $dbdat['info'] ;
 			//var_dump($i);var_dump($p); var_dump($this->photos[$i][$p]); echo"<br />";
 			$p++;
 			$last_b = $dbdat['bid'];
+		}
+	}
+
+	function readdb_bypids($mydirname) {
+		global $xoopsDB;
+		
+		$this->bids = "";
+		
+		$whr_pids = " WHERE pid IN ('".implode('\',\'',$this->pids)."')";
+		$sql = "SELECT *
+				FROM ".$xoopsDB->prefix($mydirname.'_photo').$whr_pids." 
+				ORDER BY bid, tstamp, pid";
+		//var_dump($sql); echo"<br />";
+		$result = $xoopsDB->query($sql);
+		$num_rows = $xoopsDB->getRowsNum($result);
+
+		if ($num_rows<1) {return false;}
+		$photo = array() ;
+		while ( $dbdat = $xoopsDB->fetchArray($result) ) {
+				$photo['pid']   = $dbdat['pid'] ;
+				$photo['ptype'] = $dbdat['ptype'] ;
+				$photo['pname'] = $dbdat['pid'].$dbdat['ptype'] ;
+				$photo['thumbnail'] = "t_".$dbdat['pid'].$dbdat['ptype'] ;
+				$photo['info']  = $dbdat['info'] ;
+				$photo['bid']   = (int)$dbdat['bid'] ;
+				$photo['uid']   = (int)$dbdat['uid'] ;
+			//var_dump($photo); echo"<br />";
+				$this->photos[$photo['pid']] = $photo;
 		}
 	}
 
@@ -140,12 +172,12 @@ class Photo
 				$this->photos[$last_b]['ptype'] = $_ptype[$rand] ;
 	}
 
-
 	function deletedb($mydirname){
 		global $xoopsDB;
 
 		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_photo')." WHERE bid='".$this->bid."' and pid='".$this->pid."'";
 		$result = $xoopsDB->query($sql);
+		return ($result);
 	}
 
 	function deletedbF($mydirname){
@@ -153,6 +185,7 @@ class Photo
 
 		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_photo')." WHERE bid='".$this->bid."' and pid='".$this->pid."'";
 		$result = $xoopsDB->queryF($sql);
+		return ($result);
 	}
 
 	function deletedb_mul($mydirname){
@@ -219,6 +252,33 @@ class Photo
 			$sql = "UPDATE ".$xoopsDB->prefix($mydirname.'_photo')." SET
 					uid='".$this->uid."',
 					bid='".$this->bid."',
+					pid='".$this->pid."',
+					ptype='".$this->ptype."',
+					tstamp='".$this->tstamp."',
+					info='".$this->info."'
+					WHERE bid='".$this->bid."' and pid='".$this->pid."'";
+		}
+			$result = $xoopsDB->query($sql);
+			//var_dump($sql);
+			return $this->pid;
+	}
+
+	function updatedb_bid($mydirname, $new_bid){
+		global $xoopsDB;
+
+      		if (!get_magic_quotes_gpc()) {
+			$sql = "UPDATE ".$xoopsDB->prefix($mydirname.'_photo')." SET
+					uid='".addslashes($this->uid)."',
+					bid='".addslashes($new_bid)."',
+					pid='".addslashes($this->pid)."',
+					ptype='".addslashes($this->ptype)."',
+					tstamp='".addslashes($this->tstamp)."',
+					info='".addslashes($this->info)."'
+					WHERE bid='".$this->bid."' and pid='".$this->pid."'";
+		} else {
+			$sql = "UPDATE ".$xoopsDB->prefix($mydirname.'_photo')." SET
+					uid='".$this->uid."',
+					bid='".$new_bid."',
 					pid='".$this->pid."',
 					ptype='".$this->ptype."',
 					tstamp='".$this->tstamp."',

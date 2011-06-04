@@ -77,6 +77,8 @@ define("_MD_DATE_YEAR","/");
 define("_MD_DATE_MONTH","/");
 define("_MD_DATE_DAY"," ");
 define("_MD_DATE_EACHMONTH","Each month");
+define("_MD_DIARY_COUNT","Diary count");
+define("_MD_DIARY_NAME","Name");
 
 define("_MD_DIARY_SWAPCAT","Move category of selected diaries");
 define("_MD_DIARY_SWAPTO","Move to:");
@@ -86,8 +88,8 @@ define("_MD_DIARY_CHKALLDESC","Check/Uncheck all checkboxes above");
 define("_MD_DIARY_OPTION","Option");
 define("_MD_DIARY_UPDATE_TIME","Update the registered date.");
 define("_MD_DIARY_REG_TIME","Regist the specified time.");
-define("_MD_DIARY_REG_PERSON","Specify User");
 define("_MD_DIARY_UPDATE_PING","Send update-ping");
+define("_MD_DIARY_REG_PERSON","Specify User");
 define("_MD_DIARY_TEXT","Contents");
 define("_MD_DIARY_EDIT","Regist/Edit");
 define("_MD_DIARY_DEL","Delete");
@@ -99,9 +101,11 @@ define("_MD_YT_ADD","Insert to textarea");
 define("_MD_ND_URL","URL of NikoDouga Video");
 define("_MD_PHOTO","Image");
 define("_MD_PHOTO_SELECT","Select image");
+define("_MD_PHOTO_MANAGE","Manage images");
 define("_MD_PHOTO_ADD","Add a image");
 define("_MD_FILEDEL_CONFIRM","will be deleted.\\nAre you sure that you cannot rescue it onece deleted?");
-define("_MD_FILEDELETED","An image is deleted.");
+define("_MD_FILEDELETED","Images are deleted.");
+define("_MD_FILEROTATED","Images are rotated.");
 define("_MD_PHOTO_SHRINK","images<br />shrink to less than 640x640 pixcels");
 define("_MD_PHOTO_SHRINK2","## Shrink to less than 640px both width or height size");
 define("_MD_PHOTO_MAXSIZE","## Allowed size of an image");
@@ -115,12 +119,16 @@ define("_MD_ROTATE","Rotate");
 define("_MD_RROTATE","Rotate right 90deg.");
 define("_MD_LROTATE","Rotate left 90deg.");
 define("_MD_ROTATE_CONFIRM","will be rotated. Are you sure?");
+define("_MD_EDIT_PINFO","Edit photo infomation");
+define("_MD_PMOVE","Move diary attached");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERROR: Check the content you input.</font>");
 define("_MD_NODIARY_ERR","<font color='red'>ERROR: No diary is hit.</font>");
 define("_MD_SIZEOVER","<font color='red'>ERROR: Image size is over the limit.</font>");
 define("_MD_NOFILE","<font color='red'>ERROR: Could not read the image data.</font>");
+define("_MD_FAILED_FILEDELETE","<font color='red'>ERROR: Falied to delete image. </font>");
+define("_MD_FAILED_FILEROTATE","<font color='red'>ERROR: Failed to rotate image. </font>");
 
 define("_MD_DATANUM1","Total<strong>");
 define("_MD_DATANUM2","</strong>items<strong>");
@@ -270,5 +278,8 @@ define("_MD_MAIL_TOSTEP0","Return to STEP0");
 define("_MD_NEWDIARY","Diary List");
 define("_MD_NEWPHOTO","Image List");
 define("_MD_QUERYOFF","Query Off");
+define("_MD_RTNTO_NEWDIARY","Return to new diaries");
+define("_MD_DSC","Descending");
+define("_MD_ASC","Ascending");
 
 ?>

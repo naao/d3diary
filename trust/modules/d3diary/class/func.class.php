@@ -29,13 +29,13 @@ function ini_set()
 {	//must be set $this->mydirname, $req_uid before call it
 
 	// copying parent's parameters
-	$this->mydirname = $this->d3dConf->mydirname;
-	$this->mid = $this->d3dConf->mid;
+	$this->mydirname = & $this->d3dConf->mydirname;
+	$this->mid = & $this->d3dConf->mid;
 
-	$this->uid = $this->d3dConf->uid;
-	$this->mod_config = $this->d3dConf->mod_config;
-	$this->dcfg = $this->d3dConf->dcfg;
-	$this->req_uid = $this->d3dConf->req_uid;
+	$this->uid = & $this->d3dConf->uid;
+	$this->mod_config = & $this->d3dConf->mod_config;
+	$this->dcfg = & $this->d3dConf->dcfg;
+	$this->req_uid = & $this->d3dConf->req_uid;
 	
 	$this->mPerm = & $this->d3dConf->mPerm;
 	$this->gPerm = & $this->d3dConf->gPerm;
@@ -329,7 +329,11 @@ function get_calender( $req_uid, $year, $month, $uid, $base_url="", $block=false
 	if (empty($base_url)) {
 		$page = !empty($this->d3dConf->page) ? $this->d3dConf->page : (($req_uid > 0) ? 'index' : 'diarylist');
 		$base_url=XOOPS_URL."/modules/".$this->mydirname."/index.php?page=".$page;
-		if( $req_uid > 0 ) { $base_url = $base_url."&amp;req_uid=".$req_uid; }
+		if( $req_uid > 0 ) { 
+			$base_url .= "&amp;req_uid=".$req_uid."&amp;";
+		} else {
+			$base_url .= "&amp;";
+		}
 	}
 
 	if($this->mPerm->isadmin){
@@ -1183,7 +1187,7 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
 		if(!in_array($dbdat['uid'],$blogger2_ids)) {
 			$_dat['uid'] = (int)$dbdat['uid'];
 			$_dat['count'] = (int)$dbdat['count'];
-			$_dat['p_count'] = $p_count[$_dat['uid']];
+			$_dat['p_count'] = !empty($p_count[$_dat['uid']]) ? $p_count[$_dat['uid']] : 0 ;
 			$_dat['time'] = $dbdat['max_create_time'] ;
 			$_dat['uname'] = htmlSpecialChars( $dbdat['uname'], ENT_QUOTES );
 			$_dat['name'] = htmlSpecialChars( $dbdat['name'], ENT_QUOTES );
@@ -1195,7 +1199,7 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
   	return array( $rtn_, $rtn2_, $got_navi);
 }
 
-function get_photolist( $req_uid, $uid, $max_entry, $offset=0, $params=array() ){
+function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=array() ){
 
 	$db = & $this->d3dConf->db;
 	
@@ -1212,11 +1216,8 @@ function get_photolist( $req_uid, $uid, $max_entry, $offset=0, $params=array() )
 		//var_dump($whr_openarea);
 	}
 
-	if(intval($req_uid)>0){
-		$whr_uids="d.uid='".intval($req_uid)."'";
-	} else {
-		$whr_uids=" 1 ";
-	}
+	$whr_uids = count($req_uid)>0 ? "d.uid IN (".implode(',',$req_uid).")" : " 1 ";
+	
 		$now = date("Y-m-d H:i:s");
 		if ($this->mPerm->isadmin!=true and $this->mPerm->isauthor!=true) {
 			$whr_nofuture = " AND d.create_time<'".$now."' ";
@@ -1300,6 +1301,11 @@ function get_photolist( $req_uid, $uid, $max_entry, $offset=0, $params=array() )
 			$whr_time.=" AND d.create_time>='".$params['year']."-".$params['month']."-01 00:00:00"."' ";
 			$whr_time.=" AND d.create_time<'".$next_year."-".$next_month."-01 00:00:00"."' ";
 		}
+		
+		// params for info sanitize
+		$max_info = !empty($params['max_info']) ? $params['max_info'] : 30 ;
+		$enc = !empty($params['enc']) ? $params['enc'] : _CHARSET ;
+		$f_truncate = !empty($params['f_truncate']) ? $params['f_truncate'] : false ;
 	}
 
 	$sql_base = "FROM ".$db->prefix($this->mydirname.'_photo')." p 
@@ -1313,10 +1319,8 @@ function get_photolist( $req_uid, $uid, $max_entry, $offset=0, $params=array() )
 
 	// get total photos count
 	$sql = "SELECT count(p.pid) as count ".$sql_base ;
-
 	$result = $db->query($sql);
 	list ($count) = $db->fetchRow($result);
-
 	if($count>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
                 if( ereg("^".$ofst_key."=[0-9]+", $_SERVER['QUERY_STRING']) ) {
@@ -1350,7 +1354,7 @@ function get_photolist( $req_uid, $uid, $max_entry, $offset=0, $params=array() )
 		$photo['ptype']= $dbdat['ptype'];
 		$photo['pname'] = $this->myts->makeTboxData4Show($photo['pid'].$photo['ptype']);
 		$photo['thumbnail'] = "t_".$photo['pid'].$photo['ptype'];
-		$photo['info'] = $this->stripPb_Tarea( $dbdat['info'] ) ;
+		$photo['info'] = $dbdat['info'] ? $this->substrTarea( $dbdat['info'], 0, $max_info, $f_truncate, $enc ) : "" ;
 		$tmp = split("[-: ]",$dbdat['tstamp']);
 		$photo['tstamp'] = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
 		$photo['time'] = $dbdat['tstamp'] ;
@@ -1363,6 +1367,168 @@ function get_photolist( $req_uid, $uid, $max_entry, $offset=0, $params=array() )
 	}
 
   	return array( $rtn_, $got_navi);
+
+}
+
+// can be called only by main pages
+function manage_photos ( & $photoObj, & $diaryObj, & $psels, & $psel_names, $action, $params=array() )
+{
+	list( $uploaddir, $previewdir ) = $this->d3dConf->get_photodir() ;
+	$previewpath = $uploaddir.$previewdir ;
+
+	$photos = array(); $prev_pnames = array();
+	$i = 0 ;
+	if( !empty( $psels ) ) {
+		$pattern = array("..","index.html",".php");
+		$replace = array("","","");
+		foreach ( $psels as $_pid ) {
+			$_pid = addslashes($_pid);
+			$sel_pname = addslashes($psel_names[$i]);
+			$trim_pname = str_replace($previewdir, "", $sel_pname);
+			$trim_pname = str_replace($pattern,$replace,$trim_pname);
+			$sel_pname2 = str_replace($pattern,$replace,$trim_pname);
+			if (strlen($sel_pname2) == strlen($sel_pname) and !empty($_pid)){
+				// registered files
+				$photoObj->pids[] = str_replace($previewdir, "", $_pid) ;
+			} else {
+				// previewed files
+				$prev_pnames[] = $sel_pname2 ;
+			}
+			$i++;
+		}
+		
+		 // check each photo owner's or isadmin's file is registered by self
+		$photoObj->readdb_bypids( $this->mydirname ) ;
+		if( !empty( $photoObj->photos ) ) {
+			foreach ( $photoObj->pids as $_pid ) {
+				//var_dump($photo); var_dump($_rtn[$photo]); echo"<br />";
+				if( $this->mPerm->isadmin || $photoObj->photos[$_pid]['uid'] == $this->uid ) {
+					$photos[] = $photoObj->photos[$_pid] ;
+				}
+			}
+			$photoObj->photos = $photos ;	// overrides : to use in photolist of case1 or case4
+		}
+	} else {
+		return false ;
+	}
+
+	switch ( $action ) {
+	case 1 :	// edit info selected
+		return true;
+		break;
+	case 11 :	// edit info action
+		$photoObj->init_values( $this->mydirname );
+		$i=0;
+		foreach ( $photos as $photo ) {
+			$photoObj->bid = $photo['bid'];
+			$photoObj->pid = $photo['pid'];
+			$photoObj->readdb( $this->mydirname );
+			$photoObj->info = htmlspecialchars( $params['pvinfo'][$i], ENT_QUOTES ) ;
+			$photoObj->updatedb( $this->mydirname );
+			$i++;
+		}  // end foreach $photos
+		return true;
+		break;
+	case 2 :	// left rotate
+	case 3 :	// right rotate
+		$i=0;
+		foreach ( $photos as $photo ) {
+			if ( $photo['bid']>0 ){
+				$uploadfile = $uploaddir.$photo['pname'];
+				$t_uploadfile = $uploaddir.$photo['thumbnail'];
+				list($width, $height, $type, $attr) = getimagesize($uploadfile);
+				if ( $action == 2 ) {
+					$degrees = 90;
+				} else {
+					$degrees = 270;
+				}
+				// rotate
+				if($type == 1){
+					$upimage = ImageCreateFromGIF($uploadfile);
+					$t_upimage = ImageCreateFromGIF($t_uploadfile);
+					$rotated = imagerotate($upimage, $degrees, 0);
+					$t_rotated = imagerotate($t_upimage, $degrees, 0);
+					imagegif($rotated,$uploadfile);
+					imagegif($t_rotated,$t_uploadfile);
+				} elseif($type == 2){
+					$upimage = ImageCreateFromJPEG($uploadfile);
+					$t_upimage = ImageCreateFromJPEG($t_uploadfile);
+					$rotated = imagerotate($upimage, $degrees, 0);
+					$t_rotated = imagerotate($t_upimage, $degrees, 0);
+					imagejpeg($rotated,$uploadfile);
+					imagejpeg($t_rotated,$t_uploadfile);
+				} else {
+					$upimage = ImageCreateFromPNG($uploadfile);
+					$t_upimage = ImageCreateFromPNG($t_uploadfile);
+					$rotated = imagerotate($upimage, $degrees, 0);
+					$t_rotated = imagerotate($t_upimage, $degrees, 0);
+					imagepng($rotated,$uploadfile);
+					imagepng($t_rotated,$t_uploadfile);
+				}
+			}
+			$i++;
+		}  // end foreach $photos
+		return true;
+		break;
+	case 4 :	// move selected
+		break;
+	case 41 :	// move action
+		$diaryObj->bids = array_unique( $params['bids'] );
+	    	$diaryObj->readdb_mul( $this->mydirname );
+	    	
+		$photoObj->init_values( $this->mydirname );
+		$i=0;
+		foreach ( $photos as $photo ) {
+			if( $this->mPerm->isadmin || $diaryObj->diaries[$params['bids'][$i]]['uid'] == $this->uid ) {
+				$photoObj->bid = $photo['bid'];
+				$photoObj->pid = $photo['pid'];
+				$photoObj->readdb( $this->mydirname );
+				if( $this->mPerm->isadmin ) { $photoObj->uid = (int)$diaryObj->diaries[$params['bids'][$i]]['uid'] ;}
+				$photoObj->updatedb_bid( $this->mydirname, $params['bids'][$i] );
+				//var_dump($photoObj); echo"<br />";
+			} else {
+				return false;
+			}
+			$i++;
+		}// end foreach $photos
+		return true;
+		break;
+	case 5 :	// delete
+		$i=0;
+		foreach ( $photos as $photo ) {
+			if ( $photo['bid']>0 ){
+				// once copy files into preview directory for transaction
+				$f_from = $uploaddir.$photo['pname'];
+				$f_to = $previewpath.$photo['pname'];
+				if (copy($f_from, $f_to)!=true){ return false ;}
+				$f_from = $uploaddir.$photo['thumbnail'];
+				$f_to = $previewpath.$photo['thumbnail'];
+				if (copy($f_from, $f_to)!=true){ return false ;}
+
+				// delete from db
+				$photoObj->bid = $photo['bid'];
+				$photoObj->pid = $photo['pid'];
+				if( ($result = $photoObj->deletedbF( $this->mydirname )) ==true ) {
+					unlink($uploaddir.$photo['pname']);
+					unlink($uploaddir.$photo['thumbnail']);
+				}
+					unlink($previewpath.$photo['pname']);
+					unlink($previewpath.$photo['thumbnail']);
+				//$yd_data['msg'] = _MD_FILEDELETED;
+			}
+		}// end foreach $photos
+		
+		$i=0;
+		foreach ( $prev_pnames as $prev_pname ) {
+			// delete previewed files
+			unlink( $previewpath.$prev_pname ) ;
+			unlink( $previewpath.'t_'.$prev_pname ) ;
+		}// end foreach $del_files
+		return true;
+		break;
+	default:
+	}
+	
 
 }
 
@@ -1911,70 +2077,78 @@ function update_other_cat($uid){
 // set rss url for specified blog tools
 function get_ext_rssurl( $blogtype, &$url, &$rss )
 {
-	// ¹¹¥é¥Ã¥·¥å
+	
 	if(!preg_match("/^.*\/$/i",$url)){
 		$url.="/";
 	}
 	
-	if($blogtype==0){
-		// £Ö¥í¥°
+	switch ($blogtype) {
+	case 0 :
+		// this site
 		$rss="";
 		$url="";
 		//d3diary_update_newentry($mydirname, $uid);
-	}elseif($blogtype==1){ 
-		// ³ÚÅ·¹­
+		break;
+	case 1 :
+		// rakten
 		$rss=$url."rss";
 		preg_match("/^http:\/\/plaza.rakuten.co.jp(.*)$/i", $rss, $matches);
 		$rss = "http://api.plaza.rakuten.ne.jp".$matches[1];
-
-	}elseif($blogtype==2){ 
-		// £À¥¤¥¢¥ê
+		break;
+	case 2 :
+		// hatena blog
 		$rss=$url."rss";
-
-	}elseif($blogtype==3 or $blogtype==4){ 
-		// ¥É¥ê¥³¥à¥Ö¥í¥°¡¦¥ä¥×¥í¥°
+		break;
+	case 3 :
+	case 4 :
+		// drecom
 		$rss=$url."index1_0.rdf";
-
-	}elseif($blogtype==5 or $blogtype==10 or 
-			$blogtype==12 or $blogtype==16 or $blogtype==18){ 
-		// ¥Á¥ã¥ó¥Í¥ëËÌ¹ñtv Seesaa goo BLOG ¥Ö¥í¥°¡¦¥¸¡¼¡Ê269g¡Ë So-net blog
+		break;
+	case 5 :
+	case 10 :
+	case 12 :
+	case 16 :
+	case 18 :
+		// channel kitaguni Seesaa goo BLOG blog gee(269g) So-net blog
 		$rss=$url."index.rdf";
-
-	}elseif($blogtype==6){
+		break;
+	case 6 :
 		// livedoor Blog
 		$rss=$url."atom.xml";
-
-	}elseif($blogtype==17){
-		// ¥³¥³¥í¥°
+		break;
+	case 17 :
+		// cocolog
 		$rss=$url."blog/atom.xml";
-
-	}elseif($blogtype==7){
+		break;
+	case 7 :
 		// Doblog
 		preg_match("/^http:\/\/www.doblog.com\/weblog\/myblog\/(\d+)/i",$url,$matches);
 		$rss="http://rss.doblog.com/rss/myrss.do?method=mypagerss&userid=".intval($matches[1])."&type=RSS_1_0";
-
-	}elseif($blogtype==8 or $blogtype==11){
-		// Excite¥Ö¥í¥° Movable Type·Ï 
+		break;
+	case 8 :
+	case 11 :
+		// Exciteblog  Movable Type
 		$rss=$url."index.xml";
-
-	}elseif($blogtype==9){
+		break;
+	case 9 :
 		// JUGEM
 		$rss=$url."?mode=rss";
-
-	}elseif($blogtype==13 or $blogtype==19){
-		// AOL¥À¥¤¥¢¥ê¡¼ Yahoo!¥Ö¥í¥°
+		break;
+	case 13 :
+	case 19 :
+		// AOL diaryYahoo! blog
 		$rss=$url."rss.xml";
-
-	}elseif($blogtype==14){
-		// ¥¢¥á¡¼¥Ð¥Ö¥í¥°
+		break;
+	case 14 :
+		// ameba blog
 		$rss=$url."rss.html";
-
-	}elseif($blogtype==15){
-		// fc2¥Ö¥í¥°
+		break;
+	case 15 :
+		// fc2 blog
 		$rss=$url."?xml";
 
-	}else{
-		// 
+	default:
+		// 
 		if($blogtype!=100 or empty($rss)){
 			return false;
 		}
@@ -2005,19 +2179,6 @@ function htmlPurifier( $text )
 		}
 	}
 	return $text ;
-}
-
-// function to exclude req_uid and change diarylist page for modified req_uid
-function get_baseurl_modify( $base_url ) {
-	// exclude req_uid
-	$base_url = preg_replace("/^(.*)\?req_uid=[0-9]+/", "$1?page=diarylist", $base_url);
-	$base_url = preg_replace("/^(.*)\&amp\;req_uid=[0-9]+/", "$1", $base_url);
-	if ( $this->d3dConf->q_fr==1 ) {
-		// exclude fr
-		return preg_replace("/^(.*)\&amp\;fr=[0-9]+/", "$1", $base_url);
-	} else {
-		return $base_url;
-	}
 }
 
 function get_d3comforums_can_read( $com_dirname, $uid=0 )

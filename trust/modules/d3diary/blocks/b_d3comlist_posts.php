@@ -16,13 +16,17 @@ function b_d3diary_d3comlist_posts_show( $options ){
 
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "b_d3comlist_posts");
+	$func =& $d3dConf->func ;
 	$myts =& $d3dConf->myts;
+	$mPerm =& $d3dConf->mPerm ;
+	$gPerm =& $d3dConf->gPerm ;
+	$mod_config =& $d3dConf->mod_config ;
 
 	$uid = $d3dConf->uid;
 
-	$com_dirname = $d3dConf->mod_config['comment_dirname'];
-	$com_forum_id = intval($d3dConf->mod_config['comment_forum_id']);
-	$com_anchor_type = intval($d3dConf->mod_config['comment_anchor_type']);
+	$com_dirname = $mod_config['comment_dirname'];
+	$com_forum_id = intval($mod_config['comment_forum_id']);
+	$com_anchor_type = intval($mod_config['comment_anchor_type']);
 
 	// if comment integration is not set, exit immediately
 	if(empty($com_dirname) || $com_forum_id<=0) {
@@ -40,10 +44,10 @@ function b_d3diary_d3comlist_posts_show( $options ){
 	$editperm=0;
 	$owner=0;
 	if($uid>0 && $req_uid==$uid){$editperm=1;}
-	if($d3dConf->mPerm->isadmin){$editperm=1;}
+	if($mPerm->isadmin){$editperm=1;}
 
 	// forums can be read by current viewer (check by forum_access)
-	$temparr_forums_can_read = $d3dConf->func->get_d3comforums_can_read( $com_dirname, $uid );
+	$temparr_forums_can_read = $func->get_d3comforums_can_read( $com_dirname, $uid );
 	if(!empty($temparr_forums_can_read)) {
 		// remove comment_forum_id from allowed forums array
 		$arrcom_forum_id[] = $com_forum_id;
@@ -59,7 +63,7 @@ function b_d3diary_d3comlist_posts_show( $options ){
 		$temp_forum_id = intval($forum_row['forum_id']);
 		// exclude d3diary's comment forum
 		if( ($temp_forum_id != $com_forum_id) && ! empty( $forum_row['forum_external_link_format'] ) ) {
-			$d3com[$temp_forum_id] =& $d3dConf->func->get_d3com_object( $com_dirname , $forum_row['forum_external_link_format'] ) ;
+			$d3com[$temp_forum_id] =& $func->get_d3com_object( $com_dirname , $forum_row['forum_external_link_format'] ) ;
 		} else {
 			$d3com[$temp_forum_id] = false ;
 		}
@@ -121,12 +125,12 @@ function b_d3diary_d3comlist_posts_show( $options ){
 	}
 
 	// diary permission
-	if($d3dConf->mPerm->isadmin){
+	if($mPerm->isadmin){
 		$whr_openarea = " 1 ";
 	} else {
-		$_params4op['use_gp'] = $d3dConf->gPerm->use_gp;
-		$_params4op['use_pp'] = $d3dConf->gPerm->use_pp;
-		$whr_openarea = $d3dConf->mPerm->get_open_query( "b_d3com_topics", $_params4op );
+		$_params4op['use_gp'] = $gPerm->use_gp;
+		$_params4op['use_pp'] = $gPerm->use_pp;
+		$whr_openarea = $mPerm->get_open_query( "b_d3com_topics", $_params4op );
 	}
 
 	$sql = "SELECT p.post_id, p.subject, p.votes_sum, p.votes_count, p.post_time, p.post_text, p.uid, 
@@ -161,7 +165,7 @@ function b_d3diary_d3comlist_posts_show( $options ){
 			'unique_key' => $unique_key ,
 			'use_aggre' => $use_aggre ,
 			'com_forum_id' => $com_forum_id ,
-			'mod_config' => $d3dConf->mod_config ,
+			'mod_config' => $mod_config ,
 			'lang_forum' => constant($constpref.'_FORUM') ,
 			'lang_topic' => constant($constpref.'_TOPIC') ,
 			'lang_replies' => constant($constpref.'_REPLIES') ,

@@ -127,9 +127,13 @@ function check_editperm($bid, $uid)
 {
 	$db = & $this->d3dConf->db;
 
-	$sql = "SELECT count(*) AS count_num FROM ".$db->prefix($this->mydirname."_diary")." 
-		WHERE (uid = '$uid') and (bid='$bid')";
-		
+	if( $this->isadmin ) {
+		$sql = "SELECT count(*) AS count_num FROM ".$db->prefix($this->mydirname."_diary")." 
+			WHERE bid='$bid'";
+	} else {
+		$sql = "SELECT count(*) AS count_num FROM ".$db->prefix($this->mydirname."_diary")." 
+			WHERE (uid = '$uid') and (bid='$bid')";
+	}
 	if ( !$result = $db->query($sql) ) {
 		return false;
 	}
@@ -137,9 +141,7 @@ function check_editperm($bid, $uid)
 		return false;
 	}
 	if ( $row['count_num'] <= 0 ) {
-		if ( !$this->isadmin ) {
 			return false;
-		}
 	}
   	return true;
 }

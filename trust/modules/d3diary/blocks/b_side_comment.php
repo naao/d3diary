@@ -13,6 +13,8 @@ function b_d3dside_comment_show( $options ){
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_comment");
+	$func =& $d3dConf->func ;
+	$mod_config =& $d3dConf->mod_config ;
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	
@@ -24,7 +26,7 @@ function b_d3dside_comment_show( $options ){
 		return ;
 	}
 
-		list( $yd_comment, $yd_com_key ) =  $d3dConf->func->get_commentlist ($req_uid,$uid,$max_entry,false);
+		list( $yd_comment, $yd_com_key ) =  $func->get_commentlist ($req_uid,$uid,$max_entry,false);
 
 		$lang = array();
 		$constpref = "_MB_" . strtoupper( $mydirname ) ;
@@ -37,7 +39,7 @@ function b_d3dside_comment_show( $options ){
 		$block['yd_uid'] = $req_uid;
 		$block['lang'] = $lang;
 		$block['mydirname'] = $mydirname;
-		$block['mod_config'] = $d3dConf->mod_config ;
+		$block['mod_config'] = $mod_config ;
 	
 	$d3dConf->debug_appendtime('b_side_comment');
 

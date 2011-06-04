@@ -1,7 +1,7 @@
 <?php
 include_once XOOPS_ROOT_PATH."/class/xoopstree.php";
 
-class Tag
+class D3diaryTag
 {
 	var $tag_id;
 	var $tag_name;
@@ -13,14 +13,14 @@ class Tag
 	var $bids = array();	// for readdb_mul
 	var $tags = array();
 
-	function Tag(){
+	function D3diaryTag(){
 	}
 
     function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
-            $instance = new Tag();
+            $instance = new D3diaryTag();
         }
         return $instance;
     }

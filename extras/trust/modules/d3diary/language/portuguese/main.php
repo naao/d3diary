@@ -52,6 +52,7 @@ define("_MD_CATEGORY_DELCONFIRM","Você deseja realmente excluir?");
 define("_MD_CATEGORY_REQ","O nome da categoria não foi especificada.");
 define("_MD_CATEGORY_HTML","Habilitar padrão HTML");
 define("_MD_CATEGORY_HTMLDSC","Em um novo formulário do Diário, quando selecionar uma categoria com padrão HTML habilitada aqui, a caixa de seleção do HTML será verdadeira.");
+
 define("_MD_CATEGORY_COMMON","Categoria comum");
 define("_MD_CATEGORY_QUERY","Pergunta dos itens da categoria comum");
 define("_MD_CATEGORY_NOSELECTED","Não selecionada");
@@ -77,6 +78,8 @@ define("_MD_DATE_YEAR","/");
 define("_MD_DATE_MONTH","/");
 define("_MD_DATE_DAY"," ");
 define("_MD_DATE_EACHMONTH","Cada mês");
+define("_MD_DIARY_COUNT","Conta de diário");
+define("_MD_DIARY_NAME","Nome");
 
 define("_MD_DIARY_SWAPCAT","Mover categoria dos diários selecionados");
 define("_MD_DIARY_SWAPTO","Mover para:");
@@ -99,9 +102,11 @@ define("_MD_YT_ADD","Inserir área de texto");
 define("_MD_ND_URL","URL do vídeo no NikoDouga");
 define("_MD_PHOTO","Imagem");
 define("_MD_PHOTO_SELECT","Selecionar imagem");
+define("_MD_PHOTO_MANAGE","Administre imagens");
 define("_MD_PHOTO_ADD","Adicionar imagem");
 define("_MD_FILEDEL_CONFIRM","será excluído.\\n Você tem certeza que não deseja recuperar o excluido?");
-define("_MD_FILEDELETED","A imagem foi excluida.");
+define("_MD_FILEDELETED","São apagadas imagens.");
+define("_MD_FILEROTATED","São giradas imagens.");
 define("_MD_PHOTO_SHRINK","imagens<br />encolher para menos de 640x640 pixels");
 define("_MD_PHOTO_SHRINK2","## Encolher o tamanho da largura e altura para menos de 640 px");
 define("_MD_PHOTO_MAXSIZE","## tamanho máximo Permitido de uma imagem");
@@ -115,12 +120,16 @@ define("_MD_ROTATE","RGire");
 define("_MD_RROTATE","Gire direito 90deg.");
 define("_MD_LROTATE","Gire esquerda 90deg.");
 define("_MD_ROTATE_CONFIRM","será girado. O senhor está seguro?");
+define("_MD_EDIT_PINFO","Edite infomation de fotografia");
+define("_MD_PMOVE","Diário de movimento prendeu");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERRO: Cheque o conteúdo que você informou.</font>");
 define("_MD_NODIARY_ERR","<font color='red'>ERRO: Nenhum diário foi encontrado.</font>");
 define("_MD_SIZEOVER","<font color='red'>ERRO: O tamanho da imagem é maior do que o limite permitido.</font>");
 define("_MD_NOFILE","<font color='red'>ERRO: não foi possivel ler o dado da imagem.</font>");
+define("_MD_FAILED_FILEDELETE","<font color='red'>ERRO: Falied para apagar imagem. </font>");
+define("_MD_FAILED_FILEROTATE","<font color='red'>ERRO: Não girou imagem. </font>");
 
 define("_MD_DATANUM1","<strong>Total</strong>");
 define("_MD_DATANUM2","</strong>itens");
@@ -181,10 +190,10 @@ define("_MD_CONF_USEMAIL","Função de mailpost de uso");
 define("_MD_CONF_USEMAILDESC","sar mailpost, jogo que método para importar de correspondências.<br />selecionando 'Importação de AUTO', tenta cada vez de intervalo automaticamente. Só intitule, são importadas corpo de diário e imagens mas não são importadas categoria, openarea, etiquetas e outras opções, eles podem ser editados manualmente depois. <br />Em página de importação manual, conferir-em correspondências como prefere o senhor e podem ser somadas categoria e opções de openarea .");
 define("_MD_CONF_MAILADDRESS","permitido 'de' endereço");
 define("_MD_CONF_MAILADDRESSDESC","'de' endereço que o senhor pode receber. (vazio é permitido) <br />login usuário e-mail endereço Registrado já é habilitado, assim não é necessário introduzir aqui.");
-define("_MD_CONF_KEEPMAIL","Remete apagamento depois de importou");
+define("_MD_CONF_KEEPINDEX","Página de TOPO depois de anotou em");
 define("_MD_CONF_KEEPMAILDESC","Fixando se apague correspondências ou não depois de importou. <br/ > Fixando aqui será impremented para modo de importação manual e será mudado em tela de importação manual.");
 define("_MD_CONF_KEEPINDEX","Página de TOPO depois de anotou em ");
-define("_MD_CONF_KEEPINDEXDESC","Selecione se índice de ego ou todo o diarylist de pessoal");
+define("_MD_CONF_KEEPINDEXDESC","Selecione se índice de ego ou todos o diarylist de pessoal anotaram em");
 define("_MD_CONF_MAILUPTIME","Confira intervalo em modo de Auto");
 define("_MD_CONF_MAILUPTIMEDESC","Tempo fixando para intervalo em modo de Auto. <br/ > Depois de passar o tempo de intervalo, correspondências serão inported quando a própria página de índice for viewd, valor de colocação tão muito pequeno pode complexo o tráfico de servidor.");
 define("_MD_CONF_AL_EXISTMAIL","Endereço de correio permitido já é usado. <br/ > Jogo um endereço de correio diferente.");
@@ -270,4 +279,10 @@ define("_MD_MAILTO",":Remeta");
 define("_MD_MAIL_CASEMANUAL","[Em Importação manual]");
 define("_MD_MAIL_TOSTEP0","Volte a STEP0");
 
+define("_MD_NEWDIARY","Lista de diário");
+define("_MD_NEWPHOTO","Lista de imagem");
+define("_MD_QUERYOFF","Examine Fora");
+define("_MD_RTNTO_NEWDIARY","Volte a diários novos");
+define("_MD_DSC","Descendingdiaries");
+define("_MD_ASC","Ascendendo");
 ?>

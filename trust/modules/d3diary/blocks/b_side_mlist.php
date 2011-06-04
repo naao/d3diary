@@ -13,6 +13,7 @@ function b_d3dside_mlist_show( $options ){
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_mlist");
+	$func =& $d3dConf->func ;
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	
@@ -31,13 +32,9 @@ function b_d3dside_mlist_show( $options ){
 	//$q_tag = $d3dConf->q_tag ;
 	$q_fr = $d3dConf->q_fr ;
 
-	if ( $req_uid == 0 ) {
-		$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_date. "&amp;";
-	} else {
-		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
-	}
+	$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
 
-	list( $yd_monlist, $yd_monthnavi ) =  $d3dConf->func->get_monlist ($req_uid, $uid, $max_entry );
+	list( $yd_monlist, $yd_monthnavi ) =  $func->get_monlist ($req_uid, $uid, $max_entry );
 
 		$lang = array();
 		$constpref = "_MB_" . strtoupper( $mydirname ) ;

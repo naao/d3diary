@@ -12,6 +12,7 @@ function b_d3dside_category_show( $options ){
 
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_category");
+	$func =& $d3dConf->func ;
 
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
@@ -31,13 +32,9 @@ function b_d3dside_category_show( $options ){
 	//$q_month = $d3dConf->q_month ;
 	//$q_day = $d3dConf->q_day ;
 	$q_fr = $d3dConf->q_fr ;
-	if ( $req_uid == 0 ) {
-		$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_cat. "&amp;";
-	} else {
 		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat."&amp;";
-	}
 	
-		$catopt = $d3dConf->func->get_categories($req_uid,$uid,true);
+		$catopt = $func->get_categories($req_uid,$uid,true);
 		$tag_name = rawurlencode(rawurldecode($d3dConf->getpost_param('tag_name'))) ;
 		//$tag_name = $d3dConf->getpost_param('tag_name') ;
 

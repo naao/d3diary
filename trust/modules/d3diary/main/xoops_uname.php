@@ -15,16 +15,18 @@ $use_mb = (in_array($enc, $encs));
 $use_utf8 = ($enc === 'UTF-8');
 
 $d3dConf = & D3diaryConf::getInstance ( $mydirname, 0, "xoops_uname" ) ;
+$gPerm =& $d3dConf->gPerm ;
+$mod_config =& $d3dConf->mod_config ;
 $uid = $d3dConf->uid;
 
 if($uid<=0) {
 	exit;
 }
-if( $d3dConf->gPerm->use_pp ==1 ) {
-	$_tempGperm = $d3dConf->gPerm->getUidsByName( array_keys($d3dConf->gPerm->gperm_config) );
+if( $gPerm->use_pp ==1 ) {
+	$_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 	// check edit permission by group
 	if(!empty($_tempGperm['allow_ppermission'])){
-		if(!in_array($uid, $_tempGperm['allow_ppermission'])) {
+		if(!isset($_tempGperm['allow_ppermission'][$uid])) {
 			exit();
 		}
 	} else {
@@ -41,7 +43,7 @@ if ($q !== "") {
 	}
 	$q = addslashesGPC($q);
 
-	if ($d3dConf->mod_config['use_name'] == 1) {
+	if ($mod_config['use_name'] == 1) {
 		$where1 = " WHERE name LIKE '".$q."%'";
 		$where2 = " WHERE name LIKE '%".$q."%' AND name NOT LIKE '".$q."%'";
 		$order = " ORDER BY name ASC";
@@ -82,7 +84,7 @@ if ($q !== "") {
 }
 
 $oq = '"'.str_replace('"','\"',$oq).'"';
-if ($d3dConf->mod_config['use_name'] == 1) {
+if ($mod_config['use_name'] == 1) {
 	$ret = join(", ", $names);
 } else {
 	$ret = join(", ", $unames);

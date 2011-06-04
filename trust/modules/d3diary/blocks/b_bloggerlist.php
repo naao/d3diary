@@ -15,25 +15,25 @@ function b_d3diary_bloggerlist_show( $options ){
 
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_bloggerlist");
+	$func =& $d3dConf->func ;
+	$mod_config =& $d3dConf->mod_config ;
 
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	
 	$params['ofst_key'] = "bgbofst" ;
-	$_offset_ = $d3dConf->func->getpost_param($params['ofst_key']);
+	$_offset_ = $func->getpost_param($params['ofst_key']);
 	$offset = isset($_offset_) ?(int)$_offset_ : 0;
 
-	list( $blogger, $blogger2, $bloggernavi ) = $d3dConf->func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );
+	list( $blogger, $blogger2, $bloggernavi ) = $func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );
 
-	$page = $d3dConf->func->getpost_param('page');
-	
 	$block="";
 
 	$block['blogger'] = $blogger;
 	$block['blogger2'] = $blogger2;
 	$block['bloggernavi'] = $bloggernavi;
 	$block['mydirname'] = $mydirname;
-	$block['mod_config'] = $d3dConf->mod_config;
+	$block['mod_config'] = $mod_config;
 	$block['lang']['other'] = constant($constpref.'_OTHER');
 	$block['lang']['more'] = constant($constpref.'_MORE');
 	$block['lang']['newdiary'] = constant($constpref.'_NEWDIARY');

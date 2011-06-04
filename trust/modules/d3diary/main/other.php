@@ -18,9 +18,13 @@ $yd_list=array(); $yd_com_key=""; $yd_monthnavi="";
 $req_uid = isset($_GET['req_uid']) ? (int)$_GET['req_uid'] : 0;
 
 $d3dConf =& D3diaryConf::getInstance($mydirname, $req_uid, "edit");
+$func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
+$mPerm =& $d3dConf->mPerm ;
+//$gPerm =& $d3dConf->gPerm ;
+$mod_config =& $d3dConf->mod_config ;
 
-$d3dConf->func->update_other();
+$func->update_other();
 
 $uid = $d3dConf->uid;
 
@@ -38,34 +42,34 @@ $d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XO
 $xoopsTpl->assign( 'xoops_module_header' ,$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header );
 
 // access check
-if(!$d3dConf->mPerm->check_permission( $d3dConf->dcfg->uid, $d3dConf->dcfg->openarea )){
+if(!$mPerm->check_permission( $d3dConf->dcfg->uid, $d3dConf->dcfg->openarea )){
     redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
 	exit();
 }
 
 // menu
-if($d3dConf->mod_config['menu_layout']==1){
+if($mod_config['menu_layout']==1){
 	$yd_layout = "left";
-}elseif($d3dConf->mod_config['menu_layout']==2){
+}elseif($mod_config['menu_layout']==2){
 	$yd_layout = "";
 }else{
 	$yd_layout = "right";
 }
 
-$yd_avaterurl = $d3dConf->func->get_user_avatar(array($d3dConf->dcfg->uid));
+$yd_avaterurl = $func->get_user_avatar(array($d3dConf->dcfg->uid));
 
 	//$yd_uname=d3diary_get_xoopsuname($d3dConf->dcfg->uid);
-	$rtn = $d3dConf->func->get_xoopsuname($d3dConf->dcfg->uid);
+	$rtn = $func->get_xoopsuname($d3dConf->dcfg->uid);
 	$yd_uname = $rtn['uname'];
 	$yd_name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
 	
-	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->initBoxArr();
+	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr();
 
 // specified category
-$req_cid=intval($d3dConf->func->getpost_param('cid'));
+$req_cid=intval($func->getpost_param('cid'));
 
 if($req_cid >0 ){
-	$category =& Category::getInstance();
+	$category =& D3diaryCategory::getInstance();
 	$category->uid=$d3dConf->dcfg->uid;
 	$category->cid=$req_cid;
 	$category->readdb($mydirname);
@@ -130,7 +134,7 @@ if($req_cid >0 ){
 	$yd_data['month'] = intval(date("m", $tstamp));
 	$yd_data['day'] = intval(date("d", $tstamp));
 	$yd_data['time'] = date("H:i:s", $tstamp);
-		$week = intval($d3dConf->func->myformatTimestamp($tstamp, "w"));
+		$week = intval($func->myformatTimestamp($tstamp, "w"));
 	$yd_data['week'] = $arr_weeks [$week];
 	$yd_data['b_month'] = $arr_monthes [$yd_data['month'] -1];
 	$yd_data['dclass'] = $arr_dclass [$week];
@@ -208,7 +212,7 @@ if( $req_cid >0 ){
 			$yd_data['month'] = intval(date("m", $tstamp));
 			$yd_data['day'] = intval(date("d", $tstamp));
 			$yd_data['time'] = date("H:i:s", $tstamp);
-				$week = intval($d3dConf->func->myformatTimestamp($tstamp, "w"));
+				$week = intval($func->myformatTimestamp($tstamp, "w"));
 			$yd_data['week'] = $arr_weeks [$week];
 			$yd_data['b_month'] = $arr_monthes [$yd_data['month'] -1];
 			$yd_data['dclass'] = $arr_dclass [$week];
@@ -257,16 +261,16 @@ if( $req_cid >0 ){
 		$bc_para['cname'] = $yd_data['cname'] ? $yd_data['cname'] : constant('_MD_NOCNAME');
 	}
 
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( $d3dConf->dcfg->uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $d3dConf->dcfg->uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 if ($d3dConf->dcfg->uid>0){
-    if ($d3dConf->mod_config['menu_layout']<=1){
-	$yd_list = $d3dConf->func->get_blist ($d3dConf->dcfg->uid,$uid,10);
-	list( $yd_comment, $yd_com_key ) =  $d3dConf->func->get_commentlist ($d3dConf->dcfg->uid,$uid,10,false);
-	list( $yd_calender, $yd_cal_month ) =  $d3dConf->func->get_calender ($d3dConf->dcfg->uid,date("Y"),date("m"), $uid);
-	list( $yd_friends, $yd_friendsnavi ) =  $d3dConf->func->get_friends ($d3dConf->mPerm->req_friends);
-	list( $yd_monlist, $yd_monthnavi ) =  $d3dConf->func->get_monlist ($d3dConf->dcfg->uid,$uid);
+    if ($mod_config['menu_layout']<=1){
+	$yd_list = $func->get_blist ($d3dConf->dcfg->uid,$uid,10);
+	list( $yd_comment, $yd_com_key ) =  $func->get_commentlist ($d3dConf->dcfg->uid,$uid,10,false);
+	list( $yd_calender, $yd_cal_month ) =  $func->get_calender ($d3dConf->dcfg->uid,date("Y"),date("m"), $uid);
+	list( $yd_friends, $yd_friendsnavi ) =  $func->get_friends ($mPerm->req_friends);
+	list( $yd_monlist, $yd_monthnavi ) =  $func->get_monlist ($d3dConf->dcfg->uid,$uid);
     } else {
 	$yd_calender=""; $yd_cal_month=""; $yd_friends=""; $yd_friendsnavi="";
 	$yd_comment=""; $yd_monlist=""; $yd_monthnav="";
@@ -295,13 +299,13 @@ if ($d3dConf->dcfg->uid>0){
 			"yd_openarea" => intval($d3dConf->dcfg->openarea),
 			"yd_layout" => $yd_layout,
 			"yd_offset" => $offset,
-			"catopt"  => $d3dConf->func->get_categories($d3dConf->dcfg->uid,$uid),
+			"catopt"  => $func->get_categories($d3dConf->dcfg->uid,$uid),
 			"mydirname" => $mydirname,
 			"xoops_breadcrumbs" => $breadcrumbs,
-			"mod_config" => $d3dConf->mod_config
+			"mod_config" => $mod_config
 			));
 
-$d3dConf->func->countup_diary($d3dConf->dcfg->uid);
+$func->countup_diary($d3dConf->dcfg->uid);
 
 include_once XOOPS_ROOT_PATH.'/footer.php';
 

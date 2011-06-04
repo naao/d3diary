@@ -3,7 +3,7 @@
 function b_d3diary_list_show( $options ){
 
 	include_once dirname( dirname(__FILE__) ).'/class/photo.class.php';
-	$photo =& Photo::getInstance();
+	$photo =& D3diaryPhoto::getInstance();
 
 	$mydirname = empty( $options[0] ) ? 'd3diary' : $options[0] ;
 	$max_entry = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
@@ -26,7 +26,9 @@ function b_d3diary_list_show( $options ){
 
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "b_diarylist");
+	$func =& $d3dConf->func ;
 	$myts =& $d3dConf->myts;
+	$mod_config =& $d3dConf->mod_config ;
 
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
@@ -34,7 +36,7 @@ function b_d3diary_list_show( $options ){
 	
 	$mytstamp = array();	// by ref
 	// dosort = false, byref $mytstamp
-	$entry = $d3dConf->func->get_blist_tstamp ( $req_uid, $uid, $max_entry_4query, false, $mytstamp, $params );
+	$entry = $func->get_blist_tstamp ( $req_uid, $uid, $max_entry_4query, false, $mytstamp, $params );
 	
 	// random photos
 	$d3dConf->get_new_bids( $got_bids ) ;
@@ -46,7 +48,7 @@ function b_d3diary_list_show( $options ){
 	unset($photo->photos);
 	
 	// comment counts, newest comments
-	list($yd_comment,$yd_com_key) = $d3dConf->func->get_commentlist(0,$uid,$got_bids,100,true);
+	list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,$got_bids,100,true);
 	if(!empty($yd_comment)){
 		foreach( $yd_comment as $_com){
 			$i = (int)$_com['bid'];
@@ -73,13 +75,13 @@ function b_d3diary_list_show( $options ){
 		    if(isset($usrcnt[$e['uid']])){
 			if( $usrcnt[$e['uid']]<$max_entryby_person ){
 				$entry_temp[$j] = $e;
-				$entry_temp[$j]['diary'] = $d3dConf->func->substrTarea($e['diary'], $e['dohtml'], $max_length, true);
+				$entry_temp[$j]['diary'] = $func->substrTarea($e['diary'], $e['dohtml'], $max_length, true);
 				$usrcnt[$e['uid']] ++;
 				$j++;
 			}
 		    } else {
 				$entry_temp[$j] = $e;
-				$entry_temp[$j]['diary'] = $d3dConf->func->substrTarea($e['diary'], $e['dohtml'], $max_length, true);
+				$entry_temp[$j]['diary'] = $func->substrTarea($e['diary'], $e['dohtml'], $max_length, true);
 				$usrcnt[$e['uid']] = 1;
 				$j++;
 		    }
@@ -98,7 +100,7 @@ function b_d3diary_list_show( $options ){
 		$block['categories'] = implode(',', $params['categories']);
 		$block['tags'] = implode(',', $params['tags']);
 		$block['mydirname'] = $mydirname;
-		$block['mod_config'] = $d3dConf->mod_config;
+		$block['mod_config'] = $mod_config;
 		$block['yd_com_key'] = $yd_com_key;
 		
 	$d3dConf->debug_appendtime('b_diarylist');

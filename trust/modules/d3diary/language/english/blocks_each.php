@@ -46,6 +46,8 @@ define($constpref."_BEFORE_MONTH","Prev");
 define($constpref."_NEXT_MONTH","Next");
 
 define($constpref."_OTHER","Blogger on other site");
+define($constpref."_NEWDIARY","Diary List");
+define($constpref."_NEWPHOTO","Image List");
 
 // definitions for displaying d3comment blocks 
 define($constpref."_FORUM","Forum");
@@ -63,8 +65,8 @@ define($constpref."_LINKTOLISTTOPICS","Topic Index");
 define($constpref."_ALT_UNSOLVED","Unsolved topic");
 define($constpref."_ALT_MARKED","Marked topic");
 
-define($constpref."_ORDERPOSTED","New Images"); 
-define($constpref."_ORDERRANDOM","Randum Images"); 
+define($constpref."_B_ORDERPOSTED","New Images"); 
+define($constpref."_B_ORDERRANDOM","Randum Images"); 
 define($constpref."_PERSON","'s diary"); 
 
 }

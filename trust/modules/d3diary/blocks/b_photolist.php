@@ -14,7 +14,7 @@ function b_d3d_photolist_show( $options ){
 		$params['tags'] = empty( $options[5] ) ? array() : explode( ',', $options[5] ) ;
 	}
 	$params['show_pinfo'] = empty( $options[6] ) ? false : true ;
-	$max_length = empty( $options[7] ) ? 80 : intval( $options[7] ) ;
+	$params['max_info'] = empty( $options[7] ) ? 80 : intval( $options[7] ) ;
 	$limit_self = empty( $options[8] ) ? 0 : (int)$options[8] ;
 	$this_template = empty( $options[9] ) ? 'db:'.$mydirname.'_block_photolist.html' : trim( $options[9] ) ;
 	$columns = empty( $options[10] ) ? 0 : (int)$options[10] ;
@@ -26,13 +26,15 @@ function b_d3d_photolist_show( $options ){
 
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "b_diarylist");
+	$func =& $d3dConf->func ;
 	$myts =& $d3dConf->myts;
-
+	$mod_config =& $d3dConf->mod_config ;
+	
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	
 	$params['ofst_key'] = "phbofst" ;
-	$_offset_ = $d3dConf->func->getpost_param($params['ofst_key']);
+	$_offset_ = $func->getpost_param($params['ofst_key']);
 	$offset = isset($_offset_) ?(int)$_offset_ : 0;
 
 
@@ -45,7 +47,7 @@ function b_d3d_photolist_show( $options ){
 	}
 
 	if ($req_uid > 0) {
-		$ret = $d3dConf->func->get_xoopsuname($req_uid) ;
+		$ret = $func->get_xoopsuname($req_uid) ;
 		$yd_uname = $ret['uname'];
 		$yd_name = $ret['name'];
 	}
@@ -59,14 +61,18 @@ function b_d3d_photolist_show( $options ){
 		}
 	}
 
-	list( $entry, $photonavi ) = $d3dConf->func->get_photolist ( $req_uid, $uid, $max_entry, $offset, $params );
+	$arr_req_uids = $req_uid > 0 ? array($req_uid) : array() ;
+	$params['enc'] = _CHARSET ;
+	$params['f_truncate']= true ;
+
+	list( $entry, $photonavi ) = $func->get_photolist ( $arr_req_uids, $uid, $max_entry, $offset, $params );
 	
-/*	$entry_temp = array();
-	if (!empty($entry)) {
+/*	if (!empty($entry)) {
+		$_enc =  _CHARSET ;
 		$i=0;
-		foreach ( $entry as $b => $e){
+		foreach ( $entry as $e ){
 			if(empty($e)){break;}
-			$entry_temp[$i] = $e;
+			$entry[$i]['info'] = mb_substr(strip_tags($e['info']),0,$max_length,$_enc) ;
 			$i++;
 		}
 	}
@@ -77,12 +83,12 @@ function b_d3d_photolist_show( $options ){
 		switch ($params['order']) {
 		case 'random' :
 			$block['photonavi'] = "";
-			$lang['order'] =  constant($constpref.'_ORDERRANDOM'); ;
+			$lang['order'] =  constant($constpref.'_B_ORDERRANDOM'); ;
 			break;
 		case 'time' :
 		default :
 			$block['photonavi'] = $photonavi;
-			$lang['order'] =  constant($constpref.'_ORDERPOSTED'); ;
+			$lang['order'] =  constant($constpref.'_B_ORDERPOSTED'); ;
 		}
 			$lang['person'] = constant($constpref.'_PERSON');
 
@@ -97,8 +103,8 @@ function b_d3d_photolist_show( $options ){
 		$block['categories'] = implode(',', $params['categories']);
 		$block['tags'] = implode(',', $params['tags']);
 		$block['mydirname'] = $mydirname;
-		$block['mod_config'] = $d3dConf->mod_config;
-		$block['max_length'] = $max_length;
+		$block['mod_config'] = $mod_config;
+		//$block['max_length'] = $max_length;
 		$block['maxsize'] = $maxsize;
 		$block['show_pinfo'] = $params['show_pinfo'];
 		$block['show_entrylink'] = $show_entrylink;

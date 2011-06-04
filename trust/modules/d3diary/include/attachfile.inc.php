@@ -30,8 +30,8 @@ function attachfile_check_upload_permission_plugin( $mydirname , $module_dirname
 	include_once $mytrustdirpath.'/class/category.class.php';
 	include_once $mytrustdirpath.'/class/d3diaryConf.class.php' ;
 
-	$diary =& Diary::getInstance();
-	$cat =& Category::getInstance();
+	$diary =& D3diaryDiary::getInstance();
+	$cat =& D3diaryCategory::getInstance();
 	
 	$diary->bid = $target_id ;
 	$diary->readdb($mydirname);
@@ -48,7 +48,7 @@ function attachfile_check_upload_permission_plugin( $mydirname , $module_dirname
 	$owner=0;
 	$_tempGperm = $d3dConf->gPerm->getUidsByName( array('allow_edit') );
 	// check edit permission by group
-	if(in_array($uid, $_tempGperm['allow_edit'])) {
+	if(isset($_tempGperm['allow_edit'][$uid])) {
 		if($diary->uid==$uid){$owner=1;$editperm=1;}
 		if($d3dConf->mPerm->isadmin){$editperm=1;}
 	}	unset($_tempGperm);

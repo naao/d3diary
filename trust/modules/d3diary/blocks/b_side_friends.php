@@ -12,6 +12,8 @@ function b_d3dside_friends_show( $options ){
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_fiends");
+	$func =& $d3dConf->func ;
+	$mPerm =& $d3dConf->mPerm ;
 
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
@@ -19,8 +21,8 @@ function b_d3dside_friends_show( $options ){
 	//if( $req_uid > 0 || $uid > 0 ) {
 	if( $req_uid > 0 ) {
 		$block="";
-		if ( $d3dConf->mPerm->d3d_conf['use_friend'] === true ) {
-			list( $yd_friends, $yd_friendsnavi ) =  $d3dConf->func->get_friends ($d3dConf->mPerm->req_friends);
+		if ( $mPerm->d3d_conf['use_friend'] === true ) {
+			list( $yd_friends, $yd_friendsnavi ) =  $func->get_friends ($mPerm->req_friends);
 
 			$lang = array();
 			$constpref = "_MB_" . strtoupper( $mydirname ) ;

@@ -1,7 +1,7 @@
 <?php
 include_once XOOPS_ROOT_PATH."/class/xoopstree.php";
 
-class Diary
+class D3diaryDiary
 {
 	var $uid;
 	var $bid;
@@ -16,14 +16,17 @@ class Diary
 	var $vpids;
 	var $view;
 
-	function Diary(){
+	var $bids;	// for multiread
+	var $diaries=array();
+
+	function D3diaryDiary(){
 	}
 
     function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
-            $instance = new Diary();
+            $instance = new D3diaryDiary();
         }
         return $instance;
     }
@@ -50,6 +53,21 @@ class Diary
 			$this->vgids   = $dbdat['vgids'];
 			$this->vpids   = $dbdat['vpids'];
 			$this->view   = $dbdat['view'];
+		}
+	}
+
+	function readdb_mul($mydirname){
+		global $xoopsDB ;
+	
+		$whr_bids = " WHERE bid IN (".implode(',',$this->bids).")";
+		$sql = "SELECT *
+				  FROM ".$xoopsDB->prefix($mydirname.'_diary').$whr_bids." 
+				  order by bid";
+		$result = $xoopsDB->query($sql);
+		$num_rows = $xoopsDB->getRowsNum($result);
+
+		while ( $dbdat = $xoopsDB->fetchArray($result) ) {
+			$this->diaries[(int)$dbdat['bid']] = $dbdat;
 		}
 	}
 

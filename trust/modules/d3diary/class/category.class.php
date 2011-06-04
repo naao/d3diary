@@ -1,7 +1,7 @@
 <?php
 include_once XOOPS_ROOT_PATH."/class/xoopstree.php";
 
-class Category
+class D3diaryCategory
 {
 	var $uid;
 	var $cid;
@@ -18,14 +18,14 @@ class Category
 	var $vgids;
 	var $vpids;
 
-	function Category(){
+	function D3diaryCategory(){
 	}
 
     function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
-            $instance = new Category();
+            $instance = new D3diaryCategory();
         }
         return $instance;
     }

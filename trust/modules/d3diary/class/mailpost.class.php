@@ -50,12 +50,12 @@ function ini_set()
 {	//must be set $this->mydirname, $req_uid before call it
 
 	// copying parent's parameters
-	$this->mydirname = $this->d3dConf->mydirname;
-	$this->mid = $this->d3dConf->mid;
+	$this->mydirname = & $this->d3dConf->mydirname;
+	$this->mid = & $this->d3dConf->mid;
 
-	$this->uid = $this->d3dConf->uid;
-	$this->req_uid = $this->d3dConf->req_uid;
-	$this->mod_config = $this->d3dConf->mod_config;
+	$this->uid = & $this->d3dConf->uid;
+	$this->req_uid = & $this->d3dConf->req_uid;
+	$this->mod_config = & $this->d3dConf->mod_config;
 	$this->dcfg = & $this->d3dConf->dcfg;
 	
 	$this->myts =& $this->d3dConf->myts;

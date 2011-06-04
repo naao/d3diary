@@ -11,10 +11,10 @@ include_once dirname( dirname(__FILE__) ).'/class/photo.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/tag.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 
-$diary =& Diary::getInstance();
-$category =& Category::getInstance();
-$photo =& Photo::getInstance();
-$tag =& Tag::getInstance();
+$diary =& D3diaryDiary::getInstance();
+$category =& D3diaryCategory::getInstance();
+$photoObj =& D3diaryPhoto::getInstance();
+$tag =& D3diaryTag::getInstance();
 
 require_once XOOPS_TRUST_PATH.'/libs/altsys/class/D3NotificationHandler.class.php' ;
 
@@ -35,11 +35,15 @@ define ('_D3DIARY_PROCMODE_PHOTOROTATE', '10' ) ;
 $myname = "edit.php";
 
 $d3dConf =& D3diaryConf::getInstance($mydirname, 0, "edit");
+$func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
+$mod_config =& $d3dConf->mod_config ;
 
 $uid = $d3dConf->uid;
 $d3dConf->req_uid = $req_uid = isset($_GET['req_uid']) ? (int)$_GET['req_uid'] : $uid;
-$d3dConf->mPerm->ini_set();
+$mPerm->ini_set();
 
 if( $uid<=0 ){
     redirect_header(XOOPS_URL.'/user.php',2,_MD_IVUID_ERR);
@@ -54,32 +58,34 @@ if($d3dConf->dcfg->blogtype!=0){
 $openarea = intval($d3dConf->dcfg->openarea)!=0 ? intval($d3dConf->dcfg->openarea) : 0;
 $now = date("Y-m-d H:i:s");
 
-$diary->bid = (int)$d3dConf->func->getpost_param('bid');
+$diary->bid = (int)$func->getpost_param('bid');
 $diary->uid = $req_uid;
 
 // edit parameters
 $eparam = array() ;
 $eparam['is_prev'] = 0 ;
 // photo parameters
-$eparam['uploaddir'] = XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/';	// photo upload dir
-$eparam['previewdir'] = 'prev/';						// photo preview dir
-$eparam['th_size']= empty( $d3dConf->mod_config['photo_thumbsize'] ) ? 160 : intval($d3dConf->mod_config['photo_thumbsize']);
+
+list( $eparam['uploaddir'] , $eparam['previewdir'] ) = $d3dConf->get_photodir() ;	// photo upload dir, preview dir
+$eparam['th_size']= empty( $mod_config['photo_thumbsize'] ) ? 160 : intval($mod_config['photo_thumbsize']);
 										// photo thumbnail size
-$eparam['postmax']= intval($d3dConf->mod_config['photo_maxpics']);		// max photo numbers
+$eparam['postmax']= intval($mod_config['photo_maxpics']);		// max photo numbers
 
 //
 // set mode for processing the branch
 //
 
-$post_val['photodel'] = $d3dConf->func->getpost_param('photodel') ;
-$post_val['photorotate'] = $d3dConf->func->getpost_param('photorotate') ;
-$post_val['delsub'] = $d3dConf->func->getpost_param('delsub') ;
-$post_val['submit1'] = $d3dConf->func->getpost_param('submit1') ;
-$post_val['preview'] = $d3dConf->func->getpost_param('preview') ;
+//$post_val['photodel'] = $func->getpost_param('photodel') ;
+//$post_val['photorotate'] = $func->getpost_param('photorotate') ;
+$post_val['delsub'] = $func->getpost_param('delsub') ;
+$post_val['submit1'] = $func->getpost_param('submit1') ;
+$post_val['preview'] = $func->getpost_param('preview') ;
+$post_val['phandle'] = $func->getpost_param('phandle') ;
+$action = (int)$func->getpost_param('action') ;
 
-if( !empty($post_val['photodel']) ) {
+if( !empty($post_val['phandle']) && $action == 5 && $diary->bid>0 ) {
 	$eparam['mode'] = _D3DIARY_PROCMODE_PHOTODEL ;		// delete photo
-} elseif( !empty($post_val['photorotate'] ) && $diary->bid>0 ) {
+} elseif( !empty($post_val['phandle']) && ($action == 2 || $action == 3) && $diary->bid>0 ) {
 	$eparam['mode'] = _D3DIARY_PROCMODE_PHOTOROTATE ;	// rotate photo
 } elseif( !empty($post_val['delsub'] ) && $diary->bid>0 ) {
 	$eparam['mode'] = _D3DIARY_PROCMODE_DELETE ;		// delete
@@ -99,35 +105,35 @@ if( !empty($post_val['photodel']) ) {
 // for access check
 //
 
-	if ($d3dConf->mPerm->isadmin && 0 < intval($d3dConf->req_uid)) {
+	if ($mPerm->isadmin && 0 < intval($d3dConf->req_uid)) {
 		$req_uid = intval($d3dConf->req_uid);
-		$rtn = $d3dConf->func->get_xoopsuname($req_uid);
+		$rtn = $func->get_xoopsuname($req_uid);
 		$uname = $rtn['uname'];
 		$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
-		$rtn = $d3dConf->func->get_xoopsuname($uid);
+		$rtn = $func->get_xoopsuname($uid);
 		$myuname = $rtn['uname'];
 		$myname = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
 	} else {
 		$req_uid = $uid;
-		$rtn = $d3dConf->func->get_xoopsuname($uid);
+		$rtn = $func->get_xoopsuname($uid);
 		$uname = $rtn['uname'];
 		$name = $rtn['name'];
 	}
 	
-	$notif_name = $d3dConf->mod_config['use_name']==1 ? $name : $uname;
+	$notif_name = $mod_config['use_name']==1 ? $name : $uname;
 
 // STEP0 check edit permission
 
-	if(($diary->bid>0 and !$d3dConf->mPerm->check_editperm($diary->bid, $uid)) or ($uid != $req_uid && $diary->bid <= 0)){
+	if(($diary->bid>0 and !$mPerm->check_editperm($diary->bid, $uid)) or ($uid != $req_uid && $diary->bid <= 0)){
 		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
 		exit();
 	}
 
 	// get permission unames for each groupPermission
 	// check edit permission by group
-	$_tempGperm = $d3dConf->gPerm->getUidsByName( array_keys($d3dConf->gPerm->gperm_config) );
+	$_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 	if(!empty($_tempGperm['allow_edit'])){
-		if(!in_array($uid, $_tempGperm['allow_edit'])) {
+		if(!isset($_tempGperm['allow_edit'][$uid])) {
 			redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
 			exit();
 		}
@@ -145,19 +151,20 @@ if( !empty($post_val['photodel']) ) {
 	}
 
 	// set "was preview" for last access was preview
-	$eparam['was_prev'] = (int)$d3dConf->func->getpost_param('was_prev') ;	
+	$eparam['was_prev'] = (int)$func->getpost_param('was_prev') ;	
 
 	// pname in preview
-	$prev_pname = $d3dConf->func->getpost_param('pname');
+	$prev_pname = $func->getpost_param('pname');
 	$prev_pname = !empty($prev_pname) ? $prev_pname : array();
-	$prev_pid = $d3dConf->func->getpost_param('pid');
+	$prev_pid = $func->getpost_param('pid');
 	$prev_pid = !empty($prev_pid) ? $prev_pid : array();
-	$prev_info = $d3dConf->func->getpost_param('pvinfo');
+	$prev_info = $func->getpost_param('pvinfo');
 	$prev_info = !empty($prev_info) ? $prev_info : array();
 
 	$form_photos = array() ;
-	if ( count($prev_pid) > 0 ) {
-		for ($i=0; $i<count($prev_pid); $i++) {
+	$count_pr_pid = count($prev_pid) ;
+	if ( $count_pr_pid > 0 ) {
+		for ($i=0; $i<$count_pr_pid; $i++) {
 			$form_photo['pid'] = $prev_pid[$i] ;
 			$form_photo['pname'] = $prev_pname[$i] ;
 			$form_photo['info'] = $prev_info[$i] ;
@@ -166,18 +173,18 @@ if( !empty($post_val['photodel']) ) {
 	}
 
 	// photo name by submit with photos
-	$pinfo = $d3dConf->func->getpost_param('pinfo');
+	$pinfo = $func->getpost_param('pinfo');
 	$pinfo = !empty($pinfo) ? $pinfo : array();
 
 	// photo delete check by submit with photos
-	$temp_pdels = $d3dConf->func->getpost_param('pdel');
-	$pdels = array(); $pdel_names = array();
-	if (!empty($temp_pdels)) {
-		foreach ( $temp_pdels as $temp_pdel ) {
-			list( $pdels[], $pdel_names[] ) = explode( "::", $temp_pdel );
+	$temp_psels = $func->getpost_param('psel');
+	$psels = array(); $psel_names = array();
+	if (!empty($temp_psels)) {
+		foreach ( $temp_psels as $temp_psel ) {
+			list( $psels[], $psel_names[] ) = explode( "::", $temp_psel );
 		}
 	}
-	//var_dump($pdels); echo "<br><br>"; var_dump($pdel_names); echo "<br><br>";
+	//var_dump($psels); echo "<br><br>"; var_dump($psel_names); echo "<br><br>";
 
 // STEP 2: get registered diary and photos if existed
 	if($diary->bid>0){
@@ -202,47 +209,14 @@ switch ( $eparam['mode'] ) {
 		exit();
 	}
 
-	$i=0;
-	foreach ( $pdels as $pdel ) {
-		$del_pid = addslashes($pdel);
-		$pattern = array("..","index.html",".php");
-		$replace = array("","","");
-		$trim_pid = str_replace($eparam['previewdir'], "", $del_pid);
+	$rtnurl = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4_all ;
+	// delete registered photos ( $action == 5 )
+	$result = $func->manage_photos( $photoObj, $diaryObj, $psels, $psel_names, $action, $eparam ) ;
+	$_msg="";
 
-		$del_pname = addslashes($pdel_names[$i]);
-		$trim_pname = str_replace($eparam['previewdir'], "", $del_pname);
-		$trim_pname = str_replace($pattern,$replace,$trim_pname);
-		$del_pname2 = str_replace($pattern,$replace,$del_pname);
-
-		//var_dump($eparam['previewdir']); echo"<br />"; var_dump($del_pname); echo"<br />"; var_dump($del_pname2); echo"<br />"; var_dump($trim_pname); echo"<br />"; var_dump($del_pid); echo"<br />"; var_dump($trim_pid); echo"<br />";
-
-		// delete registered file
-		if (strlen($trim_pid) == strlen($del_pid)  and $diary->bid>0 and !empty($del_pid)){
-			// delete from database
-			//$photo->uid=$diary->uid;
-			$photo->bid=$diary->bid;
-			$photo->pid=$del_pid;
-			$photo->readdb($mydirname);
-			
-			/* delfile */
-			unlink($eparam['uploaddir'].$photo->pid.$photo->ptype);
-			unlink($eparam['uploaddir'].'t_'.$photo->pid.$photo->ptype);
-			$yd_data['msg'] = _MD_FILEDELETED;
-			$photo->deletedbF($mydirname);
-			$photo->init_values($mydirname);
-			// readdb again after deleted
-			list( $num_photos , $yd_photo )= d3diary_readdb_photo($mydirname);
-			$yd_data['photo_num'] = $num_photos ;
-
-		// delete previewed file
-		} elseif (!empty($del_pname2)) {
-			unlink($eparam['uploaddir'].$del_pname2);
-			unlink($eparam['uploaddir'].$eparam['previewdir'].'t_'.$trim_pname);
-			$yd_data['msg'] = _MD_FILEDELETED;
-			
-		}
-		$i++;
-	}  // end foreach $pdels
+		// readdb again after deleted
+		list( $num_photos , $yd_photo )= d3diary_readdb_photo($mydirname);
+		$yd_data['photo_num'] = $num_photos ;
 
 		// read and add previewed photos
 		$msg=d3diary_checkphoto( $mydirname );
@@ -253,6 +227,7 @@ switch ( $eparam['mode'] ) {
 			$yd_data['photo_num'] = $yd_data['photo_num'] + $photo_num;
 		}
 
+	//$eparam['mode'] = _D3DIARY_PROCMODE_PREVIEW ;
 	// input form
    	d3diary_showform( $mydirname ) ;
 	break ;
@@ -265,51 +240,12 @@ switch ( $eparam['mode'] ) {
 		exit();
 	}
 
-	$i=0;
-	foreach ( $pdels as $pdel ) {
-		$del_pid = addslashes($pdel);
-		$pattern = array("..","index.html",".php");
-		$replace = array("","","");
-		$trim_pid = str_replace($eparam['previewdir'], "", $del_pid);
-		$del_pname = addslashes($pdel_names[$i]);
+	$rtnurl = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4_all ;
+	// rotate registered photos ( $action == 2 || $action == 3 )
+	$result = $func->manage_photos( $photoObj, $diaryObj, $psels, $psel_names, $action, $eparam ) ;
 
-		if (strlen($trim_pid) == strlen($del_pid)  and $diary->bid>0 and !empty($del_pname)){
-			$uploadfile = $eparam['uploaddir'].$del_pname;
-			$t_uploadfile = $eparam['uploaddir'].'t_'.$del_pname;
-			list($width, $height, $type, $attr) = getimagesize($uploadfile);
-			if ( (int)$post_val['photorotate'] == 2 ) {
-				$degrees = 90;
-			} else {
-				$degrees = 270;
-			}
-			// rotate
-			if($type == 1){
-				$upimage = ImageCreateFromGIF($uploadfile);
-				$t_upimage = ImageCreateFromGIF($t_uploadfile);
-				$rotated = imagerotate($upimage, $degrees, 0);
-				$t_rotated = imagerotate($t_upimage, $degrees, 0);
-				imagegif($rotated,$uploadfile);
-				imagegif($t_rotated,$t_uploadfile);
-			} elseif($type == 2){
-				$upimage = ImageCreateFromJPEG($uploadfile);
-				$t_upimage = ImageCreateFromJPEG($t_uploadfile);
-				$rotated = imagerotate($upimage, $degrees, 0);
-				$t_rotated = imagerotate($t_upimage, $degrees, 0);
-				imagejpeg($rotated,$uploadfile);
-				imagejpeg($t_rotated,$t_uploadfile);
-			} else {
-				$upimage = ImageCreateFromPNG($uploadfile);
-				$t_upimage = ImageCreateFromPNG($t_uploadfile);
-				$rotated = imagerotate($upimage, $degrees, 0);
-				$t_rotated = imagerotate($t_upimage, $degrees, 0);
-				imagepng($rotated,$uploadfile);
-				imagepng($t_rotated,$t_uploadfile);
-			}
-		}
-		$i++;
-	}  // end foreach $pdels
-
-	redirect_header( XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$diary->bid,2,_MD_DIARY_UPDATED);
+	//$eparam['mode'] = _D3DIARY_PROCMODE_PREVIEW ;
+	redirect_header( $rtnurl, 2, _MD_DIARY_UPDATED);
 
 	// input form
 	//d3diary_showform( $mydirname ) ;
@@ -329,27 +265,27 @@ switch ( $eparam['mode'] ) {
 		exit();
 	}
 
-	$diary->title=$d3dConf->func->getpost_param('title');
-	$diary->dohtml=intval($d3dConf->func->getpost_param('dohtml'));
+	$diary->title=$func->getpost_param('title');
+	$diary->dohtml=intval($func->getpost_param('dohtml'));
 	if ($diary->dohtml == 1) {
-		$diary->diary = $d3dConf->func->htmlPurifier($d3dConf->func->getpost_param('diary'));
+		$diary->diary = $func->htmlPurifier($func->getpost_param('diary'));
 	} else {
-		$diary->diary = $d3dConf->func->getpost_param('diary');
+		$diary->diary = $func->getpost_param('diary');
 	}
-	$diary->cid=$d3dConf->func->getpost_param('cid');
-	$diary->openarea=$d3dConf->func->getpost_param('openarea');
-	$chk_vgids= $d3dConf->func->getpost_param('vgids');		
+	$diary->cid=$func->getpost_param('cid');
+	$diary->openarea=$func->getpost_param('openarea');
+	$chk_vgids= $func->getpost_param('vgids');		
 	$diary->vgids = $chk_vgids ? "|".implode("|", array_map("intval" ,$chk_vgids))."|" : "";
-	$chk_vpids= $d3dConf->func->getpost_param('vpids');		
+	$chk_vpids= $func->getpost_param('vpids');		
 	$diary->vpids = $chk_vpids ? "|".implode("|", array_map("intval" ,explode("," , $chk_vpids)))."|" : "";
 	$openarea = intval($diary->openarea)!=0 ? intval($diary->openarea) : $openarea;
 
-	$yd_data['dohtml'] = $d3dConf->func->getpost_param('dohtml');
+	$yd_data['dohtml'] = $func->getpost_param('dohtml');
 	
-	if ($d3dConf->func->getpost_param('reg_time')) {
+	if ($func->getpost_param('reg_time')) {
 		d3diary_reg_time();
 	}
-	$cname=$d3dConf->func->getpost_param('cname');
+	$cname=$func->getpost_param('cname');
 	$msg=d3diary_checkphoto($mydirname);
 	if(empty($msg)){
 		// new category
@@ -385,8 +321,8 @@ switch ( $eparam['mode'] ) {
 		$category->readdb($mydirname);
 
 		// Trigger Notification using "Altsys D3NotificationHandler"
-		$openarea_entry = intval($d3dConf->func->getpost_param('openarea'))!=0 ? 
-					intval($d3dConf->func->getpost_param('openarea')) : 0;
+		$openarea_entry = intval($func->getpost_param('openarea'))!=0 ? 
+					intval($func->getpost_param('openarea')) : 0;
 		$category->cid = (int)$diary->cid;
 		$category->uid = $uid;
 		$category->readdb($mydirname);
@@ -395,7 +331,7 @@ switch ( $eparam['mode'] ) {
 		$vpids_cat = !empty($category->vpids) ? $category->vpids : "";
 
 		// 1st parameter $openarea is byref
-		$users2notify = $d3dConf->mPerm->get_users_can_read_entry( $openarea, $yd_data['openarea'], $openarea_cat, 								$diary->vgids, $diary->vpids, $vgids_cat, $vpids_cat );
+		$users2notify = $mPerm->get_users_can_read_entry( $openarea, $yd_data['openarea'], $openarea_cat, 								$diary->vgids, $diary->vpids, $vgids_cat, $vpids_cat );
 
 		$not_handler =& D3NotificationHandler::getInstance() ;
 		
@@ -406,7 +342,7 @@ switch ( $eparam['mode'] ) {
 		$not_handler->triggerEvent( $mydirname , 'd3diary' , 'blogger' , $req_uid , 'new_entry' , $comment_tags , $users2notify ) ;
 		
 
-	    if (intval($d3dConf->func->getpost_param('update_ping'))==1 && $openarea==0 && ($diary->create_time <= $now)){
+	    if (intval($func->getpost_param('update_ping'))==1 && $openarea==0 && ($diary->create_time <= $now)){
 	    		$blogtitle=mb_convert_encoding($notif_name._MD_DIARY_TITLENAME, "UTF-8");
 			$blogtopurl=mb_convert_encoding(XOOPS_URL.'/modules/'.$mydirname.'/index.php?req_uid='.$req_uid, "UTF-8");
 			d3diary_ping_send($blogtitle, $blogtopurl);
@@ -447,26 +383,26 @@ switch ( $eparam['mode'] ) {
 	    redirect_header( XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=edit',2,_MD_NODIARY_ERR);
 		exit();
 	}
-	$diary->title=$d3dConf->func->getpost_param('title');
-	$diary->dohtml=intval($d3dConf->func->getpost_param('dohtml'));
+	$diary->title=$func->getpost_param('title');
+	$diary->dohtml=intval($func->getpost_param('dohtml'));
 	if ($diary->dohtml == 1) {
-		$diary->diary = $d3dConf->func->htmlPurifier($d3dConf->func->getpost_param('diary'));
+		$diary->diary = $func->htmlPurifier($func->getpost_param('diary'));
 	} else {
-		$diary->diary = $d3dConf->func->getpost_param('diary');
+		$diary->diary = $func->getpost_param('diary');
 	}
-	$diary->cid=$d3dConf->func->getpost_param('cid');
-	$chk_vgids= $d3dConf->func->getpost_param('vgids');		
+	$diary->cid=$func->getpost_param('cid');
+	$chk_vgids= $func->getpost_param('vgids');		
 	$diary->vgids = $chk_vgids ? "|".implode("|", array_map("intval" ,$chk_vgids))."|" : "";
-	$chk_vpids= $d3dConf->func->getpost_param('vpids');
+	$chk_vpids= $func->getpost_param('vpids');
 	$diary->vpids = $chk_vpids ? "|".implode("|", array_map("intval" ,explode("," , $chk_vpids)))."|" : "";
 
-	if ( ($diary->openarea == 100) && (intval($d3dConf->func->getpost_param('openarea') != 100))) {
-		if (intval($d3dConf->func->getpost_param('update_time'))==1) {
+	if ( ($diary->openarea == 100) && (intval($func->getpost_param('openarea') != 100))) {
+		if (intval($func->getpost_param('update_time'))==1) {
 			$update_create_time = true;
 			
 			// Trigger Notification using "Altsys D3NotificationHandler"
-			$openarea_entry = intval($d3dConf->func->getpost_param('openarea'))!=0 ? 
-					intval($d3dConf->func->getpost_param('openarea')) : 0;
+			$openarea_entry = intval($func->getpost_param('openarea'))!=0 ? 
+					intval($func->getpost_param('openarea')) : 0;
 			$category->cid = (int)$diary->cid;
 			$category->uid = $uid;
 			$category->readdb($mydirname);
@@ -475,7 +411,7 @@ switch ( $eparam['mode'] ) {
 			$vpids_cat = !empty($category->vpids) ? $category->vpids : "";
 
 			// 1st parameter $openarea is byref
-			$users2notify = $d3dConf->mPerm->get_users_can_read_entry( $openarea, $openarea_entry, $openarea_cat, 
+			$users2notify = $mPerm->get_users_can_read_entry( $openarea, $openarea_entry, $openarea_cat, 
 						$diary->vgids, $diary->vpids, $vgids_cat, $vpids_cat );
 
 			$not_handler =& D3NotificationHandler::getInstance() ;
@@ -493,13 +429,13 @@ switch ( $eparam['mode'] ) {
 		$update_create_time = false;
 	}
 	
-	$diary->openarea=intval($d3dConf->func->getpost_param('openarea'));
+	$diary->openarea=intval($func->getpost_param('openarea'));
 	$openarea = intval($diary->openarea)!=0 ? intval($diary->openarea) : $openarea;
 	
-	if ($d3dConf->func->getpost_param('reg_time')) {
+	if ($func->getpost_param('reg_time')) {
 		d3diary_reg_time();
 	}
-	$cname=$d3dConf->func->getpost_param('cname');
+	$cname=$func->getpost_param('cname');
 	$msg=d3diary_checkphoto($mydirname);
 	// subscribe
 	if(empty($msg)){
@@ -538,7 +474,7 @@ switch ( $eparam['mode'] ) {
 		$category->uid=$req_uid;
 		$category->readdb($mydirname);
 		$openarea = intval($category->openarea)!=0 ? intval($category->openarea) : $openarea;
-	    if (intval($d3dConf->func->getpost_param('update_ping'))==1 && $openarea==0 && ($diary->create_time <= $now)){
+	    if (intval($func->getpost_param('update_ping'))==1 && $openarea==0 && ($diary->create_time <= $now)){
 	    		$blogtitle=mb_convert_encoding($uname._MD_DIARY_TITLENAME, "UTF-8");
 			$blogtopurl=mb_convert_encoding(XOOPS_URL.'/modules/'.$mydirname.'/index.php?req_uid='.$req_uid, "UTF-8");
 			d3diary_ping_send($blogtitle, $blogtopurl);
@@ -574,15 +510,15 @@ switch ( $eparam['mode'] ) {
 	          WHERE uid='".intval($diary->uid)."' and bid='".intval($diary->bid)."'";
 	$result = $xoopsDB->query($sql);
 	
-	$photo->uid=$diary->uid;
-	$photo->bid=$diary->bid;
+	$photoObj->uid=$diary->uid;
+	$photoObj->bid=$diary->bid;
 	while ( $dbdat = $xoopsDB->fetchArray($result) ) {
-		$photo->pid=$dbdat['pid'];
-		$photo->readdb($mydirname);
+		$photoObj->pid=$dbdat['pid'];
+		$photoObj->readdb($mydirname);
 		/* delfile */
-		unlink(XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/'.$photo->pid.$photo->ptype);
-		unlink(XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/t_'.$photo->pid.$photo->ptype);
-		$photo->deletedb($mydirname);
+		unlink(XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/'.$photoObj->pid.$photoObj->ptype);
+		unlink(XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/t_'.$photoObj->pid.$photoObj->ptype);
+		$photoObj->deletedb($mydirname);
 	}
 
 	$diary->deletedb($mydirname);
@@ -602,11 +538,11 @@ switch ( $eparam['mode'] ) {
 // STEP 4: process tags
 
 	$pop_tags=array(); $perso_tags=array(); $_entry_tags=array(); $entry_tags=array();
-	$d3dConf->func->get_taglist($req_uid, $diary->bid, $pop_tags, $person_tags, $_entry_tags);
+	$func->get_taglist($req_uid, $diary->bid, $pop_tags, $person_tags, $_entry_tags);
 	
 	// read tags
 	// use post_tags for preview
-	$post_tags = $d3dConf->func->getpost_param('tags');
+	$post_tags = $func->getpost_param('tags');
 	if(!empty($post_tags)) {
 		if (function_exists('mb_convert_kana')){
 			preg_match_all("/\[(.+)\]/U", mb_convert_kana($post_tags, 'asKV'), $tags);
@@ -629,7 +565,7 @@ switch ( $eparam['mode'] ) {
 	
 	$d3diary_header .= '<script type="text/javascript" src="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=loader&src=tag.js"></script>'."\r\n";
 	if(!empty($_tempGperm['allow_ppermission'])){
-		if(in_array($uid,$_tempGperm['allow_ppermission'])){
+		if(isset($_tempGperm['allow_ppermission'][$uid])){
 			$d3diary_header .= '<script type="text/javascript" src="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=loader&src=prototype,suggest,log.js"></script>'."\r\n";
 		}
 	}
@@ -642,9 +578,9 @@ switch ( $eparam['mode'] ) {
 $smilylist = d3diary_get_smilylist();
 
 // menu
-if($d3dConf->mod_config['menu_layout']==1){
+if($mod_config['menu_layout']==1){
 	$yd_layout = "left";
-}elseif($d3dConf->mod_config['menu_layout']==2){
+}elseif($mod_config['menu_layout']==2){
 	$yd_layout = "";
 }else{
 	$yd_layout = "right";
@@ -662,15 +598,15 @@ if($d3dConf->mod_config['menu_layout']==1){
 	$bc_para['title'] = $yd_data['title'];
 	$bc_para['bc_name'] = constant('_MD_DIARY_EDIT');
 	
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( $req_uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $req_uid, $bc_para['mode'], $bc_para );
 
 // header ~ assign
 $xoopsOption['template_main']= $mydirname.'_edit.html';
 include XOOPS_ROOT_PATH."/header.php";
 // this page uses smarty template
 // this must be set before including main header.php
-	$_temp_preview = $d3dConf->func->getpost_param('preview');
-	if(!empty($_temp_preview) || intval($d3dConf->func->getpost_param('photodel'))==1){
+	$_temp_preview = $func->getpost_param('preview');
+	if(!empty($_temp_preview) || intval($func->getpost_param('photodel'))==1){
 		$xoopsTpl->assign("preview", "1");	// naao 100731
 	}
 
@@ -682,34 +618,34 @@ include XOOPS_ROOT_PATH."/header.php";
 			"yd_name" => $name,
 			"yd_openarea" => intval($d3dConf->dcfg->openarea),
 			"yd_layout" => $yd_layout,
-			"yd_use_friend" => intval($d3dConf->mod_config['use_friend']),
-			"yd_photo_maxsize" => intval($d3dConf->mod_config['photo_maxsize']),
-			"yd_photo_maxpics" => intval($d3dConf->mod_config['photo_maxpics']),
-			"yd_useresize" => intval($d3dConf->mod_config['photo_useresize']),
+			"yd_use_friend" => intval($mod_config['use_friend']),
+			"yd_photo_maxsize" => intval($mod_config['photo_maxsize']),
+			"yd_photo_maxpics" => intval($mod_config['photo_maxpics']),
+			"yd_useresize" => intval($mod_config['photo_useresize']),
 			"yd_data" => $yd_data,
 			"yd_photo" => $yd_photo,
 			"popTagArr" => $pop_tags,
 			"myTagArr" => $person_tags,
 			"bTagArr" => $entry_tags,
-			"yd_counter" =>  $d3dConf->func->get_count_diary($diary->uid),
-			"yd_use_open_entry" => intval($d3dConf->mod_config['use_open_entry']),
+			"yd_counter" =>  $func->get_count_diary($diary->uid),
+			"yd_use_open_entry" => intval($mod_config['use_open_entry']),
 			"catopt" => d3diary_get_category_foredit($mydirname, $req_uid),
 			"mydirname" => $mydirname,
 			"xoops_breadcrumbs" => $breadcrumbs,
 			"xoops_module_header" => 
 				$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
-			"mod_config" => $d3dConf->mod_config,
+			"mod_config" => $mod_config,
 			"charset" => _CHARSET,
 			"smilylist" => $smilylist,
-			"allow_edit" => !empty($_tempGperm['allow_edit']) ? in_array($uid, $_tempGperm['allow_edit']) : array(),
-			"allow_html" => !empty($_tempGperm['allow_html']) ? in_array($uid, $_tempGperm['allow_html']) : array(),
-			"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? in_array($uid, $_tempGperm['allow_regdate']) : array()
+			"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$uid]) : false,
+			"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$uid]) : false,
+			"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? isset($_tempGperm['allow_regdate'][$uid]) : false
 			));
 			
 	if(!empty($_tempGperm['allow_gpermission']) && ( $_oe == 10 || $_oe == 20 ))
-		{ $xoopsTpl->assign( 'allow_gpermission' , in_array($uid,$_tempGperm['allow_gpermission'])); }
+		{ $xoopsTpl->assign( 'allow_gpermission' , isset($_tempGperm['allow_gpermission'][$uid])); }
 	if(!empty($_tempGperm['allow_ppermission']) && ( $_oe == 20 ))
-		{ $xoopsTpl->assign( 'allow_ppermission' , in_array($uid,$_tempGperm['allow_ppermission'])); }
+		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
 
 include_once XOOPS_ROOT_PATH.'/footer.php';
 
@@ -717,7 +653,7 @@ include_once XOOPS_ROOT_PATH.'/footer.php';
 // private functions
 //
 function d3diary_get_category_foredit($mydirname, $uid){
-	global $xoopsDB, $myts, $d3dConf;
+	global $xoopsDB, $myts, $mod_config;
 	
 	// changed for common category (uid=0)
 	$sql = "SELECT *
@@ -732,7 +668,7 @@ function d3diary_get_category_foredit($mydirname, $uid){
 		if($dbdat['blogtype'] != 100){
 			$catopt['cid']   = $dbdat['cid'];
 			$catopt['cname']   = htmlspecialchars($dbdat['cname'], ENT_QUOTES);
-			if (intval($d3dConf->mod_config['use_open_cat'])>=1){
+			if (intval($mod_config['use_open_cat'])>=1){
 				if ($dbdat['subcat']==1) $catopt['cname'] = "&nbsp;--&nbsp;".$catopt['cname'] ;
 				switch ((int)$dbdat['openarea']) {
 					case 0: $catopt['cname'] .= " &nbsp;[".constant('_MD_CONF2_FOLLOW')."]"; break;
@@ -756,24 +692,24 @@ function d3diary_get_category_foredit($mydirname, $uid){
 }
 
 function d3diary_readdb_photo($mydirname){
-	global $diary, $photo, $xoopsDB, $myts, $d3dConf;
+	global $diary, $photoObj, $xoopsDB, $myts, $func;
 	global $form_photos, $del_pid;
 
-	$photo->bids = array( intval($diary->bid) ) ;
-	$photo->readdb_mul($mydirname) ;
+	$photoObj->bids = array( intval($diary->bid) ) ;
+	$photoObj->readdb_mul($mydirname) ;
 
 	$rtn_photo = array() ;
 	$i = 0 ;
-	$_photos = !empty($photo->photos[$diary->bid]) ? $photo->photos[$diary->bid] : array() ;
+	$_photos = !empty($photoObj->photos[$diary->bid]) ? $photoObj->photos[$diary->bid] : array() ;
 	$num_photos = count($_photos) ;
 	if ( 0 < $num_photos ) {
 		foreach ( $_photos as $_photo) {
 			if (!empty( $_photo['info'] )) {
 				$_photo['pinfo']   = $myts->makeTboxData4Show( $_photo['info'] );
-				$_photo['info']    = $d3dConf->func->stripPb_Tarea( $_photo['info'] );
+				$_photo['info']    = $func->stripPb_Tarea( $_photo['info'] );
 			} elseif ( !empty($form_photos[$i]['info']) and ($form_photos[$i]['pid'] != $del_pid) ) {
 				$_photo['pinfo']   = $myts->makeTboxData4Show( $form_photos[$i]['info'] );
-				$_photo['info']    = $d3dConf->func->stripPb_Tarea( $form_photos[$i]['info'] );
+				$_photo['info']    = $func->stripPb_Tarea( $form_photos[$i]['info'] );
 			}
 			$rtn_photo[] = $_photo;
 			$i++;
@@ -783,7 +719,7 @@ function d3diary_readdb_photo($mydirname){
 }
 
 function d3diary_checkphoto($mydirname){
-	global $diary, $xoopsOption, $d3dConf, $eparam;
+	global $diary, $xoopsOption, $mod_config, $eparam;
 	
 	$totalsize=0;
 
@@ -806,21 +742,21 @@ function d3diary_checkphoto($mydirname){
 			}
 		}
 	}
-	if($totalsize > ($d3dConf->mod_config['photo_maxsize']*1024)){
+	if($totalsize > ($mod_config['photo_maxsize']*1024)){
 	   return _MD_SIZEOVER;
 	}
 
 }
 
 function d3diary_prevphoto($mydirname){
-	global $photo, $diary, $xoopsOption, $d3dConf, $myts, $eparam;
-	global $yd_data, $form_photos, $del_pid, $pdels, $pinfo ;
+	global $photoObj, $diary, $xoopsOption, $func, $myts, $eparam;
+	global $yd_data, $form_photos, $del_pid, $psels, $pinfo ;
 
 	$prevdir = $eparam['previewdir'] ;
 	$updir = $eparam['uploaddir'].$prevdir;
 
-	$photo->uid=$diary->uid;
-	$photo->bid=$diary->bid;
+	$photoObj->uid=$diary->uid;
+	$photoObj->bid=$diary->bid;
 
 	/* create dir */
 //	$updir = XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/'.$diary->uid;
@@ -839,11 +775,11 @@ function d3diary_prevphoto($mydirname){
 			$trim_pname = str_replace($prevdir, "", $form_photos[$i]['pname']);
 			$trim_pid = str_replace($prevdir, "", $form_photos[$i]['pid']);
 			if ( ($trim_pname != $form_photos[$i]['pname'] ) and (strlen($trim_pid) !=  strlen($form_photos[$i]['pid']))
-			    and  !in_array( $form_photos[$i]['pid'], $pdels ) ){
+			    and  !in_array( $form_photos[$i]['pid'], $psels ) ){
 				$prevphotos['pid']   = $form_photos[$i]['pid'];
 				$prevphotos['pname']   = $form_photos[$i]['pname'];
 				$prevphotos['thumbnail']   = $prevdir."t_".$trim_pname;
-				$prevphotos['info']  = $d3dConf->func->stripPb_Tarea( $myts->stripslashesGPC($form_photos[$i]['info']) );
+				$prevphotos['info']  = $func->stripPb_Tarea( $myts->stripslashesGPC($form_photos[$i]['info']) );
 				$prevphotos['pinfo']  = $myts->makeTboxData4Show( $myts->stripslashesGPC($form_photos[$i]['info']) );
 				$arr_prevphotos[] = $prevphotos;
 				$yd_data['photo_num']++;
@@ -860,7 +796,7 @@ function d3diary_prevphoto($mydirname){
 		$p_photo['pname']   = $prevdir.$p_photo['pname'];
 		$p_photo['thumbnail']   = $prevdir.$p_photo['thumbnail'] ;
 		$_tmp_pinfo = $p_photo['info'] ;
-		$p_photo['info']  = $d3dConf->func->stripPb_Tarea( $_tmp_pinfo );
+		$p_photo['info']  = $func->stripPb_Tarea( $_tmp_pinfo );
 		$p_photo['pinfo']  = $myts->makeTboxData4Show( $_tmp_pinfo );
 		$arr_prevphotos[] = $p_photo;
 	}
@@ -869,14 +805,14 @@ function d3diary_prevphoto($mydirname){
 }
 
 function d3diary_regphoto($mydirname, $prev=""){
-	global $photo, $diary, $xoopsOption, $d3dConf, $eparam;
-	global $yd_data, $form_photos, $pinfo, $pdels ;
+	global $photoObj, $diary, $xoopsOption, $d3dConf, $eparam;
+	global $yd_data, $form_photos, $pinfo, $psels ;
 
 	$updir = $eparam['uploaddir'] ;
 	$prevdir = $eparam['previewdir'] ;
 
-	$photo->uid=$diary->uid;
-	$photo->bid=$diary->bid;
+	$photoObj->uid=$diary->uid;
+	$photoObj->bid=$diary->bid;
 
 	/* create dir */
 //	$updir = XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/'.$diary->uid;
@@ -899,11 +835,11 @@ function d3diary_regphoto($mydirname, $prev=""){
 			$trim_pname = str_replace($prevdir, "", $form_photos[$i]['pname']);
 			$trim_pid = str_replace($prevdir, "", $form_photos[$i]['pid']);
 			if (( $trim_pname != $form_photos[$i]['pname'] ) and (strlen($trim_pid) !=  strlen($form_photos[$i]['pid']) )){
-				$photo->pid   = $trim_pid;
-				$photo->ptype = strrchr($trim_pname, ".");
+				$photoObj->pid   = $trim_pid;
+				$photoObj->ptype = strrchr($trim_pname, ".");
 				
-				$f_from = $updir.$prevdir.$photo->pid.$photo->ptype;
-				$f_to = $updir.$photo->pid.$photo->ptype;
+				$f_from = $updir.$prevdir.$photoObj->pid.$photoObj->ptype;
+				$f_to = $updir.$photoObj->pid.$photoObj->ptype;
 				if (copy($f_from, $f_to)==true){
 					unlink($f_from);
 				} else {
@@ -911,8 +847,8 @@ function d3diary_regphoto($mydirname, $prev=""){
 					break;
 				}
 				
-				$f_from = $updir.$prevdir.'t_'.$photo->pid.$photo->ptype;
-				$f_to = $updir.'t_'.$photo->pid.$photo->ptype;
+				$f_from = $updir.$prevdir.'t_'.$photoObj->pid.$photoObj->ptype;
+				$f_to = $updir.'t_'.$photoObj->pid.$photoObj->ptype;
 				if (copy($f_from, $f_to)==true){
 					unlink($f_from);
 				} else {
@@ -920,8 +856,8 @@ function d3diary_regphoto($mydirname, $prev=""){
 					break;
 				}
 				
-				$photo->info  = $form_photos[$i]['info'];
-				$photo->insertdb($mydirname);
+				$photoObj->info  = $form_photos[$i]['info'];
+				$photoObj->insertdb($mydirname);
 			}
 			$i++;
 		}
@@ -930,10 +866,10 @@ function d3diary_regphoto($mydirname, $prev=""){
 	list( $photo_num , $reg_photos ) = d3diary_process_uploaded_photo( $mydirname , $updir) ;
 
 	foreach ( $reg_photos as $reg_photo ) {
-		$photo->pid = $reg_photo['pid'] ;
-		$photo->ptype = $reg_photo['ptype'] ;
-		$photo->info =  $reg_photo['info'];
-		$photo->insertdb($mydirname);
+		$photoObj->pid = $reg_photo['pid'] ;
+		$photoObj->ptype = $reg_photo['ptype'] ;
+		$photoObj->info =  $reg_photo['info'];
+		$photoObj->insertdb($mydirname);
 	}
 
 	return array ( $photo_num , $reg_photos ) ;
@@ -941,26 +877,26 @@ function d3diary_regphoto($mydirname, $prev=""){
 }
 
 function d3diary_swap_photoinfo (){
-	global $yd_photo, $form_photos, $myts, $d3dConf ;
+	global $yd_photo, $form_photos, $myts, $func ;
 
 	$i=0;
 	while ($i < count($form_photos)){
 		$yd_photo[$i]['pinfo']	= $myts->makeTboxData4Show( $myts->stripslashesGPC($form_photos[$i]['info']) );
-		$yd_photo[$i]['info'] 	= $d3dConf->func->stripPb_Tarea( $myts->stripslashesGPC($form_photos[$i]['info']) );
+		$yd_photo[$i]['info'] 	= $func->stripPb_Tarea( $myts->stripslashesGPC($form_photos[$i]['info']) );
 		$i++;
 	}
 }
 
 function d3diary_update_photoinfo ( $mydirname ){
-	global $photo, $form_photos ;
+	global $photoObj, $form_photos ;
 
 	$i=0;
 	while ($i < count($form_photos)){
-		$photo->pid   = $form_photos[$i]['pid'];
-		$photo->readdb($mydirname);
-		if ( $photo->info != $form_photos[$i]['info'] ){
-			$photo->info  = $form_photos[$i]['info'];
-			$photo->updatedb($mydirname);
+		$photoObj->pid   = $form_photos[$i]['pid'];
+		$photoObj->readdb($mydirname);
+		if ( $photoObj->info != $form_photos[$i]['info'] ){
+			$photoObj->info  = $form_photos[$i]['info'];
+			$photoObj->updatedb($mydirname);
 		}
 		$i++;
 	}
@@ -968,7 +904,7 @@ function d3diary_update_photoinfo ( $mydirname ){
 
 // to process submit or preview uploaded photos
 function d3diary_process_uploaded_photo( $mydirname , $updir){
-	global $photo, $diary, $xoopsOption, $d3dConf, $eparam;
+	global $photoObj, $diary, $xoopsOption, $mod_config, $eparam;
 	global $yd_data, $pinfo ;
 
 	$photo_num = 0 ; $arr_prevphotos = array() ;
@@ -976,25 +912,25 @@ function d3diary_process_uploaded_photo( $mydirname , $updir){
 	for($i=0;$i<=$eparam['postmax'];$i++){
 		if(!empty($_FILES['filename']['name'][$i])){
 			/* set timestamp to pid */
-			//$photo->pid   = 	md5(uniqid(rand(),1));
-			$photo->pid   = substr("0".(string)$i, -2). md5(uniqid(rand(),1));
-			$photo->ptype = strrchr($_FILES['filename']['name'][$i], ".");
-			$photo->info = $pinfo[$i];
-			if(strcasecmp($photo->ptype, ".png")!=0 and strcasecmp($photo->ptype, ".jpg")!=0 and
-			   strcasecmp($photo->ptype, ".jpeg")!=0 and strcasecmp($photo->ptype, ".gif")!=0){
+			//$photoObj->pid   = 	md5(uniqid(rand(),1));
+			$photoObj->pid   = substr("0".(string)$i, -2). md5(uniqid(rand(),1));
+			$photoObj->ptype = strrchr($_FILES['filename']['name'][$i], ".");
+			$photoObj->info = $pinfo[$i];
+			if(strcasecmp($photoObj->ptype, ".png")!=0 and strcasecmp($photoObj->ptype, ".jpg")!=0 and
+			   strcasecmp($photoObj->ptype, ".jpeg")!=0 and strcasecmp($photoObj->ptype, ".gif")!=0){
 			   continue;
 			}
 
 			list($width, $height, $type, $attr) = getimagesize($_FILES['filename']['tmp_name'][$i]);
 
 			/* move */
-			$uploadfile = $updir.$photo->pid.$photo->ptype;
+			$uploadfile = $updir.$photoObj->pid.$photoObj->ptype;
 			if (!move_uploaded_file($_FILES['filename']['tmp_name'][$i], $uploadfile)) {
 		//	    redirect_header( XOOPS_URL.'/modules/'.$mydirname.'/index.php',3,_MD_IVFILE);
 			}
 
 			/* create thumbnail*/
-			$th_file = $updir.'t_'.$photo->pid.$photo->ptype;
+			$th_file = $updir.'t_'.$photoObj->pid.$photoObj->ptype;
 			if($type == 1){
 				$src_id = imagecreatefromgif($uploadfile);
 			} elseif($type == 2){
@@ -1003,7 +939,7 @@ function d3diary_process_uploaded_photo( $mydirname , $updir){
 				$src_id = imagecreatefrompng($uploadfile);
 			}
 
-			if($d3dConf->mod_config['photo_useresize']==1){
+			if($mod_config['photo_useresize']==1){
 				// shrink large size data(640px)
 				if($width>640 or $height>640){
 					if($width >= $height){
@@ -1053,11 +989,11 @@ function d3diary_process_uploaded_photo( $mydirname , $updir){
 			imagedestroy($src_id);
 			imagedestroy($dst_id);
 			
-			$prevphotos['pid']   = $photo->pid;
-			$prevphotos['ptype']   = $photo->ptype;
-			$prevphotos['pname']   = $photo->pid.$photo->ptype;
-			$prevphotos['thumbnail']   = "t_".$photo->pid.$photo->ptype;
-			$prevphotos['info']  = $photo->info;
+			$prevphotos['pid']   = $photoObj->pid;
+			$prevphotos['ptype']   = $photoObj->ptype;
+			$prevphotos['pname']   = $photoObj->pid.$photoObj->ptype;
+			$prevphotos['thumbnail']   = "t_".$photoObj->pid.$photoObj->ptype;
+			$prevphotos['info']  = $photoObj->info;
 			$arr_prevphotos[] = $prevphotos;
 			$photo_num++;
 			
@@ -1067,7 +1003,7 @@ function d3diary_process_uploaded_photo( $mydirname , $updir){
 }
 
 function d3diary_showform($mydirname){
-	global $photo, $diary, $xoopsOption, $d3dConf, $eparam, $d3diary_header ;
+	global $photoObj, $diary, $xoopsOption, $func, $myts, $mPerm, $gPerm, $eparam, $d3diary_header ;
 	global $yd_data, $del_pname, $form_photos, $_oe;
 
 		$yd_data['bid'] = $diary->bid;
@@ -1075,23 +1011,23 @@ function d3diary_showform($mydirname){
 
 	// preview or photodel
 	if( $eparam['is_prev']==1 ){
-		$yd_data['cid']=$d3dConf->func->getpost_param('cid');
+		$yd_data['cid']=$func->getpost_param('cid');
 		if($yd_data['cid']>0){
-			$category =& Category::getInstance();
+			$category =& D3diaryCategory::getInstance();
 			$category->uid = $diary->uid;
 			$category->cid = intval($yd_data['cid']);
 			$category->readdb($mydirname);
 			$yd_data['cname'] = htmlSpecialChars($category->cname, ENT_QUOTES);
 		}else{
-			$yd_data['cname'] = htmlSpecialChars($d3dConf->myts->stripslashesGPC($d3dConf->func->getpost_param('cname')), ENT_QUOTES);
+			$yd_data['cname'] = htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('cname')), ENT_QUOTES);
 		}
-		$yd_data['title'] = htmlSpecialChars($d3dConf->myts->stripslashesGPC($d3dConf->func->getpost_param('title')), ENT_QUOTES);
-		$yd_data['openarea'] = $d3dConf->func->getpost_param('openarea');
-		$yd_data['dohtml'] = $d3dConf->func->getpost_param('dohtml');
-		$yd_data['update_ping'] = intval($d3dConf->func->getpost_param('update_ping'));
+		$yd_data['title'] = htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('title')), ENT_QUOTES);
+		$yd_data['openarea'] = $func->getpost_param('openarea');
+		$yd_data['dohtml'] = $func->getpost_param('dohtml');
+		$yd_data['update_ping'] = intval($func->getpost_param('update_ping'));
 
-		$yd_data['diary'] = $d3dConf->func->stripPb_Tarea($d3dConf->myts->stripslashesGPC($d3dConf->func->getpost_param('diary')), $yd_data['dohtml']);
-		$yd_data['diary4edit']= htmlSpecialChars($d3dConf->myts->stripslashesGPC($d3dConf->func->getpost_param('diary')), ENT_QUOTES);
+		$yd_data['diary'] = $func->stripPb_Tarea($myts->stripslashesGPC($func->getpost_param('diary')), $yd_data['dohtml']);
+		$yd_data['diary4edit']= htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('diary')), ENT_QUOTES);
 
 	} else {
 		$yd_data['cid'] = $diary->cid;
@@ -1101,7 +1037,7 @@ function d3diary_showform($mydirname){
 		$yd_data['dohtml'] = $diary->dohtml;
 	}
 
-	if ($d3dConf->func->getpost_param('reg_time')) {	//post by specified time
+	if ($func->getpost_param('reg_time')) {	//post by specified time
 		$yd_data['reg_time']   = 1;
 		d3diary_reg_time();
 		$tmp_time = $yd_data['create_time_unformat'];
@@ -1113,24 +1049,24 @@ function d3diary_showform($mydirname){
 	} else {
 		$tmp_time = time();
 	}
-		$week = intval($d3dConf->func->myformatTimestamp($tmp_time, "w"));
-		$yd_data['year']   = $d3dConf->func->myformatTimestamp($tmp_time, "Y");
-		$yd_data['month']   = intval($d3dConf->func->myformatTimestamp($tmp_time, "m"));
-		$yd_data['day']   = intval($d3dConf->func->myformatTimestamp($tmp_time, "d"));
-		$yd_data['time']   = $d3dConf->func->myformatTimestamp($tmp_time, "H:i");
+		$week = intval($func->myformatTimestamp($tmp_time, "w"));
+		$yd_data['year']   = $func->myformatTimestamp($tmp_time, "Y");
+		$yd_data['month']   = intval($func->myformatTimestamp($tmp_time, "m"));
+		$yd_data['day']   = intval($func->myformatTimestamp($tmp_time, "d"));
+		$yd_data['time']   = $func->myformatTimestamp($tmp_time, "H:i");
 
-		list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->initBoxArr();
+		list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr();
 		$yd_data['week'] = $arr_weeks [$week];
 		$yd_data['b_month'] = $arr_monthes [$yd_data['month'] -1];
 		$yd_data['dclass'] = $arr_dclass [$week];
 		$yd_data['wclass'] = $arr_wclass [$week];
 
 		$yd_data['group_list'] = array();
-		$_oe = (int)$d3dConf->mod_config['use_open_entry'];
+		$_oe = (int)$mod_config['use_open_entry'];
 		if( $_oe == 10 || $_oe == 20 ) {
 			$g_selcted = explode( "|", trim( $diary->vgids ,"|" ) );
-			foreach ( $d3dConf->gPerm->group_list as $_gid => $_name) {
-		    	    if($_gid >= 4 && (in_array($_gid, $d3dConf->mPerm->mygids) || $d3dConf->mPerm->isadmin)){
+			foreach ( $gPerm->group_list as $_gid => $_name) {
+		    	    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
 				$group_list[$_gid]['gname'] = $_name;
 				$group_list[$_gid]['gsel'] = (in_array( $_gid, $g_selcted )) ? 1 : 0;
 			    }
@@ -1146,14 +1082,14 @@ function d3diary_showform($mydirname){
 
 			foreach ($p_selcted as $vpid) {
 				if( $vpid >1 ) {
-					$rtn = $d3dConf->func->get_xoopsuname($vpid);
+					$rtn = $func->get_xoopsuname($vpid);
 					$uname = $rtn['uname'];
 					$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
 					$unames[] = htmlspecialchars( $uname.'['.$vpid.'] ', ENT_QUOTES );
 					$names[] = htmlspecialchars( $name.'['.$vpid.'] ', ENT_QUOTES );
 				}
 			}
-			if( $d3dConf->mod_config['use_name'] == 1 ) {
+			if( $mod_config['use_name'] == 1 ) {
 				$yd_data['pperm_names'] = $names;
 			} else {
 				$yd_data['pperm_names'] = $unames;
@@ -1183,9 +1119,9 @@ function d3diary_get_smilylist(){
 }
 
 function d3diary_regtags($mydirname){
-	global $xoopsDB, $tag, $diary, $d3dConf;
+	global $xoopsDB, $tag, $diary, $func ;
 
-	$post_tags = $d3dConf->func->getpost_param('tags');
+	$post_tags = $func->getpost_param('tags');
 
 	if(!empty($post_tags)) {
 		if (function_exists('mb_convert_kana')){
@@ -1226,10 +1162,10 @@ function d3diary_regtags($mydirname){
 }
 
 function d3diary_ping_send($blogtitle, $blogtopurl) {
-	global $d3dConf;
+	global $mod_config;
 	
-	if (!empty($d3dConf->mod_config['updateping_url'])) {
-		$arr_ping_servers = explode("\n", $d3dConf->mod_config['updateping_url']);
+	if (!empty($mod_config['updateping_url'])) {
+		$arr_ping_servers = explode("\n", $mod_config['updateping_url']);
 		$arr_ping_servers = array_map("trim" ,$arr_ping_servers);
 		$arr_ping_servers2 = array_map("parse_url" ,$arr_ping_servers);
 		$ping = array();
@@ -1261,8 +1197,8 @@ function d3diary_ping_send($blogtitle, $blogtopurl) {
 
 function d3diary_reg_time(){
 	global $diary, $yd_data, $d3dConf;
-	if ($d3dConf->func->getpost_param('reg_time')) {
-		$pub = $d3dConf->func->getpost_param('published');
+	if ($func->getpost_param('reg_time')) {
+		$pub = $func->getpost_param('published');
 		$pub = array_map('intval', $pub);
 		$tmp_time = mktime($pub['Time_Hour'],$pub['Time_Minute'],0,$pub['Date_Month'],$pub['Date_Day'],$pub['Date_Year']);
 		$yd_data['create_time_unformat'] = $tmp_time;

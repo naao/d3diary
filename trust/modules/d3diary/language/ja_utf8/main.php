@@ -102,9 +102,11 @@ define("_MD_YT_ADD","文中に挿入");
 define("_MD_ND_URL","ニコニコ動画の動画URL：");
 define("_MD_PHOTO","画像");
 define("_MD_PHOTO_SELECT","画像選択");
+define("_MD_PHOTO_MANAGE","選択画像操作");
 define("_MD_PHOTO_ADD","画像を追加する");
 define("_MD_FILEDEL_CONFIRM","を削除します。\\n一度削除すると戻せません。よろしいですか？");
 define("_MD_FILEDELETED","画像を削除しました。");
+define("_MD_FILEROTATED","画像を回転しました。");
 define("_MD_PHOTO_SHRINK","枚<br />640x640以下に縮小されます。");
 define("_MD_PHOTO_SHRINK2","※縦・横幅が640px以上の場合は、適切なサイズに変更されます。");
 define("_MD_PHOTO_MAXSIZE","※写真の登録可能サイズ：合計");
@@ -118,12 +120,16 @@ define("_MD_ROTATE","回転");
 define("_MD_RROTATE","右90度回転");
 define("_MD_LROTATE","左90度回転");
 define("_MD_ROTATE_CONFIRM","を回転します。よろしいですか？");
+define("_MD_EDIT_PINFO","説明の編集");
+define("_MD_PMOVE","添付先の移動");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERROR:入力内容を確認してください。</font>");
 define("_MD_NODIARY_ERR","<font color='red'>ERROR:該当する日記が存在しません。</font>");
 define("_MD_SIZEOVER","<font color='red'>ERROR:画像サイズが大きすぎます。</font>");
 define("_MD_NOFILE","<font color='red'>ERROR:写真ファイルが読み取れませんでした。</font>");
+define("_MD_FAILED_FILEDELETE","<font color='red'>ERROR:画像削除に失敗しました。</font>");
+define("_MD_FAILED_FILEROTATE","<font color='red'>ERROR:画像回転に失敗しました。</font>");
 
 define("_MD_DATANUM1","全<strong>");
 define("_MD_DATANUM2","</strong>件のうち<strong>");
@@ -273,5 +279,8 @@ define("_MD_MAIL_TOSTEP0","STEP0へ戻る");
 define("_MD_NEWDIARY","日記一覧");
 define("_MD_NEWPHOTO","画像一覧");
 define("_MD_QUERYOFF","抽出条件解除");
+define("_MD_RTNTO_NEWDIARY","日記一覧に戻る");
+define("_MD_DSC","降順");
+define("_MD_ASC","昇順");
 
 ?>

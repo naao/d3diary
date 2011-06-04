@@ -14,8 +14,11 @@ define ('_D3DIARY_EDITTAG_DELETE', '1' ) ;
 define ('_D3DIARY_EDITTAG_REV', '2' ) ;
 define ('_D3DIARY_EDITTAG_ADD', '3' ) ;
 
-$tag =& Tag::getInstance();
+$tag =& D3diaryTag::getInstance();
 $d3dConf = & D3diaryConf::getInstance($mydirname);
+$func =& $d3dConf->func ;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
 
 $uid = $d3dConf->uid;
 if( $uid<=0 ){
@@ -26,25 +29,29 @@ if( $uid<=0 ){
 $d3dConf->set_mod_config(0,"edit_tags");	// needs $dcfg
 $uname = $d3dConf->uname;
 
-$_tempGperm = $d3dConf->gPerm->getUidsByName( array('allow_edit') );
+$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
 // check edit permission by group
-if(!in_array($uid, $_tempGperm['allow_edit'])) {
-	redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
-	exit();
-}
-	unset($_tempGperm);
+if(!empty($_tempGperm['allow_edit'])){
+	if(!isset($_tempGperm['allow_edit'][$uid])) {
+		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+		exit();
+	}
+} else {
+		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+		exit();
+}	unset($_tempGperm);
 
-$req_uid = intval($d3dConf->func->getpost_param('req_uid'));
-$tagaction = intval($d3dConf->func->getpost_param('tagaction'));
-$org_tag = rawurldecode($d3dConf->func->getpost_param('old_tag'));
-$rev_tag = rawurldecode($d3dConf->func->getpost_param('rev_tag'));
-$post_tags = $d3dConf->func->getpost_param('tags');
-$q_string = htmlspecialchars( $d3dConf->func->getpost_param('q_string'), ENT_QUOTES );
+$req_uid = intval($func->getpost_param('req_uid'));
+$tagaction = intval($func->getpost_param('tagaction'));
+$org_tag = rawurldecode($func->getpost_param('old_tag'));
+$rev_tag = rawurldecode($func->getpost_param('rev_tag'));
+$post_tags = $func->getpost_param('tags');
+$q_string = htmlspecialchars( $func->getpost_param('q_string'), ENT_QUOTES );
 
-$chk_bids= $d3dConf->func->getpost_param('chk_bids');
+$chk_bids= $func->getpost_param('chk_bids');
 $sel_bids = $chk_bids ? array_map("intval" ,$chk_bids) : Array();
 
-if(!$d3dConf->mPerm->check_exist_user($req_uid)){
+if(!$mPerm->check_exist_user($req_uid)){
 	if($uid>0){
 		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php',4,_MD_IVUID_ERR);
 	}else{
@@ -61,7 +68,7 @@ require XOOPS_ROOT_PATH.'/header.php';
 
 $owner=0; $editperm=0;
 if($req_uid==$uid){$owner=1;$editperm=1;}
-if($d3dConf->mPerm->isadmin){$editperm=1;}	
+if($mPerm->isadmin){$editperm=1;}	
 
 if($editperm != 1) {
     redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);

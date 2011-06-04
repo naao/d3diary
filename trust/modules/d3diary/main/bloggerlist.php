@@ -13,23 +13,25 @@ global $xoopsUser,$xoopsDB;
 	$constpref = '_MB_' . strtoupper( $mydirname ) ;
 
 $d3dConf =& D3diaryConf::getInstance($mydirname, 0, "bloggerlist");
+$func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
+$mod_config =& $d3dConf->mod_config ;
 
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 
 	$params['ofst_key'] = "bgofst" ;
-	$_offset_ = $d3dConf->func->getpost_param($params['ofst_key']);
+	$_offset_ = $func->getpost_param($params['ofst_key']);
 	$offset = isset($_offset_) ?(int)$_offset_ : 0;
 
 	//$max_entry = 100;
-	$max_entry = (int)$d3dConf->mod_config['block_diarynum'];
+	$max_entry = (int)$mod_config['block_diarynum'];
 	$params['getnav'] = true ;	// not render but get navi
 
-	$params['order'] = htmlspecialchars( $d3dConf->func->getpost_param('odr'), ENT_QUOTES ) ;
+	$params['order'] = htmlspecialchars( $func->getpost_param('odr'), ENT_QUOTES ) ;
 	$params['order'] = $params['order'] ? $params['order'] :'time' ; 
 
-	list( $blogger, $blogger2, $bloggernavi ) = $d3dConf->func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );
+	list( $blogger, $blogger2, $bloggernavi ) = $func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );
 	
 	// create url for sort
 	$url = '';
@@ -56,7 +58,7 @@ $d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XO
 	$bc_para['name'] = "";
 	$bc_para['bc_name'] = constant('_MD_POSTER_LIST');
 	
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( 0, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( 0, $bc_para['mode'], $bc_para );
 
 	$xoopsTpl->assign(array(
 			'blogger' => $blogger,
@@ -64,9 +66,10 @@ $d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XO
 			'bloggernavi' => $bloggernavi,
 			'mydirname' => $mydirname,
 			'sort_baseurl' => $sort_baseurl,
+			"style_s" => $d3dConf->style_s,
 			'xoops_module_header' => 
 				$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
-			'mod_config' => $d3dConf->mod_config,
+			'mod_config' => $mod_config,
 			'xoops_breadcrumbs' => $breadcrumbs
 		));
 

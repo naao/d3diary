@@ -588,12 +588,94 @@ div.personnel span.exist_highlight {
 	cursor: pointer;
 }
 
+.d3dSortDsc_s {
+	background: url(images/down_3.gif) top left no-repeat;
+	margin:0px 0px 0px 0px;
+	padding:0px 4px 0px 4px;
+	text-indent:-9999px; 
+	background-position:0px -12px;
+	pointer-events: none;
+	cursor: default;
+}
+.d3dSortDsc {
+	background: url(images/down_3.gif) top left no-repeat;
+	margin:0px 0px 0px 0px;
+	padding:0px 4px 0px 4px;
+	text-indent:-9999px; 
+	background-position:0px 2px;
+}
+
+a.d3dSortDsc {
+	width:12px;
+	height:10px;
+	text-decoration: none;
+}
+a:hover.d3dSortDsc {
+	background-position:0px -26px;
+}
+
+.d3dSortAsc_s {
+	background: url(images/up_3.gif) top left no-repeat;
+	margin:0px 0px 0px 0px;
+	padding:0px 4px 0px 4px;
+	text-indent:-9999px; 
+	background-position:0px -12px;
+	pointer-events: none;
+	cursor: default;
+}
+
+.d3dSortAsc {
+	background: url(images/up_3.gif) top left no-repeat;
+	margin:0px 0px 0px 0px;
+	padding:0px 4px 0px 4px;
+	text-indent:-9999px; 
+	background-position:0px 2px;
+}
+
+a.d3dSortAsc {
+	width:12px;
+	height:10px;
+	text-decoration: none;
+}
+a:hover.d3dSortAsc {
+	background-position:0px -26px;
+}
+
+.d3dQueryInfo{
+	text-align:left;
+	float:left;
+	padding:2px 0px 2px 2px;
+}
+
+.d3dTurnoff {
+	padding:2px 4px 2px 16px;
+	background: url(images/turnoff_2.gif) top left no-repeat;
+	height:14px;
+}
+a.d3dTurnoff {
+}
+a:hover.d3dTurnoff {
+	background-position:0px -21px;
+}
+
 .d3dlinkEntry {
-	padding:2px 2px 2px 20px;
-	background: url(images/pencil.gif) top left no-repeat;
+	padding:4px 4px 0px 22px;
+	background: url(images/pencil_2.gif) top left no-repeat;
+	height:14px;
+}
+a.d3dlinkEntry {
+}
+a:hover.d3dlinkEntry {
+	background-position:0px -19px;
 }
 
 .d3dlinkImage {
-	padding:2px 2px 2px 20px;
-	background: url(images/camera.gif) top left no-repeat;
+	padding:4px 4px 0px 22px;
+	background: url(images/camera_2.gif) top left no-repeat;
+	height:14px;
+}
+a.d3dlinkImage {
+}
+a:hover.d3dlinkImage {
+	background-position:0px -19px;
 }

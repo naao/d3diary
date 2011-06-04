@@ -7,6 +7,9 @@
 include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 
 $d3dConf = & D3diaryConf::getInstance($mydirname);
+$func =& $d3dConf->func ;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
 
 $uid = $d3dConf->uid;
 if( $uid<=0 ){
@@ -17,21 +20,25 @@ if( $uid<=0 ){
 $d3dConf->set_mod_config(0,"editcat_diaries");	// needs $dcfg
 $uname = $d3dConf->uname;
 
-$_tempGperm = $d3dConf->gPerm->getUidsByName( array('allow_edit') );
+$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
 // check edit permission by group
-if(!in_array($uid, $_tempGperm['allow_edit'])) {
-	redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
-	exit();
-}
-	unset($_tempGperm);
+if(!empty($_tempGperm['allow_edit'])){
+	if(!isset($_tempGperm['allow_edit'][$uid])) {
+		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+		exit();
+	}
+} else {
+		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+		exit();
+}	unset($_tempGperm);
 
-$req_uid = intval($d3dConf->func->getpost_param('req_uid'));	
-$org_cid = intval($d3dConf->func->getpost_param('cid'));	
-$swap_cid= intval($d3dConf->func->getpost_param('swap_cid'));	
-$chk_bids= $d3dConf->func->getpost_param('chk_bids');		
+$req_uid = intval($func->getpost_param('req_uid'));	
+$org_cid = intval($func->getpost_param('cid'));	
+$swap_cid= intval($func->getpost_param('swap_cid'));	
+$chk_bids= $func->getpost_param('chk_bids');		
 $sel_bids = $chk_bids ? implode(",", array_map("intval" ,$chk_bids)) : Array();
 
-if(!$d3dConf->mPerm->check_exist_user($req_uid)){
+if(!$mPerm->check_exist_user($req_uid)){
 	if($uid>0){
 		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php',4,_MD_IVUID_ERR);
 	}else{
@@ -49,7 +56,7 @@ require XOOPS_ROOT_PATH.'/header.php';
 
 $owner=0; $editperm=0;
 if($req_uid==$uid){$owner=1;$editperm=1;}
-if($d3dConf->mPerm->isadmin){$editperm=1;}	
+if($mPerm->isadmin){$editperm=1;}	
 
 if($editperm != 1) {
     redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);

@@ -22,8 +22,12 @@ include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	$req_uid = $uid;
 
 $d3dConf = & D3diaryConf::getInstance($mydirname, $req_uid, "usr_config");
+$func =& $d3dConf->func ;
 $dcfg =& $d3dConf->dcfg;
 $myts =& $d3dConf->myts;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
+$mod_config =& $d3dConf->mod_config ;
 
 //--------------------------------------------------------------------
 // GET Initial Valuses
@@ -32,11 +36,11 @@ $myts =& $d3dConf->myts;
 $uname = $d3dConf->uname;
 $name = $d3dConf->name;
 // get permission unames for each groupPermission
-//$_tempGperm = $d3dConf->gPerm->getUidsByName( array('allow_edit') );
-$_tempGperm = $d3dConf->gPerm->getUidsByName( array_keys($d3dConf->gPerm->gperm_config) );
+//$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
+$_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 // check edit permission for access user's group
 if(!empty($_tempGperm['allow_edit'])){
-	if(!in_array($uid, $_tempGperm['allow_edit'])) {
+	if(!isset($_tempGperm['allow_edit'][$uid])) {
 		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
 		exit();
 	}	//unset($_tempGperm);
@@ -48,7 +52,7 @@ if(!empty($_tempGperm['allow_edit'])){
 // check mailpost permission for access user's group
 $allow_mailpost = 0;
 if(!empty($_tempGperm['allow_mailpost'])){
-	if(in_array($uid, $_tempGperm['allow_mailpost'])) {
+	if(isset($_tempGperm['allow_mailpost'][$uid])) {
 		$allow_mailpost = 1;
 	}
 }
@@ -65,15 +69,15 @@ if(!empty($_POST['submit1'])){
 
 	$dcfg->uid = $uid;
 
-	$dcfg->blogurl= htmlspecialchars($d3dConf->func->getpost_param('blogurl'), ENT_QUOTES);
-	$dcfg->blogtype= intval($d3dConf->func->getpost_param('blogtype'));
-	$dcfg->rss= htmlspecialchars($d3dConf->func->getpost_param('rss'), ENT_QUOTES);
-	$dcfg->openarea= intval($d3dConf->func->getpost_param('openarea'));
+	$dcfg->blogurl= htmlspecialchars($func->getpost_param('blogurl'), ENT_QUOTES);
+	$dcfg->blogtype= intval($func->getpost_param('blogtype'));
+	$dcfg->rss= htmlspecialchars($func->getpost_param('rss'), ENT_QUOTES);
+	$dcfg->openarea= intval($func->getpost_param('openarea'));
 	if ($dcfg->blogtype==0 && $allow_mailpost==1) {
-		$dcfg->mailpost = intval($d3dConf->func->getpost_param('mailpost'));
-		$dcfg->address = htmlspecialchars($d3dConf->func->getpost_param('address'), ENT_QUOTES);
-		$dcfg->keep = intval($d3dConf->func->getpost_param('jump'));
-		$dcfg->uptime = intval($d3dConf->func->getpost_param('uptime'));
+		$dcfg->mailpost = intval($func->getpost_param('mailpost'));
+		$dcfg->address = htmlspecialchars($func->getpost_param('address'), ENT_QUOTES);
+		$dcfg->keep = intval($func->getpost_param('jump'));
+		$dcfg->uptime = intval($func->getpost_param('uptime'));
 	} else {
 		$dcfg->mailpost = 0;
 		$dcfg->address = '';
@@ -93,7 +97,7 @@ if(!empty($_POST['submit1'])){
 	$_rss = $dcfg->rss;
 	
 	// $_url, $_rss are by ref value
-	if ( $d3dConf->func->get_ext_rssurl( $dcfg->blogtype, $_url, $_rss )!=true ) {
+	if ( $func->get_ext_rssurl( $dcfg->blogtype, $_url, $_rss )!=true ) {
 		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config',3,_MD_FAIL_UPDATED._MD_NORSSURL);
 		exit();
 	} else {
@@ -115,7 +119,7 @@ if(!empty($_POST['submit1'])){
 
 		$dcfg->deletedb($mydirname);
 		$dcfg->insertdb($mydirname);
-		redirect_header( htmlspecialchars($d3dConf->func->getpost_param('referrer'), ENT_QUOTES), 3,_MD_CONF_UPDATED );
+		redirect_header( htmlspecialchars($func->getpost_param('referrer'), ENT_QUOTES), 3,_MD_CONF_UPDATED );
 	}
 
 
@@ -162,7 +166,7 @@ if(!empty($_POST['submit1'])){
 	$bc_para['mode'] = "usr_config";
 	$bc_para['bc_name'] = constant('_MD_CONF_LINK');
 	
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 $xoopsTpl->assign(array(
@@ -171,9 +175,9 @@ $xoopsTpl->assign(array(
 		"yd_name" => $name,
 		"yd_cfg" => $yd_cfg,
 		"yd_mailpost"	=> $allow_mailpost,
-		"yd_use_friend" => $d3dConf->mod_config['use_friend'],
+		"yd_use_friend" => $mod_config['use_friend'],
 		"mydirname" => $mydirname,
-		"mod_config" => $d3dConf->mod_config,
+		"mod_config" => $mod_config,
 		"xoops_breadcrumbs" => $breadcrumbs
 		));
 

@@ -46,6 +46,8 @@ define($constpref."_BEFORE_MONTH","前の月");
 define($constpref."_NEXT_MONTH","次の月");
 
 define($constpref."_OTHER","外部ブロガー");
+define($constpref."_NEWDIARY","日記一覧");
+define($constpref."_NEWPHOTO","画像一覧");
 
 // definitions for displaying d3comment blocks 
 define($constpref."_FORUM","フォーラム");
@@ -63,8 +65,8 @@ define($constpref."_LINKTOLISTTOPICS","トピック一覧へ");
 define($constpref."_ALT_UNSOLVED","未解決トピック");
 define($constpref."_ALT_MARKED","注目トピック");
 
-define($constpref."_ORDERPOSTED","新着画像"); 
-define($constpref."_ORDERRANDOM","ランダム画像"); 
+define($constpref."_B_ORDERPOSTED","新着画像"); 
+define($constpref."_B_ORDERRANDOM","ランダム画像"); 
 define($constpref."_PERSON","さんの日記"); 
 
 }

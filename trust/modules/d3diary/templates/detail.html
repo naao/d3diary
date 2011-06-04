@@ -15,10 +15,24 @@
 <{/if}>
 
 <!-- start module contents -->
+<div class="item" style="border:0px ;">
 	<p><a href="<{$xoops_url}>/userinfo.php?uid=<{$yd_uid}>">
 	<{if $mod_config.use_name==1 && $yd_name}><{$yd_name}>
 	<{else}><{$yd_uname}>
-	<{/if}></a><{$smarty.const._MD_DIARY_PERSON}></p>
+	<{/if}></a><{$smarty.const._MD_DIARY_PERSON}>
+</p>
+<div class="itemInfo" style="text-align:left;">
+<div style="text-align:right;">
+	<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$yd_openarea}>.gif" border=0 style="float:right;" />
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$yd_uid}><{$base_qstr}>" title="<{$smarty.const._MD_NEWDIARY}>" class="d3dlinkEntry" style="float:left;" ></a>
+	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=photolist&amp;req_uid=<{$yd_uid}><{$base_qstr}>" class="d3dlinkImage" title="<{$smarty.const._MD_NEWPHOTO}>" style="float:left;" ></a>
+</div>
+<{if $yd_day>0}>[<{$yd_year}>-<{$yd_month}>-<{$yd_day}>]&nbsp;
+<{elseif $yd_month>0}>[<{$yd_year}>-<{$yd_month}>]&nbsp;<{/if}>
+<{if $yd_param.mode=="category"}><{$smarty.const._MD_CATEGORY}>&nbsp;[<{$yd_param.cname}>]&nbsp;<{/if}>
+<{if $yd_param.tag}><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]&nbsp;<{/if}>
+</div><!-- /itemInfo -->
+</div><!-- /item -->
 
 <div id="d3dWrap">
 
@@ -50,33 +64,18 @@
 <span class="itemTitle">
 <{$yd_data.title|escape}>
 </span>
-<img src="<{$xoops_url}>/modules/<{$mydirname}>/images/open<{$yd_openarea}>.gif" border=0 style="float:right;" />
 </div><!-- /itemHead -->
 
 <div class="itemInfo">
 <span class="itemPermaLink">
 <{if $yd_before.bid >0}>
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$yd_before.bid}>&req_uid=<{$yd_uid}>
-<{if $yd_param.mode=="date"}>
-&amp;mode=date&amp;year=<{$yd_data.year}>&amp;month=<{$yd_data.month}>&amp;day=<{$yd_data.day}>
-<{elseif $yd_param.mode=="month"}>
-&amp;mode=month&amp;year=<{$yd_data.year}>&amp;month=<{$yd_data.month}>
-<{elseif $yd_param.mode=="category"}>
-&amp;mode=category&amp;cid=<{$yd_param.cid}>
-<{/if}>" title="<{$yd_before.title}>">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$yd_before.bid}>&req_uid=<{$yd_uid}><{$base_qstr}>" title="<{$yd_before.title}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow2.png" border=0 style="vertical-align:middle;" /><{$smarty.const._MD_DIARY_LAST}>
 </a>
 <{/if}>
 
 <{if $yd_after.bid >0}>
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$yd_after.bid}>&req_uid=<{$yd_uid}>
-<{if $yd_param.mode=="date"}>
-&amp;mode=date&amp;year=<{$yd_data.year}>&amp;month=<{$yd_data.month}>&amp;day=<{$yd_data.day}>
-<{elseif $yd_param.mode=="month"}>
-&amp;mode=month&amp;year=<{$yd_data.year}>&amp;month=<{$yd_data.month}>
-<{elseif $yd_param.mode=="category"}>
-&amp;mode=category&amp;cid=<{$yd_param.cid}>
-<{/if}>" title="<{$yd_after.title}>">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$yd_after.bid}>&req_uid=<{$yd_uid}><{$base_qstr}>" title="<{$yd_after.title}>">
 <{$smarty.const._MD_DIARY_NEXT}><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" />
 </a>
 <{/if}>

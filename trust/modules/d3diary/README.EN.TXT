@@ -97,17 +97,18 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
    the setting that displays the article text at the topics display. 
 
 **Future functions
-- Correction of trouble that the external blog is not displayed on the block with no internal diary of all members. （thx taroj）
 - Increments of image uploading directory
 - Trackback function
 
 ** Changed history
-2010/ 5/ 6  ver0.18
+2010/ 6/ 4  ver0.18 alpha
 	- Fixed bug of photo info is not trancated in photolist block.
 	- Added photolist page and changed links in blocks of category, tagcroud, and blogger.
 	　Added submenu "Photo List" in main menu.
 	- Sorted view function is added in index, diarylist, bloggerlist, photolist pages.
 	　It sorts with keeping category or tag query condition.
+	- Fixed bug that "friend's diary" in main menu shows owner's diary.
+	- Changed class names to eliminate possobility of confliction with other modules.
 
 2010/ 5/ 6  ver0.17b
 	- Category swap function was very complecated in category edit screen because only swap each column.

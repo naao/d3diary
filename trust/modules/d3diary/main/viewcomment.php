@@ -6,7 +6,7 @@
 include_once dirname( dirname(__FILE__) ).'/class/category.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 
-$category =& Category::getInstance();
+$category =& D3diaryCategory::getInstance();
 //--------------------------------------------------------------------
 // GET Initial Valuses
 //--------------------------------------------------------------------
@@ -17,7 +17,11 @@ $yd_list=array(); $yd_com_key=""; $yd_monthnavi="";
 $req_uid = isset($_GET['req_uid']) ? (int)$_GET['req_uid'] : 0;
 
 $d3dConf =& D3diaryConf::getInstance($mydirname, $req_uid, "viewcomment");
+$func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
+$mod_config =& $d3dConf->mod_config ;
 
 $uid = $d3dConf->uid;
 
@@ -28,16 +32,16 @@ if($d3dConf->dcfg->blogtype!=0){
 
 $editperm=0;
 $owner=0;
-$_tempGperm = $d3dConf->gPerm->getUidsByName( array('allow_edit') );
+$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
 // check edit permission by group
 if(isset($_tempGperm['allow_edit'])){
-	if(in_array($uid, $_tempGperm['allow_edit'])) {
+	if(isset($_tempGperm['allow_edit'][$uid])) {
 		if($req_uid==$uid){$owner=1;$editperm=1;}
-		if($d3dConf->mPerm->isadmin){$editperm=1;}
+		if($mPerm->isadmin){$editperm=1;}
 	}	unset($_tempGperm);
 }
 
-if(!$d3dConf->mPerm->check_exist_user($req_uid)){
+if(!$mPerm->check_exist_user($req_uid)){
 	//if($uid>0){
 	//	$req_uid=$uid;
 	//	$openarea=$d3dConf->dcfg->openarea;
@@ -55,16 +59,15 @@ include XOOPS_ROOT_PATH."/header.php";
 // this must be set before including main header.php
 
 $mid = $d3dConf->mid;
-$yd_config = $d3dConf->mod_config;
 
 // assign module header for css
 $d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=main_css" />'."\r\n";
 //$xoopsTpl->assign( 'xoops_module_header' ,$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header );
 
-$yd_param['mode']=$d3dConf->func->getpost_param('mode');
+$yd_param['mode']=$func->getpost_param('mode');
 
 if(strcmp($yd_param['mode'], "category")==0){
-	$yd_param['cid']=$d3dConf->func->getpost_param('cid');
+	$yd_param['cid']=$func->getpost_param('cid');
 	$category->uid=$req_uid;
 	$category->cid=$yd_param['cid'];
 	$category->getchildren($mydirname);
@@ -75,15 +78,15 @@ if(strcmp($yd_param['mode'], "category")==0){
 	$yd_param['cname'] = $myts->makeTboxData4Show($category->cname);
 
 }elseif(strcmp($yd_param['mode'], "date")==0){
-	$yd_param['year']=intval($d3dConf->func->getpost_param('year'));
-	$yd_param['month']=intval($d3dConf->func->getpost_param('month'));
-	$yd_param['day']=intval($d3dConf->func->getpost_param('day'));
+	$yd_param['year']=intval($func->getpost_param('year'));
+	$yd_param['month']=intval($func->getpost_param('month'));
+	$yd_param['day']=intval($func->getpost_param('day'));
 	if (!empty($yd_param['year'])){$url_tag.="&amp;year=".$yd_param['year'];}
 	if (!empty($yd_param['month'])){$url_tag.="&amp;month=".$yd_param['month'];}
 	if (!empty($yd_param['day'])){$url_tag.="&amp;day=".$yd_param['day'];}
 }elseif(strcmp($yd_param['mode'], "month")==0){
-	$yd_param['year']=intval($d3dConf->func->getpost_param('year'));
-	$yd_param['month']=intval($d3dConf->func->getpost_param('month'));
+	$yd_param['year']=intval($func->getpost_param('year'));
+	$yd_param['month']=intval($func->getpost_param('month'));
 	if (!empty($yd_param['year'])){$url_tag.="&amp;year=".$yd_param['year'];}
 	if (!empty($yd_param['month'])){$url_tag.="&amp;month=".$yd_param['month'];}
 }elseif(strcmp($yd_param['mode'], "all")==0){
@@ -97,12 +100,12 @@ if(strcmp($yd_param['mode'], "category")==0){
 		$yd_param['next_year'] = $yd_param['year'] +1;
 	}
 
-	$com_dirname = $d3dConf->mod_config['comment_dirname'];
-	$com_forum_id = intval($d3dConf->mod_config['comment_forum_id']);
-	$com_anchor_type = intval($d3dConf->mod_config['comment_anchor_type']);
+	$com_dirname = $mod_config['comment_dirname'];
+	$com_forum_id = intval($mod_config['comment_forum_id']);
+	$com_anchor_type = intval($mod_config['comment_anchor_type']);
 
-	$req_cid=intval($d3dConf->func->getpost_param('cid'));
-	$req_uid2=intval($d3dConf->func->getpost_param('req_uid'));
+	$req_cid=intval($func->getpost_param('cid'));
+	$req_uid2=intval($func->getpost_param('req_uid'));
 
 	if(intval($req_uid2)>0) {
 		$whr_uids="AND d.uid=".intval($req_uid2);
@@ -117,8 +120,8 @@ if(strcmp($yd_param['mode'], "category")==0){
 				$whr_time.=" and d.cid='".$yd_param['cid']."' ";
 			}
 		}elseif(strcmp($yd_param['mode'], "friends")==0){
-    			if (!empty($d3dConf->mPerm->req_friends)) {
-				$whr_uids="d.uid IN (".implode(',',$d3dConf->mPerm->req_friends).")";
+    			if (!empty($mPerm->req_friends)) {
+				$whr_uids="d.uid IN (".implode(',',$mPerm->req_friends).")";
 			}
 		}elseif(strcmp($yd_param['mode'], "date")==0){
 			$whr_time.=" and d.create_time>='".$yd_param['year']."-".$yd_param['month']
@@ -137,15 +140,15 @@ if(strcmp($yd_param['mode'], "category")==0){
 			$whr_time.=" and d. create_time<'".$next_year."-".$next_month."-01 00:00:00"."' ";
 		}
 
-	if($d3dConf->mPerm->isadmin){
+	if($mPerm->isadmin){
 		$whr_openarea = "";
 	} else {
-		$_params4op['use_gp'] = $d3dConf->gPerm->use_gp;
-		$_params4op['use_pp'] = $d3dConf->gPerm->use_pp;
-		$whr_openarea = " AND ".$d3dConf->mPerm->get_open_query( "viewcomment1", $_params4op );
+		$_params4op['use_gp'] = $gPerm->use_gp;
+		$_params4op['use_pp'] = $gPerm->use_pp;
+		$whr_openarea = " AND ".$mPerm->get_open_query( "viewcomment1", $_params4op );
 	}
 		$now = date("Y-m-d H:i:s");
-		if ($d3dConf->mPerm->isadmin!=true and $d3dConf->mPerm->isauthor!=true) {
+		if ($mPerm->isadmin!=true and $mPerm->isauthor!=true) {
 			$whr_nofuture = " AND d.create_time<'".$now."' ";
 		} else {
 			$whr_nofuture = "";
@@ -155,7 +158,7 @@ if(strcmp($yd_param['mode'], "category")==0){
     	// d3comment integration
 		$whr_forum = "f.forum_id='".$com_forum_id."'" ;
 		// forums can be read by current viewer (check by forum_access)
-		$got_forums_can_read = $d3dConf->func->get_d3comforums_can_read( $com_dirname ,$uid );
+		$got_forums_can_read = $func->get_d3comforums_can_read( $com_dirname ,$uid );
 		if ( !in_array( $com_forum_id, $got_forums_can_read ) ) { exit ; }
 
 		// *********** SQL for
@@ -203,8 +206,8 @@ if(strcmp($yd_param['mode'], "category")==0){
 	
 	// page control
 	 $max_entry = 50; // for test
-	//$max_entry = intval($d3dConf->mod_config['block_diarynum']);
-	$offset = $d3dConf->func->getpost_param('pofst');
+	//$max_entry = intval($mod_config['block_diarynum']);
+	$offset = $func->getpost_param('pofst');
 	$offset = isset($offset) ? intval($offset) : 0;
 	$offset2 = $offset-1;	// getting 1 entry before to enable other entry between pages
 	if($offset <=0){ $offset=0; }
@@ -334,24 +337,24 @@ if(strcmp($yd_param['mode'], "category")==0){
     	//var_dump($com_list);
 
 // menu
-if($d3dConf->mod_config['menu_layout']==1){
+if($mod_config['menu_layout']==1){
 	$yd_layout = "left";
-}elseif($d3dConf->mod_config['menu_layout']==2){
+}elseif($mod_config['menu_layout']==2){
 	$yd_layout = "";
 }else{
 	$yd_layout = "right";
 }
 
-	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->initBoxArr();
+	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr();
 
 //$yd_uname=d3diary_get_xoopsuname($req_uid);
-$rtn = $d3dConf->func->get_xoopsuname($req_uid);
+$rtn = $func->get_xoopsuname($req_uid);
 $yd_uname = (!empty($rtn['uname'])) ? $rtn['uname'] : "" ;
 $yd_name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
 
-$yd_avaterurl = $d3dConf->func->get_user_avatar(array($req_uid));
+$yd_avaterurl = $func->get_user_avatar(array($req_uid));
 
-$xoops_pagetitle = ($d3dConf->mod_config['use_name']==1) ? $yd_name.constant("_MD_DIARY_PERSON") : 
+$xoops_pagetitle = ($mod_config['use_name']==1) ? $yd_name.constant("_MD_DIARY_PERSON") : 
 			$yd_uname.constant("_MD_DIARY_PERSON") ;
 
 // breadcrumbs
@@ -362,17 +365,17 @@ $xoops_pagetitle = ($d3dConf->mod_config['use_name']==1) ? $yd_name.constant("_M
 	$bc_para['mode'] = "comment";
 	$bc_para['bc_name'] = constant('_MD_COMMENT');
 	
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( $d3dConf->dcfg->uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $d3dConf->dcfg->uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 if ($req_uid>0){
-    if($d3dConf->mod_config['menu_layout']<=1){
-	list( $yd_calender, $yd_cal_month ) =  $d3dConf->func->get_calender ($req_uid,date("Y"),date("m"), $uid);
-	list( $yd_monlist, $yd_monthnavi ) =  $d3dConf->func->get_monlist ($req_uid,$uid);
-	list( $yd_friends, $yd_friendsnavi ) =  $d3dConf->func->get_friends ($d3dConf->mPerm->req_friends);
-	$yd_list = $d3dConf->func->get_blist ($req_uid,$uid,10);
-	list( $yd_comment, $yd_com_key ) =  $d3dConf->func->get_commentlist ($req_uid,$uid,10,false);
-	$yd_counter = $d3dConf->func->get_count_diary($req_uid);
+    if($mod_config['menu_layout']<=1){
+	list( $yd_calender, $yd_cal_month ) =  $func->get_calender ($req_uid,date("Y"),date("m"), $uid);
+	list( $yd_monlist, $yd_monthnavi ) =  $func->get_monlist ($req_uid,$uid);
+	list( $yd_friends, $yd_friendsnavi ) =  $func->get_friends ($mPerm->req_friends);
+	$yd_list = $func->get_blist ($req_uid,$uid,10);
+	list( $yd_comment, $yd_com_key ) =  $func->get_commentlist ($req_uid,$uid,10,false);
+	$yd_counter = $func->get_count_diary($req_uid);
     } else {
 	$yd_calender=""; $yd_cal_month=""; $yd_friends=""; $yd_friendsnavi="";
 	$yd_comment=""; $yd_monlist=""; $yd_monthnav=""; $yd_counter="";
@@ -403,13 +406,13 @@ if ($req_uid>0){
 			"yd_counter" => $yd_counter,
 			"com_list"  => $com_list,
 			"yd_com_key"  => $yd_com_key,			
-			"catopt"  => $d3dConf->func->get_categories($req_uid,$uid),
+			"catopt"  => $func->get_categories($req_uid,$uid),
 			"mydirname" => $mydirname,
 			"xoops_pagetitle" => $xoops_pagetitle,
 			"xoops_breadcrumbs" => $breadcrumbs,
 			"xoops_module_header" => 
 				$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
-			"mod_config" =>  $d3dConf->mod_config
+			"mod_config" =>  $mod_config
 			));
 
 include_once XOOPS_ROOT_PATH.'/footer.php';

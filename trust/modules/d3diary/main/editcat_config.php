@@ -7,7 +7,7 @@
 include_once dirname( dirname(__FILE__) ).'/class/category.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 
-$category =& Category::getInstance();
+$category =& D3diaryCategory::getInstance();
 
 	global $xoopsUser ;
 	if (is_object( @$xoopsUser )){
@@ -24,7 +24,11 @@ $category =& Category::getInstance();
 	$req_uid = $uid;
 
 $d3dConf = & D3diaryConf::getInstance($mydirname, $req_uid, "editcat_config");
+$func =& $d3dConf->func ;
+$mod_config =& $d3dConf->mod_config ;
 $myts =& $d3dConf->myts;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
 
 //--------------------------------------------------------------------
 // GET Initial Valuses
@@ -42,10 +46,10 @@ include XOOPS_ROOT_PATH."/header.php";
 // this page uses smarty template
 // this must be set before including main header.php
 
-$_tempGperm = $d3dConf->gPerm->getUidsByName( array_keys($d3dConf->gPerm->gperm_config) );
+$_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 // check edit permission by group
 if(!empty($_tempGperm['allow_edit'])){
-	if(!in_array($uid, $_tempGperm['allow_edit'])) {
+	if(!isset($_tempGperm['allow_edit'][$uid])) {
 		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
 		exit();
 	}
@@ -55,7 +59,7 @@ if(!empty($_tempGperm['allow_edit'])){
 }
 
 // dort /rename / add / delete¡Ê --> non nategory ¡Ë
-$common_cat=$d3dConf->func->getpost_param('common_cat') ? intval($d3dConf->func->getpost_param('common_cat')) : 0 ;
+$common_cat=$func->getpost_param('common_cat') ? intval($func->getpost_param('common_cat')) : 0 ;
 
 // uid overrides for common category
 if ($common_cat==1){
@@ -64,14 +68,14 @@ if ($common_cat==1){
 	$category->uid=$uid;
 }
 
-$cid = $category->cid=intval($d3dConf->func->getpost_param('cid'));
+$cid = $category->cid=intval($func->getpost_param('cid'));
 
 // edit
 if(!empty($_POST['submit1']) and $cid>0){
 	$category->readdb($mydirname);
-	$category->blogtype=intval($d3dConf->func->getpost_param('blogtype'));
-	$category->blogurl=$d3dConf->func->getpost_param('blogurl');
-	$category->rss=$d3dConf->func->getpost_param('rss');
+	$category->blogtype=intval($func->getpost_param('blogtype'));
+	$category->blogurl=$func->getpost_param('blogurl');
+	$category->rss=$func->getpost_param('rss');
 
 	if($category->blogtype>0 and empty($category->blogurl)){
 		redirect_header('index.php?page=editcat_config',3,_MD_FAIL_UPDATED._MD_NODIARYURL);
@@ -82,7 +86,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$_rss = $category->rss;
 	
 	// $_url, $_rss are by ref value
-	if ( $d3dConf->func->get_ext_rssurl( $category->blogtype, $_url, $_rss )!=true ) {
+	if ( $func->get_ext_rssurl( $category->blogtype, $_url, $_rss )!=true ) {
 		redirect_header('index.php?page=editcat_config',3,_MD_FAIL_UPDATED._MD_NORSSURL);
 		exit();
 	} else {
@@ -90,11 +94,11 @@ if(!empty($_POST['submit1']) and $cid>0){
 		$category->rss = $_rss;
 	}
 
-	$category->openarea=intval($d3dConf->func->getpost_param('openarea'));
-	$category->dohtml=intval($d3dConf->func->getpost_param('dohtml'));
-	$chk_vgids= $d3dConf->func->getpost_param('vgids');
+	$category->openarea=intval($func->getpost_param('openarea'));
+	$category->dohtml=intval($func->getpost_param('dohtml'));
+	$chk_vgids= $func->getpost_param('vgids');
 	$category->vgids = $chk_vgids ? "|".implode("|", array_map("intval" ,$chk_vgids))."|" : "";
-	$chk_vpids= $d3dConf->func->getpost_param('vpids');
+	$chk_vpids= $func->getpost_param('vpids');
 	$category->vpids = $chk_vpids ? "|".implode("|", array_map("intval" ,explode("," , $chk_vpids)))."|" : "";
 	
 	$category->updatedb($mydirname);
@@ -121,13 +125,13 @@ if(!empty($_POST['submit1']) and $cid>0){
 
 	$_selcted = explode( "|", trim( $category->vgids ,"|" ) );
 
-	//var_dump($d3dConf->gPerm->group_list);
+	//var_dump($gPerm->group_list);
 	$yd_category['group_list'] = array();
-	$_oc = (int)$d3dConf->mod_config['use_open_cat'];
+	$_oc = (int)$mod_config['use_open_cat'];
 	if( $_oc == 10 || $_oc == 20 ) {
 		$_selcted = explode( "|", trim( $category->vgids ,"|" ) );
-		foreach ( $d3dConf->gPerm->group_list as $_gid => $_name) {
-		    if($_gid >= 4 && (in_array($_gid, $d3dConf->mPerm->mygids) || $d3dConf->mPerm->isadmin)){
+		foreach ( $gPerm->group_list as $_gid => $_name) {
+		    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
 			$group_list[$_gid]['gname'] = $_name;
 			$group_list[$_gid]['gsel'] = (in_array( $_gid, $_selcted )) ? 1 : 0;
 		    }
@@ -142,14 +146,14 @@ if(!empty($_POST['submit1']) and $cid>0){
 
 		foreach ($p_selcted as $vpid) {
 			if( $vpid >1 ) {
-				$rtn = $d3dConf->func->get_xoopsuname($vpid);
+				$rtn = $func->get_xoopsuname($vpid);
 				$uname = $rtn['uname'];
 				$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
 				$unames[] = htmlspecialchars( $uname.'['.$vpid.'] ', ENT_QUOTES );
 				$names[] = htmlspecialchars( $name.'['.$vpid.'] ', ENT_QUOTES );
 			}
 		}
-		if( $d3dConf->mod_config['use_name'] == 1 ) {
+		if( $mod_config['use_name'] == 1 ) {
 			$yd_category['pperm_names'] = $names;
 		} else {
 			$yd_category['pperm_names'] = $unames;
@@ -160,7 +164,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	// assign module header for tags
 	$d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=main_css" />'."\r\n";
 	if(!empty($_tempGperm['allow_ppermission'])){
-		if(in_array($uid,$_tempGperm['allow_ppermission'])){
+		if(isset($_tempGperm['allow_ppermission'][$uid])){
 			$d3diary_header .= '<script type="text/javascript" src="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=loader&src=prototype,suggest,log.js"></script>'."\r\n";
 		}
 	}
@@ -174,7 +178,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$bc_para['bc_name'] = constant('_MD_CATEGORY_EDIT');
 	$bc_para['bc_name2'] = htmlspecialchars( $category->cname, ENT_QUOTES ) ;
 	
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 
@@ -182,27 +186,27 @@ $xoopsTpl->assign(array(
 		"yd_uid" => $uid,
 		"yd_uname" => $uname,
 		"yd_name" => $name,
-		"yd_isadmin" => $d3dConf->mPerm->isadmin,
-		"yd_use_friend" => intval($d3dConf->mod_config['use_friend']),
-		"yd_use_open_cat" => intval($d3dConf->mod_config['use_open_cat']),
+		"yd_isadmin" => $mPerm->isadmin,
+		"yd_use_friend" => intval($mod_config['use_friend']),
+		"yd_use_open_cat" => intval($mod_config['use_open_cat']),
 		"yd_cfg" => $yd_category,
 		"yd_openarea" => intval($d3dConf->dcfg->openarea),
 		"common_cat" => $common_cat,
 		"mydirname" => $mydirname,
-		"mod_config" => $d3dConf->mod_config,
+		"mod_config" => $mod_config,
 		"charset" => _CHARSET,
 		"xoops_breadcrumbs" => $breadcrumbs,
 		"xoops_module_header" => 
 			$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
-		"allow_edit" => in_array($uid, $_tempGperm['allow_edit']),
-		"allow_html" => in_array($uid, $_tempGperm['allow_html']),
-		"allow_regdate" => in_array($uid,$_tempGperm['allow_regdate'])
+		"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$uid]) : false,
+		"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$uid]) : false,
+		"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? isset($_tempGperm['allow_regdate'][$uid]) : false
 		));
 		
 	if(!empty($_tempGperm['allow_gpermission']))
-		{ $xoopsTpl->assign( 'allow_gpermission' , in_array($uid,$_tempGperm['allow_gpermission'])); }
+		{ $xoopsTpl->assign( 'allow_gpermission' , isset($_tempGperm['allow_gpermission'][$uid])); }
 	if(!empty($_tempGperm['allow_ppermission']))
-		{ $xoopsTpl->assign( 'allow_ppermission' , in_array($uid,$_tempGperm['allow_ppermission'])); }
+		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
 	
 
 include_once XOOPS_ROOT_PATH.'/footer.php';

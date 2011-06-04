@@ -8,11 +8,15 @@ include_once dirname( dirname(__FILE__) ).'/class/photo.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/tag.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 
-$category =& Category::getInstance();
-$photo =& Photo::getInstance();
-$tag =& Tag::getInstance();
+$category =& D3diaryCategory::getInstance();
+$photo =& D3diaryPhoto::getInstance();
+$tag =& D3diaryTag::getInstance();
 $d3dConf =& D3diaryConf::getInstance($mydirname, 0, "diarylist");
+$func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
+$mPerm =& $d3dConf->mPerm ;
+$gPerm =& $d3dConf->gPerm ;
+$mod_config =& $d3dConf->mod_config ;
 
 //--------------------------------------------------------------------
 // GET Initial Valuses
@@ -44,19 +48,19 @@ $d3diary_header .= '<link rel="alternate" type="application/rss+xml" title="RDF"
 	'/modules/'.$mydirname.'/rdf.php" />'."\r\n";
 //$xoopsTpl->assign( 'xoops_module_header' ,$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header );
 
-$d3dConf->func->update_other();
+$func->update_other();
 
 // menu
-if($d3dConf->mod_config['menu_layout']==1){
+if($mod_config['menu_layout']==1){
 	$yd_layout = "left";
-}elseif($d3dConf->mod_config['menu_layout']==2){
+}elseif($mod_config['menu_layout']==2){
 	$yd_layout = "";
 }else{
 	$yd_layout = "right";
 }
 
 	// get friends' array at first
-	$d3dConf->set_mod_config(0,"diarylist");	// needs $dcfg
+	//$d3dConf->set_mod_config(0,"diarylist");	// needs $dcfg
 	$openarea = array();
 	$noavatar_exists = file_exists(XOOPS_ROOT_PATH."/modules/user/images/no_avatar.gif");
 	
@@ -76,17 +80,17 @@ if($d3dConf->mod_config['menu_layout']==1){
 
 	$editperm=0;
 	
-	if($d3dConf->mPerm->isadmin){
+	if($mPerm->isadmin){
 		$editperm=1;
 		$whr_openarea = " 1 ";
 	} else {
-		$_params4op['use_gp'] = $d3dConf->gPerm->use_gp;
-		$_params4op['use_pp'] = $d3dConf->gPerm->use_pp;
-		$whr_openarea = $d3dConf->mPerm->get_open_query( "dlist1", $_params4op );
+		$_params4op['use_gp'] = $gPerm->use_gp;
+		$_params4op['use_pp'] = $gPerm->use_pp;
+		$whr_openarea = $mPerm->get_open_query( "dlist1", $_params4op );
 	}
 
 	// added requested tag_name
-	if (!empty($b_tag) && $d3dConf->mod_config['use_tag']>1) {
+	if (!empty($b_tag) && $mod_config['use_tag']>1) {
 		$sql_tag= "LEFT JOIN ".$xoopsDB->prefix($mydirname.'_tag')." t ON d.bid=t.bid ";
 	        if (!get_magic_quotes_gpc()) {
 			$whr_tag= " AND t.tag_name='".addslashes($b_tag_noquote)."'";
@@ -103,9 +107,9 @@ if($d3dConf->mod_config['menu_layout']==1){
 		$category->uid = 0;
 		$category->cid = $req_cid;
 		$category->getchildren($mydirname);
-		$yd_param['cname'] = $category->cname;
 		$url_tag.="&amp;cid=".$req_cid;
 	}
+		$yd_param['cname'] = !empty($category->cname) ? $myts->makeTboxData4Show($category->cname) : constant('_MD_NOCNAME') ;
 
 	$whr_time = ""; $whr_cat = ""; $whr_uids = "";
 
@@ -121,8 +125,8 @@ if($d3dConf->mod_config['menu_layout']==1){
 			$whr_cat.=" AND d.cid='".$yd_param['cid']."' ";
 		}
 	}elseif(strcmp($yd_param['mode'], "friends")==0){
-    		if (!empty($d3dConf->mPerm->req_friends)) {
-			$whr_uids=" AND d.uid IN (".implode(',',$d3dConf->mPerm->req_friends).")";
+    		if (!empty($mPerm->req_friends)) {
+			$whr_uids=" AND d.uid IN (".implode(',',$mPerm->req_friends).")";
 		}
 	}
 	if(!empty($yd_param['day'])){
@@ -144,7 +148,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 
 
 	$now = date("Y-m-d H:i:s");
-	if ($d3dConf->mPerm->isadmin!=true and $d3dConf->mPerm->isauthor!=true) {
+	if ($mPerm->isadmin!=true and $mPerm->isauthor!=true) {
 		$whr_nofuture = " AND d.create_time<'".$now."' ";
 	} else { $whr_nofuture = ""; }
 
@@ -178,7 +182,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 		}
 
 	// arrays for BoxDate
-	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $d3dConf->func->initBoxArr();
+	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr();
 
 	// *********** SQL base
 	$sql_base = "FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
@@ -195,8 +199,8 @@ if($d3dConf->mod_config['menu_layout']==1){
 	list ($num_rows) = $xoopsDB->fetchRow($result);
 
 	// page control
-	$max_entry = intval($d3dConf->mod_config['block_diarynum']);
-	$offset = $d3dConf->func->getpost_param('pofst');
+	$max_entry = intval($mod_config['block_diarynum']);
+	$offset = $func->getpost_param('pofst');
 	$offset = (isset($offset) && ($offset>0)) ? intval($offset) : 0;
 	if ( $offset <= 0 ) {
 		$offset2 = 0 ;
@@ -243,8 +247,8 @@ if($d3dConf->mod_config['menu_layout']==1){
 	$result = $xoopsDB->query($sql);
 
 	// flag for using d3comment
-	if(!empty($d3dConf->mod_config['comment_dirname']) 
-		&& intval($d3dConf->mod_config['comment_forum_id'])>0){
+	if(!empty($mod_config['comment_dirname']) 
+		&& intval($mod_config['comment_forum_id'])>0){
 		$yd_param['use_d3comment']=true;
 	}else{
 		$yd_param['use_d3comment']=false;
@@ -261,13 +265,13 @@ if($d3dConf->mod_config['menu_layout']==1){
 
 		$ctime=split('[-: ]',$dbdat['create_time']);
 		$entry[$i]['tstamp'] = $tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
-		$week = intval($d3dConf->func->myformatTimestamp($tstamp, "w"));
+		$week = intval($func->myformatTimestamp($tstamp, "w"));
 
 		$entry[$i]['create_time']=$dbdat['create_time'];
-		$entry[$i]['year']   = intval($d3dConf->func->myformatTimestamp($tstamp, "Y"));
-		$entry[$i]['month']   = intval($d3dConf->func->myformatTimestamp($tstamp, "m"));
-		$entry[$i]['day']   = intval($d3dConf->func->myformatTimestamp($tstamp, "d"));
-		$entry[$i]['time']   = $d3dConf->func->myformatTimestamp($tstamp, "H:i");
+		$entry[$i]['year']   = intval($func->myformatTimestamp($tstamp, "Y"));
+		$entry[$i]['month']   = intval($func->myformatTimestamp($tstamp, "m"));
+		$entry[$i]['day']   = intval($func->myformatTimestamp($tstamp, "d"));
+		$entry[$i]['time']   = $func->myformatTimestamp($tstamp, "H:i");
 		$entry[$i]['week'] = $arr_weeks [$week];
 		$entry[$i]['b_month'] = $arr_monthes [$entry[$i]['month'] -1];
 		$entry[$i]['dclass'] = $arr_dclass [$week];
@@ -296,7 +300,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 		$openarea_cat = intval($dbdat['openarea_cat']);
 
 		list( $_got_op , $_slctd_op , $_tmp_gperms, $_tmp_pperms ) 
-			= $d3dConf->mPerm->override_openarea( $_tmp_op, intval($dbdat['openarea']), $openarea_cat, 
+			= $mPerm->override_openarea( $_tmp_op, intval($dbdat['openarea']), $openarea_cat, 
 				$dbdat['vgids'], $dbdat['vpids'], $dbdat['vgids_cat'], $dbdat['vpids_cat'] );
 		$entry[$i]['openarea'] = $_got_op;
 			// var_dump($_tmp_gperms); var_dump($_tmp_pperms);
@@ -310,8 +314,8 @@ if($d3dConf->mod_config['menu_layout']==1){
 		$first_date =  $dbdat['create_time'];
 
 		$entry[$i]['dohtml'] = intval($dbdat['dohtml']);
-		$entry[$i]['diary'] = $d3dConf->func->substrTarea($dbdat['diary'], $entry[$i]['dohtml'], 
-			intval($d3dConf->mod_config['preview_charmax']));
+		$entry[$i]['diary'] = $func->substrTarea($dbdat['diary'], $entry[$i]['dohtml'], 
+			intval($mod_config['preview_charmax']));
 		$entry[$i]['other']=0;
 	    } //end (is1st)
 	    $is1st=0;
@@ -326,7 +330,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 	// *********** SQL for
 	// other enrties
 	
-	if ( $dosort == true && (empty($b_tag) || $d3dConf->mod_config['use_tag']==0) ) {
+	if ( $dosort == true && (empty($b_tag) || $mod_config['use_tag']==0) ) {
 		$sql = "SELECT  d.diary, d.create_time, d.title, d.url, u.uname, u.name, u.uid, u.user_avatar, 
 			c.cid, c.cname, c.openarea AS openarea_cat 
 			FROM ".$xoopsDB->prefix($mydirname.'_newentry')." d 
@@ -342,13 +346,13 @@ if($d3dConf->mod_config['menu_layout']==1){
 		$tmp = split("[-: ]",$dbdat['create_time']);
 		
 		$entry[$i]['tstamp'] = $tstamp = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
-		$week = intval($d3dConf->func->myformatTimestamp($tstamp, "w"));
+		$week = intval($func->myformatTimestamp($tstamp, "w"));
 
 		$entry[$i]['create_time']=$dbdat['create_time'];
-		$entry[$i]['year']   = intval($d3dConf->func->myformatTimestamp($tstamp, "Y"));
-		$entry[$i]['month']   = intval($d3dConf->func->myformatTimestamp($tstamp, "m"));
-		$entry[$i]['day']   = intval($d3dConf->func->myformatTimestamp($tstamp, "d"));
-		$entry[$i]['time']   = $d3dConf->func->myformatTimestamp($tstamp, "H:i");
+		$entry[$i]['year']   = intval($func->myformatTimestamp($tstamp, "Y"));
+		$entry[$i]['month']   = intval($func->myformatTimestamp($tstamp, "m"));
+		$entry[$i]['day']   = intval($func->myformatTimestamp($tstamp, "d"));
+		$entry[$i]['time']   = $func->myformatTimestamp($tstamp, "H:i");
 		$entry[$i]['week'] = $arr_weeks [$week];
 		$entry[$i]['b_month'] = $arr_monthes [$entry[$i]['month'] -1];
 		$entry[$i]['dclass'] = $arr_dclass [$week];
@@ -370,9 +374,9 @@ if($d3dConf->mod_config['menu_layout']==1){
 		$entry[$i]['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$entry[$i]['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 
-//		$entry[$i]['diary'] = $d3dConf->func->substrTarea($dbdat['diary'], 0, 
-//					intval($d3dConf->mod_config['preview_charmax']));
-		$entry[$i]['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$d3dConf->mod_config['preview_charmax'], _CHARSET)."...";
+//		$entry[$i]['diary'] = $func->substrTarea($dbdat['diary'], 0, 
+//					intval($mod_config['preview_charmax']));
+		$entry[$i]['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
 					
 		// openarea overrides
 		$_tmp_op = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;
@@ -396,7 +400,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 	}
 	unset($photo->photos);
 	
-	if ( $d3dConf->mod_config['use_tag']>0 ) {
+	if ( $mod_config['use_tag']>0 ) {
 		// tags
 		$tag->bids = $got_bids;
 		$tag->readdb_mul($mydirname);
@@ -409,8 +413,8 @@ if($d3dConf->mod_config['menu_layout']==1){
 
 	$d3dConf->set_new_bids ( $got_bids );
 	// comment counts, newest comments
-	//list($yd_comment,$yd_com_key) = $d3dConf->func->get_commentlist(0,$uid,$got_bids,100,true);
-	list($yd_comment,$yd_com_key) = $d3dConf->func->get_commentlist(0,$uid,100,true);
+	//list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,$got_bids,100,true);
+	list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,100,true);
 	foreach( $yd_comment as $_com){
 		$i = $_com['bid'];
 		$entry[$i]['com_num'] = $_com['com_num'];
@@ -430,7 +434,7 @@ if($d3dConf->mod_config['menu_layout']==1){
 
 	//TagCloud
 	$where = "";
-	list( $tagCloud, $dummy_navi ) = $d3dConf->func->getTagCloud($where, 80, 200);
+	list( $tagCloud, $dummy_navi ) = $func->getTagCloud($where, 80, 200);
 
 // breadcrumbs
 	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');
@@ -459,11 +463,11 @@ if($d3dConf->mod_config['menu_layout']==1){
 	}
 	
 	
-	if(!empty($b_tag) && $d3dConf->mod_config['use_tag']>0) {
+	if(!empty($b_tag) && $mod_config['use_tag']>0) {
 		$yd_param['tag'] = $b_tag;
 		$bc_para['tag'] = $yd_param['tag'];
 	}
-	$breadcrumbs = $d3dConf->func->get_breadcrumbs( 0, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( 0, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 	$xoopsTpl->assign(array(
@@ -481,20 +485,22 @@ if($d3dConf->mod_config['menu_layout']==1){
 			"lang_datanum" => constant('_MD_DATANUM1').$num_rows. constant('_MD_DATANUM2').
 						$startnum. constant('_MD_DATANUM3').$endnum.
 						constant('_MD_DATANUM4'),
-			"sort_baseurl" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->sort_baseurl,
+			"base_qstr" => $d3dConf->url4_all,
+			"sort_baseurl" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_odr,
 		        "url4ex_cat" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat,
 		        "url4ex_tag" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_tag,
 		        "url4ex_date" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date,
+			"style_s" => $d3dConf->style_s,
 			"mydirname" => $mydirname,
 		//	"xoops_pagetitle" => $xoops_pagetitle,
 			"xoops_breadcrumbs" => $breadcrumbs,
 			"xoops_module_header" => 
 				$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
-			"mod_config" =>  $d3dConf->mod_config
+			"mod_config" =>  $mod_config
 			));
 
 	$d3dConf->debug_appendtime('diarylist');
-	if($d3dConf->mPerm->isadmin==true && $d3dConf->debug_mode==1){$xoopsTpl->assign("debug_time", $d3dConf->debug_gettime());}
+	if($mPerm->isadmin==true && $d3dConf->debug_mode==1){$xoopsTpl->assign("debug_time", $d3dConf->debug_gettime());}
 
 function d3diary_assign_common_category ($mydirname) {
 	global $xoopsDB, $d3dConf ;
@@ -519,7 +525,7 @@ function d3diary_assign_common_category ($mydirname) {
 		if($op ==10 || $op==20) {
 			$_tmp_gperms = isset($dbdat['vgids']) ? 
 					array_map("intval", explode('|', trim($dbdat['vgids'],'|'))) : array();
-			if (array_intersect($d3dConf->mPerm->mygids, $_tmp_gperms)) {
+			if (array_intersect($mPerm->mygids, $_tmp_gperms)) {
 				$catopts[] = $catopt;
 			}
 		} else {

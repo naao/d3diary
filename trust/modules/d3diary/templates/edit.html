@@ -315,29 +315,35 @@
 	<input type='hidden' name='pname<{$num}>' id='pname<{$num}>' value='<{$photo.pname}>' />
 	<input type='hidden' name='pid[]' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname[]' value='<{$photo.pname}>' />
-	<p><{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='pdel[]' value='<{$photo.pid}>::<{$photo.pname}>' />
+	<p><{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' value='<{$photo.pid}>::<{$photo.pname}>' />
 	<{if $mod_config.photo_useinfo==1}>
 		<textarea name='pvinfo[]' rows="2" cols="50"><{$photo.pinfo}></textarea>
 	<{/if}>
-	<{* <input type='button' name="preview" value="<{$smarty.const._MD_T_DEL}>" onClick="d3diary_delfile(<{$num}>);return false;" /> *}></p>
     </td>
   </tr>
 <{/foreach}>
-
+<{if $yd_photo }>
+  <tr>
+    <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_PHOTO_MANAGE}><br />
+    <td class="even" style="border:1px solid gray;">
+	<select name="action" id="action">
+	<option value="0"><{$smarty.const._MD_CATEGORY_NOSELECTED}></option>
+	<option value="2"><{$smarty.const._MD_LROTATE}></option>
+	<option value="3"><{$smarty.const._MD_RROTATE}></option>
+	<option value="5"><{$smarty.const._MD_T_DEL}></option>
+	</select>
+<input type=submit name="phandle" value="<{$smarty.const._SUBMIT}>" onClick="d3diary_pmanage_confirm();return false;"/>
+</td></tr>
+<{/if}>
 <!-- Images : Start --> 
 <tr>
 <td class="head" style="border:1px solid gray;">
-	<label for="face"><{$smarty.const._MD_PHOTO_SELECT}>(gif/jpeg)</label><br />MAX<{$yd_photo_maxpics}><{$smarty.const._MD_PHOTO_SHRINK}></th>
+	<label for="face"><{$smarty.const._MD_PHOTO_ADD}>(gif/jpeg)</label><br />MAX<{$yd_photo_maxpics}><{$smarty.const._MD_PHOTO_SHRINK}></th>
 <td class="even" style="border: 1px solid gray;">
 <div id="image_add" style=float:left;>
-<a href="javascript:void(0);" onclick="d3diary_addUploadForm(0);">[<{$smarty.const._MD_PHOTO_ADD}>]</a> 
+<a href="javascript:void(0);" onclick="d3diary_addUploadForm(0);">[<{$smarty.const._MD_PHOTO_ADD}>]</a>
 </div>
-<{if $yd_photo }>
-<input type=submit name="preview" value="<{$smarty.const._MD_PHOTO_SELECT}>&nbsp;<{$smarty.const._MD_T_DEL}>" onClick="d3diary_delfile_mul();return false;"/>
-<input type=submit name="preview" value="<{$smarty.const._MD_PHOTO_SELECT}>&nbsp;<{$smarty.const._MD_LROTATE}>" onClick="d3diary_photo_rotate(2);return false;"/>
-<input type=submit name="preview" value="<{$smarty.const._MD_PHOTO_SELECT}>&nbsp;<{$smarty.const._MD_RROTATE}>" onClick="d3diary_photo_rotate(1);return false;"/>
-<{/if}>
-<br />
+
 <{if $mod_config.photo_useinfo==1}>
 <{section name=cnt start=1 loop=10}>
 <div id="image<{$smarty.section.cnt.index}>" style="display:none">
@@ -364,8 +370,6 @@
 <input type=hidden name="req_uid" value="<{$yd_uid}>"/>
 <center>
 <{if $preview}><input type=hidden name="was_prev" value="1" /><{/if}>
-<input type=hidden name="photodel" id="photodel"value="0" />
-<input type=hidden name="photorotate" id="photorotate"value="0" />
 <input type=submit name="preview" value="<{$smarty.const._MD_PREVIEW}>"/>
 <input type=submit name="submit1" value="<{$smarty.const._MD_SUBMIT}>"/>
 </center>
@@ -570,20 +574,16 @@ function d3diary_delfile(p_num) {
 
 }
 
-function d3diary_delfile_mul() {
-	document.getElementById('photodel').value=1;
-	if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_FILEDEL_CONFIRM}>')==true){
-		document.fm1.submit();
+function d3diary_pmanage_confirm() {
+	if(document.getElementById('action').value==5){
+		if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_FILEDEL_CONFIRM}>')==true){
+			document.fm1.phandle();
+		}
+	} else {
+		if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_ROTATE_CONFIRM}>')==true){
+			document.fm1.phandle();
+		}
 	}
-
-}
-
-function d3diary_photo_rotate(direction) {
-	document.getElementById('photorotate').value=direction;
-	if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_ROTATE_CONFIRM}>')==true){
-		document.fm1.submit();
-	}
-
 }
 
 function bbcode_area() {

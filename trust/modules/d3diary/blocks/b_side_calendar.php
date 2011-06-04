@@ -13,6 +13,7 @@ function b_d3dside_calendar_show( $options ){
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 	
 	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "b_side_calendar");
+	$func =& $d3dConf->func ;
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	//var_dump($req_uid);
@@ -40,13 +41,9 @@ function b_d3dside_calendar_show( $options ){
 	//$q_tag = & $d3dConf->q_tag ;
 	$q_fr = $d3dConf->q_fr ;
 
-	if ( $req_uid == 0 ) {
-		$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_date. "&amp;";
-	} else {
 		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
-	}
 
-		list( $yd_calender, $yd_cal_month ) = $d3dConf->func->get_calender ( $req_uid, $year, $month, $uid, $base_url, true );
+		list( $yd_calender, $yd_cal_month ) = $func->get_calender ( $req_uid, $year, $month, $uid, $base_url, true );
 
 		$lang = array();
 		//$lang['title'] = constant('_MD_CTITLE');

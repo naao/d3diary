@@ -34,14 +34,13 @@
 
 <div class="item" style="border:0px ;">
 <div class="itemInfo" style="text-align:center;">
-<span>[<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
-<a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
-<span>[<{$smarty.const._MD_DIARY_NAME}><a href="<{$sort_baseurl}>&amp;odr=name_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
-<a href="<{$sort_baseurl}>&amp;odr=name_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
-<span>[<{$smarty.const._MD_DIARY_COUNT}><a href="<{$sort_baseurl}>&amp;odr=count_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
-<a href="<{$sort_baseurl}>&amp;odr=count_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
-<span>[<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="d3dUp" title="UP"><image src="images/up.gif" /></a>
-<a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="d3dUp" title="DOWN"><image src="images/down.gif" /></a>]</span>
+
+[<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="<{$style_s.time_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a><a href="<{$sort_baseurl}>&amp;odr=time_asc" class="<{$style_s.time_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+[<{$smarty.const._MD_DIARY_NAME}><a href="<{$sort_baseurl}>&amp;odr=name_dsc" class="<{$style_s.name_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a><a href="<{$sort_baseurl}>&amp;odr=name_asc" class="<{$style_s.name_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+[<{$smarty.const._MD_DIARY_COUNT}><a href="<{$sort_baseurl}>&amp;odr=count_dsc" class="<{$style_s.count_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a>
+<a href="<{$sort_baseurl}>&amp;odr=count_asc" class="<{$style_s.count_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+[<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="<{$style_s.hit_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="<{$style_s.hit_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+
 </div><!-- /itemInfo -->
 <div class="itemInfo" style="text-align:left;">
 <{$smarty.const._MD_POSTER_LIST}>
