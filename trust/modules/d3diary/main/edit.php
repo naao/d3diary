@@ -1196,7 +1196,7 @@ function d3diary_ping_send($blogtitle, $blogtopurl) {
 }
 
 function d3diary_reg_time(){
-	global $diary, $yd_data, $d3dConf;
+	global $diary, $yd_data, $func;
 	if ($func->getpost_param('reg_time')) {
 		$pub = $func->getpost_param('published');
 		$pub = array_map('intval', $pub);
