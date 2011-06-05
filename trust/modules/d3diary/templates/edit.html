@@ -146,13 +146,13 @@
 <input type="hidden" name="bid" value="<{$yd_data.bid}>" />
 <table>
 <tr>
-<td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_DIARY_TITLE}></th>
+<td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_DIARY_TITLE}></td>
 <td class="even" style="border:1px solid gray;"><input type="text" name="title" size="40" value="<{$yd_data.title}>" /><br />
 <{if $yd_data.bid>0}>&nbsp;<{$smarty.const._MD_DIARY_DATE}>&nbsp;<{$yd_data.year}><{$smarty.const._MD_DATE_YEAR}><{$yd_data.month}><{$smarty.const._MD_DATE_MONTH}><{$yd_data.day}><{$smarty.const._MD_DATE_DAY}> <{$yd_data.time}><{/if}></td>
 </tr>
 
 <tr>
-<td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_CATEGORY}></th>
+<td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_CATEGORY}></td>
 <td class="even" style="border:1px solid gray;">
 <select name="cid" id="cid" onchange="chgcname()">
 <option value="0"><{$smarty.const._MD_NOCNAME}></option>
@@ -173,7 +173,7 @@
 </tr>
 
 <{if $yd_use_open_entry}><tr>
-<td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_CONF_OPENAREA}></th>
+<td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_CONF_OPENAREA}></td>
 <td class="even" style="border:1px solid gray;">
 
 <select name="openarea" id="openarea" onchange="chgopenarea()">
@@ -223,7 +223,7 @@
   <input type="button" class="formButton" value="FCKeditor" name="contentman_preview"  onclick='fckeditor_exec("100%", "350", "<{$xoops_url}>");' />
   <input type="hidden" name="fck_loaded" id='fck_loaded' value="0" />
 <{/if}>
-</th>
+</td>
 <td class="even" style="border:1px solid gray;">
 <a name='moresmiley'></a>
 <{if $mod_config.body_editor=="xoopsdhtml"}>
@@ -235,7 +235,7 @@
       <br /><{$smilylist}>
 <{/if}>
 <br />
-<input id="entry_seperator" value="<{$smarty.const._MD_PAGEBREAK}>" onclick='xoopsCodeSmilie("diary", "\n[pagebreak]\n");' type="button"><br />
+<input id="entry_pagebreak" value="<{$smarty.const._MD_PAGEBREAK}>" onclick='xoopsCodeSmilie("diary", "\n[pagebreak]\n");' type="button"><br />
 <{$smarty.const._MD_YT_URL}>
 <input type="text" name="yt" id="yt" value="" />
 <input type="button" name="yt_sub" value="<{$smarty.const._MD_YT_ADD}>" onclick="return yt_input();" /><br />
@@ -308,14 +308,14 @@
 
 <{foreach from=$yd_photo key="num" item="photo" name="list"}>
   <tr>
-    <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_PHOTO}><{$num+1}><br />
+    <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_PHOTO}><{$num+1}></td>
     <td class="even" style="border:1px solid gray;">
 	<img src='upimg/<{$photo.thumbnail}>'>
 	<input type='hidden' name='pid<{$num}>' id='pid<{$num}>' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname<{$num}>' id='pname<{$num}>' value='<{$photo.pname}>' />
 	<input type='hidden' name='pid[]' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname[]' value='<{$photo.pname}>' />
-	<p><{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' value='<{$photo.pid}>::<{$photo.pname}>' />
+	<{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' value='<{$photo.pid}>::<{$photo.pname}>' />
 	<{if $mod_config.photo_useinfo==1}>
 		<textarea name='pvinfo[]' rows="2" cols="50"><{$photo.pinfo}></textarea>
 	<{/if}>
@@ -324,7 +324,7 @@
 <{/foreach}>
 <{if $yd_photo }>
   <tr>
-    <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_PHOTO_MANAGE}><br />
+    <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_PHOTO_MANAGE}></td>
     <td class="even" style="border:1px solid gray;">
 	<select name="action" id="action">
 	<option value="0"><{$smarty.const._MD_CATEGORY_NOSELECTED}></option>
@@ -338,9 +338,9 @@
 <!-- Images : Start --> 
 <tr>
 <td class="head" style="border:1px solid gray;">
-	<label for="face"><{$smarty.const._MD_PHOTO_ADD}>(gif/jpeg)</label><br />MAX<{$yd_photo_maxpics}><{$smarty.const._MD_PHOTO_SHRINK}></th>
+	<label for="face"><{$smarty.const._MD_PHOTO_ADD}>(gif/jpeg)</label><br />MAX<{$yd_photo_maxpics}><{$smarty.const._MD_PHOTO_SHRINK}></td>
 <td class="even" style="border: 1px solid gray;">
-<div id="image_add" style=float:left;>
+<div id="image_add">
 <a href="javascript:void(0);" onclick="d3diary_addUploadForm(0);">[<{$smarty.const._MD_PHOTO_ADD}>]</a>
 </div>
 
@@ -389,9 +389,9 @@
 <{if $yd_data.bid>0}>
 <table class="outer" cellspacing="1">
 <tr>
-<th align="left">
+<td align="left">
 <{$smarty.const._MD_DIARY_DEL}>
-</th>
+</td>
 </tr><tr>
 <td>
 <table><tr>
