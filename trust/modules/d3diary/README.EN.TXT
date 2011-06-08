@@ -101,6 +101,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 6/ 9  ver0.18 alpha
+	- Fixed hits and comments number were not assigned in whatsnew puguin.
+
 2010/ 6/ 4  ver0.18 alpha
 	- Fixed bug of photo info is not trancated in photolist block.
 	- Added photolist page and changed links in blocks of category, tagcroud, and blogger.

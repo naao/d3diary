@@ -45,6 +45,15 @@ if( ! function_exists( 'd3diary_new_base' ) ) {
 		}
 		unset($photo->photos);
 	
+		// comment counts, newest comments
+		list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,100,true,true);
+		if(!empty($yd_comment)){
+			foreach( $yd_comment as $_com){
+				$i = (int)$_com['bid'];
+				$entry[$i]['com_num'] = (int)$_com['com_num'];
+			}
+		}
+
 		$ret	= array();
 		if (!empty($entry)) {
 			array_multisort($mytstamp, SORT_DESC, $entry);
@@ -59,6 +68,7 @@ if( ! function_exists( 'd3diary_new_base' ) ) {
 				$ret[$i]['time']	= $e['tstamp'];
 				$ret[$i]['uid']  	= $e['uid'];
 				$ret[$i]['hits'] 	= $e['view'];
+				$ret[$i]['replies'] 	= !empty($e['com_num']) ? $e['com_num'] : 0 ;
 				$ret[$i]['image']	= !empty($e['photo']) ? $URL_MOD."/upimg/".$e['photo'] : "";
 				$ret[$i]['id']   	= $e['bid'];
 				$i++;

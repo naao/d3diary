@@ -654,7 +654,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 	}
 
 	// entries
-	$sql = "SELECT d.uid AS uid, d.bid AS bid, d.title, d.cid, d.diary, d.create_time, d.openarea AS openarea_entry, d.dohtml, 
+	$sql = "SELECT d.uid AS uid, d.bid AS bid, d.title, d.cid, d.diary, d.create_time, d.openarea AS openarea_entry, d.dohtml, d.view, 
 			u.uname, u.name, u.user_avatar, c.openarea AS openarea_cat, c.cname, cfg.openarea 
 			FROM ".$db->prefix($this->mydirname.'_diary')." d 
 			INNER JOIN ".$db->prefix('users')." u USING(uid) 
