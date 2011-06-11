@@ -76,7 +76,7 @@
 
 <{if $yd_photolist.0.pid|count_characters>0}>
 <{if $yd_editperm}>
-<form name="MainForm" method="post" action="index.php?page=photolist<{if $yd_uid>0}>&amp;req_uid=<{$yd_uid}><{/if}><{if $smarty.get.phofst}>&amp;phofst=<{$smarty.get.phofst}><{/if}><{if $smarty.get.cid}>&amp;cid=<{$smarty.get.cid}><{/if}><{if $smarty.get.tag_name}>&amp;tag_name=<{$smarty.get.tag_name}><{/if}><{if $smarty.get.odr}>&amp;odr=<{$smarty.get.odr}><{/if}>">
+<form name="MainForm" method="post" action="index.php?page=photolist<{if $yd_uid>0}>&amp;req_uid=<{$yd_uid}><{/if}><{if $smarty.get.phofst}>&amp;phofst=<{$smarty.get.phofst}><{/if}><{$base_qstr}>">
 <{if $yd_action!=1 && $yd_action!=4}>
 	<select name="action" id="action">
 	<option value="0"><{$smarty.const._MD_CATEGORY_NOSELECTED}></option>
