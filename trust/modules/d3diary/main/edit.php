@@ -240,11 +240,11 @@ switch ( $eparam['mode'] ) {
 		exit();
 	}
 
-	$rtnurl = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4_all ;
 	// rotate registered photos ( $action == 2 || $action == 3 )
 	$result = $func->manage_photos( $photoObj, $diaryObj, $psels, $psel_names, $action, $eparam ) ;
 
 	//$eparam['mode'] = _D3DIARY_PROCMODE_PREVIEW ;
+	$rtnurl = XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$diary->bid ;
 	redirect_header( $rtnurl, 2, _MD_DIARY_UPDATED);
 
 	// input form
