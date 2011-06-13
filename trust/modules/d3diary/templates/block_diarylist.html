@@ -24,7 +24,7 @@
 	<{if $entry.cname|count_characters>0}><{if $block.yd_uid==0 && $entry.cid>10000}>[<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=diarylist&amp;mode=category&amp;cid=<{$entry.cid}>"><{$entry.cname}></a>]
 	<{else}>[<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?mode=category&amp;cid=<{$entry.cid}>&amp;req_uid=<{$entry.uid}>"><{$entry.cname}></a>]
 	<{/if}><{/if}>
-	by<a href="<{$xoops_url}>/userinfo.php?uid=<{$entry.uid}>">
+	by&nbsp;<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?req_uid=<{$entry.uid}>">
 	<{if $block.mod_config.use_name==1 && $entry.name}><{$entry.name}>
 	<{else}><{$entry.uname}>
 	<{/if}></a>
