@@ -503,7 +503,7 @@ if($mod_config['menu_layout']==1){
 	if($mPerm->isadmin==true && $d3dConf->debug_mode==1){$xoopsTpl->assign("debug_time", $d3dConf->debug_gettime());}
 
 function d3diary_assign_common_category ($mydirname) {
-	global $xoopsDB, $d3dConf ;
+	global $xoopsDB, $mPerm ;
 	// naao changed for common category (uid=0)
 	$sql = "SELECT * FROM ".$xoopsDB->prefix($mydirname.'_category')."
 	          WHERE uid='0' ORDER BY corder";

@@ -1,5 +1,20 @@
 <?php
 
+require_once XOOPS_TRUST_PATH.'/modules/attachfile/class/AttachfilePluginAbstract.class.php' ;
+
+// a class for attachfile plugin
+class d3diaryAttachfilePlugin extends AttachfilePluginAbstract{
+
+//var $attachfile_dirname = '' ;
+//var $attachfile_trustdirname = '' ;
+//var $target_dirname = '' ;
+//var $target_trustdirname = '' ;
+
+function d3diaryAttachfilePlugin( $parentObj )
+{
+	$this->parentObj = & $parentObj;
+}
+
 // ===========================================================================
 // The permission file is necessary in each module.
 // If target module is "D3 module", the permission file is necessary
@@ -7,10 +22,6 @@
 //
 // -- argument --
 // 
-// $mydirname			: attachfile's dirname in XOOPS_ROOT_PATH
-// $module_dirname		: target module's dirname in XOOPS_ROOT_PATH
-// $mytrustdirname		: attachfile's dirname in XOOPS_TRUST_PATH
-// $targettrustdirname	: target module's dirname in XOOPS_TRUST_PATH
 // $target_id			: target mosule's contents id (target to attach)
 // 
 // -- return value --
@@ -19,17 +30,19 @@
 // false				: deny access
 // ===========================================================================
 
-function attachfile_check_upload_permission_plugin( $mydirname , $module_dirname , $mytrustdirname , $targettrustdirname , $target_id )
+function attachfile_check_upload_permission_plugin( $target_id )
 {
+	//$mydirname , $module_dirname , $mytrustdirname , $targettrustdirname
+
 	// emulate d3diary
-	$mytrustdirname = $targettrustdirname ;
-	$mytrustdirpath = XOOPS_TRUST_PATH.'/modules/'.$targettrustdirname ;
-	$mydirname = $module_dirname ;
+	$mytrustdirname = $this->target_trustdirname ;
+	$mytrustdirpath = XOOPS_TRUST_PATH.'/modules/'.$mytrustdirname ;
+	$mydirname = $this->target_dirname ;
 
 	include_once $mytrustdirpath.'/class/diary.class.php';
 	include_once $mytrustdirpath.'/class/category.class.php';
 	include_once $mytrustdirpath.'/class/d3diaryConf.class.php' ;
-
+	
 	$diary =& D3diaryDiary::getInstance();
 	$cat =& D3diaryCategory::getInstance();
 	
@@ -48,7 +61,7 @@ function attachfile_check_upload_permission_plugin( $mydirname , $module_dirname
 	$owner=0;
 	$_tempGperm = $d3dConf->gPerm->getUidsByName( array('allow_edit') );
 	// check edit permission by group
-	if(isset($_tempGperm['allow_edit'][$uid])) {
+	if(in_array($uid, $_tempGperm['allow_edit'])) {
 		if($diary->uid==$uid){$owner=1;$editperm=1;}
 		if($d3dConf->mPerm->isadmin){$editperm=1;}
 	}	unset($_tempGperm);
@@ -60,19 +73,21 @@ function attachfile_check_upload_permission_plugin( $mydirname , $module_dirname
 	}
 }
 
-function attachfile_check_download_permission_plugin( $mydirname , $module_dirname , $mytrustdirname , $targettrustdirname , $target_id )
+function attachfile_check_download_permission_plugin( $target_id )
 {
+	//$mydirname , $module_dirname , $mytrustdirname , $targettrustdirname
+
 	// emulate d3diary
-	$mytrustdirname = $targettrustdirname ;
-	$mytrustdirpath = XOOPS_TRUST_PATH.'/modules/'.$targettrustdirname ;
-	$mydirname = $module_dirname ;
+	$mytrustdirname = $this->target_trustdirname ;
+	$mytrustdirpath = XOOPS_TRUST_PATH.'/modules/'.$mytrustdirname ;
+	$mydirname = $this->target_dirname ;
 
 	include_once $mytrustdirpath.'/class/diary.class.php';
 	include_once $mytrustdirpath.'/class/category.class.php';
 	include_once $mytrustdirpath.'/class/d3diaryConf.class.php' ;
 
-	$diary =& new Diary();
-	$cat =& new Category();
+	$diary =& new D3diaryDiary();
+	$cat =& new D3diaryCategory();
 	
 	$diary->bid = $target_id ;
 	$diary->readdb($mydirname);
@@ -105,6 +120,8 @@ function attachfile_check_download_permission_plugin( $mydirname , $module_dirna
 
 
 	return $yd_data['can_disp'] ; 
+
+}
 }
 
 ?>
