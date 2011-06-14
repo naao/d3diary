@@ -1004,7 +1004,7 @@ function d3diary_process_uploaded_photo( $mydirname , $updir){
 
 function d3diary_showform($mydirname){
 	global $photoObj, $diary, $xoopsOption, $func, $myts, $mPerm, $gPerm, $eparam, $d3diary_header ;
-	global $yd_data, $del_pname, $form_photos, $_oe;
+	global $yd_data, $del_pname, $form_photos, $_oe, $mod_config;
 
 		$yd_data['bid'] = $diary->bid;
 		$yd_data['uid'] = $diary->uid;
