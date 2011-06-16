@@ -207,24 +207,32 @@ class D3diaryPhoto
 	function insertdb($mydirname, $force=false ){
 		global $xoopsDB;
 
+		if ($this->tstamp) {
+			$ctime= $this->tstamp;
+		} else {
+			$ctime=date( "Y-m-d H:i:s" );
+		}
+
         if (!get_magic_quotes_gpc()) {
 			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_photo')."
-					(uid, bid, pid, ptype, info)
+					(uid, bid, pid, ptype, tstamp, info)
 					VALUES (
 					'".addslashes($this->uid)."',
 					'".addslashes($this->bid)."',
 					'".addslashes($this->pid)."',
 					'".addslashes($this->ptype)."',
+					'".addslashes($ctime)."',
 					'".addslashes($this->info)."'
 					)";
 		} else {
 			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_photo')."
-					(uid, bid, pid, ptype, info)
+					(uid, bid, pid, ptype, tstamp, info)
 					VALUES (
 					'".$this->uid."',
 					'".$this->bid."',
 					'".$this->pid."',
 					'".$this->ptype."',
+					'".$ctime."',
 					'".$this->info."'
 					)";
 		}

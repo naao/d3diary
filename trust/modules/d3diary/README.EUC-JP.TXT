@@ -97,6 +97,9 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2010/ 6/16  ver0.18 alpha
+	- photolistページで日付が表示されない件の修正。　モジュールアップデート必須。
+
 2010/ 6/ 9  ver0.18 alpha
 	- whatsnew プラグインで閲覧数・コメント数が表示されていなかったのを修正。
 
