@@ -81,7 +81,7 @@ CREATE TABLE photo (
   `bid` int(10) unsigned NOT NULL,
   `pid` varchar(50) NOT NULL,
   `ptype` tinytext NOT NULL,
-  `tstamp` timestamp NOT NULL,
+  `tstamp` datetime NOT NULL,
   `info` text,
   PRIMARY KEY  (`bid`,`pid`)
 ) TYPE=MyISAM;
