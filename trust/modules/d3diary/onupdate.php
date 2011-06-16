@@ -143,7 +143,7 @@ function d3diary_onupdate_base( $module , $mydirname )
 	$result = mysql_query("SELECT `tstamp` FROM ".$db->prefix($mydirname."_photo")) ;
 	$field_type  = mysql_field_type($result, 0);
 	if ( $field_type == "timestamp" ) {
-		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_photo")." modify `tstamp` datetime" ) ;
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_photo")." modify `tstamp` datetime NOT NULL" ) ;
 		// for NULL tstamp, copy from diary's create_time
 		$sql = "UPDATE ".$db->prefix($mydirname."_photo"). " p 
 				INNER JOIN ".$db->prefix($mydirname."_diary")." d USING(bid) 
