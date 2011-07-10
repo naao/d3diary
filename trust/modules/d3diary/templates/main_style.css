@@ -605,11 +605,6 @@ div.personnel span.exist_highlight {
 	background-position:0px 2px;
 }
 
-a.d3dSortDsc {
-	width:12px;
-	height:10px;
-	text-decoration: none;
-}
 a:hover.d3dSortDsc {
 	background-position:0px -26px;
 }
@@ -632,13 +627,15 @@ a:hover.d3dSortDsc {
 	background-position:0px 2px;
 }
 
-a.d3dSortAsc {
-	width:12px;
-	height:10px;
-	text-decoration: none;
-}
 a:hover.d3dSortAsc {
 	background-position:0px -26px;
+}
+
+a.d3dSortDsc, .d3dSortDsc_s, a.d3dSortAsc, .d3dSortAsc_s {
+	overflow:hidden;
+	display:inline-block;
+	width:4px;
+	height:12px;
 }
 
 .d3dQueryInfo{
