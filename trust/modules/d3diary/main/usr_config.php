@@ -73,15 +73,14 @@ if(!empty($_POST['submit1'])){
 	$dcfg->blogtype= intval($func->getpost_param('blogtype'));
 	$dcfg->rss= htmlspecialchars($func->getpost_param('rss'), ENT_QUOTES);
 	$dcfg->openarea= intval($func->getpost_param('openarea'));
+	$dcfg->keep = intval($func->getpost_param('jump'));
 	if ($dcfg->blogtype==0 && $allow_mailpost==1) {
 		$dcfg->mailpost = intval($func->getpost_param('mailpost'));
 		$dcfg->address = htmlspecialchars($func->getpost_param('address'), ENT_QUOTES);
-		$dcfg->keep = intval($func->getpost_param('jump'));
 		$dcfg->uptime = intval($func->getpost_param('uptime'));
 	} else {
 		$dcfg->mailpost = 0;
 		$dcfg->address = '';
-		$dcfg->keep = 0;
 		$dcfg->uptime = 0;
 	}
 
