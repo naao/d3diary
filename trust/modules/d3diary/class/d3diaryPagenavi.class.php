@@ -93,7 +93,7 @@ class d3diaryPageNav {
                 } elseif ( ($i > $current_page - $offset && $i < $current_page + $offset ) || $i == 1 || $i == $total_pages ) {
                     if ( $i == $total_pages && $current_page < $total_pages - $offset ) {
                 	$nav[$j]['txt']= '... ';
-                	$nav[$j]['class']= "txt";
+                	$nav[$j]['class']= "non";
                 	$nav[$j]['url']= "";
                 	$j++;
                     }
@@ -103,7 +103,7 @@ class d3diaryPageNav {
                 	$j++;
                     if ( $i == 1 && $current_page > 1 + $offset ) {
                 	$nav[$j]['txt']= '... ';
-                	$nav[$j]['class']= "txt";
+                	$nav[$j]['class']= "non";
                 	$nav[$j]['url']= "";
                 	$j++;
                     }
