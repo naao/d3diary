@@ -26,7 +26,7 @@ var $isauthor = false ;	// boolean
 var $d3d_conf = array();
 var $initialized = 0;
 
-function d3diaryPermissionAbstract(& $d3dConf)
+public function __construct(& $d3dConf)
 {
 	if (!defined('XOOPS_ROOT_PATH')) {
 	    exit();

@@ -25,7 +25,7 @@ if( is_object( $xoopsUser ) ) {
 
 
 require_once XOOPS_ROOT_PATH.'/class/template.php' ;
-$tpl =& new XoopsTpl() ;
+$tpl = new XoopsTpl() ;
 $tpl->assign( array(
 	'mydirname' => $mydirname ,
 	'mod_url' => XOOPS_URL.'/modules/'.$mydirname ,

@@ -10,7 +10,7 @@ class XoopsGTicket {
 	var $_latest_token = '' ;
 	var $messages = array() ;
 
-	function XoopsGTicket()
+	public function __construct()
 	{
 		global $xoopsConfig ;
 

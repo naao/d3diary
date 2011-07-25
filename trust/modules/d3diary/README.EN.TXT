@@ -8,8 +8,7 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 -- XOOPS 2.0.16a-JP (Mybe JPEX available)
 -- XOOPS Cube LegacyÅichecked on 2.1.6Åj
 -PHP
--- PHP4.3.x or over
--- PHP5
+-- PHP5.1 over
 -MySQL
 -- MySQL-4.0.x or over (detail is not sure)
 -- (MyISAM)
@@ -101,6 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 7/ 8  ver0.20 RC
+	- Remove the neccesary environment php4. php5.0 over is neccesary, php5.1 over is reccomended.
+	- Reduce notices for php5.3 environment.
+
 2010/ 6/16  ver0.18 alpha
 	- Fixed bug that cannot show date in photolist page. Module update is neccesary.
 

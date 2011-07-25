@@ -226,7 +226,7 @@ if(strcmp($yd_param['mode'], "category")==0){
 	// using d3diaryPageNav
 	if($num_rows>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^pofst=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+                if( preg_match("/^pofst=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&pofst=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);

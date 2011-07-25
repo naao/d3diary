@@ -35,9 +35,9 @@ $yd_param = array() ;
 $yd_param['cid'] = $req_cid = $d3dConf->q_cid;
 $yd_param['mode'] = $d3dConf->q_mode;
 $yd_param['friend'] = strcmp($yd_param['mode'], "friends")==0 ? 1 : $d3dConf->q_fr ;
-$yd_param['year'] = $d3dConf->q_year;
-$yd_param['month'] = $d3dConf->q_month;
-$yd_param['day'] = $d3dConf->q_day;
+$yd_param['year'] = $yd_year = $d3dConf->q_year;
+$yd_param['month'] = $yd_month = $d3dConf->q_month;
+$yd_param['day'] = $yd_day = $d3dConf->q_day;
 $yd_param['order'] = $d3dConf->q_odr ;
 $yd_param['fr_mode'] = $d3dConf->q_fr ;
 
@@ -222,6 +222,10 @@ if($mod_config['menu_layout']==1){
 
 	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr();
 
+$yd_param['year'] = !empty($yd_year) ? $yd_year : (int)date("Y") ;
+$yd_param['month'] = !empty($yd_month) ? $yd_month : (int)date("n") ;
+$yd_param['day'] = !empty($yd_day) ? $yd_day : 0 ;
+
 // breadcrumbs
 	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');
 	$bc_para['path'] = "index.php?page=photolist";
@@ -259,7 +263,7 @@ if($mod_config['menu_layout']==1){
 
 if ($req_uid>0){
     if($mod_config['menu_layout']<=1){
-	list( $yd_calender, $yd_cal_month ) =  $func->get_calender ($req_uid,date("Y"),date("m"), $uid);
+	list( $yd_calender, $yd_cal_month ) =  $func->get_calender ($req_uid,$yd_param['year'],$yd_param['month'], $uid);
 	list( $yd_monlist, $yd_monthnavi ) =  $func->get_monlist ($req_uid,$uid);
 	list( $yd_friends, $yd_friendsnavi ) =  $func->get_friends ($mPerm->req_friends);
 	$yd_list = $func->get_blist ($req_uid,$uid,10);
@@ -293,6 +297,9 @@ if ($req_uid>0){
 		"yd_layout" => $yd_layout,
 		"yd_openarea" => $yd_openarea,
 		"yd_param" => $yd_param,
+		"yd_year" => $yd_year,
+		"yd_month" => $yd_month,
+		"yd_day" => $yd_day,
 		"yd_com_key"  => $yd_com_key,			
 		"catopt"  => $func->get_categories($req_uid,$uid),
 		"yd_cid" => $req_cid,

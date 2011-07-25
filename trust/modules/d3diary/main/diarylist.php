@@ -223,7 +223,7 @@ if($mod_config['menu_layout']==1){
 	// using d3diaryPageNav
 	if($num_rows>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^pofst=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+                if( preg_match("/^pofst=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&pofst=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
@@ -263,7 +263,7 @@ if($mod_config['menu_layout']==1){
 		$i = intval($dbdat['bid']);
 		$entry[$i]['bid']=$dbdat['bid'];
 
-		$ctime=split('[-: ]',$dbdat['create_time']);
+		$ctime=preg_split('/[-: ]/',$dbdat['create_time']);
 		$entry[$i]['tstamp'] = $tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 		$week = intval($func->myformatTimestamp($tstamp, "w"));
 
@@ -343,7 +343,7 @@ if($mod_config['menu_layout']==1){
 
 	    $i=-1000;
 	    while($dbdat = $xoopsDB->fetchArray($result)){
-		$tmp = split("[-: ]",$dbdat['create_time']);
+		$tmp = preg_split("/[-: ]/",$dbdat['create_time']);
 		
 		$entry[$i]['tstamp'] = $tstamp = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
 		$week = intval($func->myformatTimestamp($tstamp, "w"));

@@ -61,7 +61,7 @@ class D3diary_POP3 {
 			$server = $this->MAILSERVER;
 
 		if(empty($server)){
-			$this->ERROR = _("POP3 connect:") . ' ' . _("No server specified");
+			$this->ERROR = "POP3 connect:" . ' ' . "No server specified";
 			unset($this->FP);
 			return false;
 		}
@@ -69,7 +69,7 @@ class D3diary_POP3 {
 		$fp = fsockopen("$server", $port, $errno, $errstr);
 
 		if(!$fp) {
-			$this->ERROR = _("POP3 connect:") . ' ' . _("Error ") . "[$errno] [$errstr]";
+			$this->ERROR = "POP3 connect:" . ' ' . "Error " . "[$errno] [$errstr]";
 			unset($this->FP);
 			return false;
 		}
@@ -81,7 +81,7 @@ class D3diary_POP3 {
 		if($this->DEBUG)
 			error_log("POP3 SEND [connect: $server] GOT [$reply]",0);
 		if(!$this->is_ok($reply)) {
-			$this->ERROR = _("POP3 connect:") . ' ' . _("Error ") . "[$reply]";
+			$this->ERROR = "POP3 connect:" . ' ' . "Error " . "[$reply]";
 			unset($this->FP);
 			return false;
 		}
@@ -91,7 +91,7 @@ class D3diary_POP3 {
 //		if(get_settings('shot_rfc_check')) {
 				$this->RFC1939 = $this->noop();
 				if($this->RFC1939) {
-					$this->ERROR = _("POP3: premature NOOP OK, NOT an RFC 1939 Compliant server");
+					$this->ERROR = "POP3: premature NOOP OK, NOT an RFC 1939 Compliant server";
 					$this->quit();
 					return false;
 				} else {
@@ -105,7 +105,7 @@ class D3diary_POP3 {
 	function noop () {
 	
 		if(!isset($this->FP)) {
-			$this->ERROR = _("POP3 noop:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 noop:" . ' ' . "No connection to server";
 			return false;
 		} else {
 			$cmd = "NOOP";
@@ -118,15 +118,15 @@ class D3diary_POP3 {
 		// Sends the USER command, returns true or false
 
 		if( empty($user) ) {
-			$this->ERROR = _("POP3 user:") . ' ' . _("no login ID submitted");
+			$this->ERROR = "POP3 user:" . ' ' . "no login ID submitted";
 			return false;
 		} elseif(!isset($this->FP)) {
-			$this->ERROR = _("POP3 user:") . ' ' . _("connection not established");
+			$this->ERROR = "POP3 user:" . ' ' . "connection not established";
 			return false;
 		} else {
 			$reply = $this->send_cmd("USER $user");
 			if(!$this->is_ok($reply)) {
-				$this->ERROR = _("POP3 user:") . ' ' . _("Error ") . "[$reply]";
+				$this->ERROR = "POP3 user:" . ' ' . "Error " . "[$reply]";
 				return false;
 			} else
 				return true;
@@ -138,15 +138,15 @@ class D3diary_POP3 {
 		// returns false (undef) on Auth failure
 
 		if(empty($pass)) {
-			$this->ERROR = _("POP3 pass:") . ' ' . _("No password submitted");
+			$this->ERROR = "POP3 pass:" . ' ' . "No password submitted";
 			return false;
 		} elseif(!isset($this->FP)) {
-			$this->ERROR = _("POP3 pass:") . ' ' . _("connection not established");
+			$this->ERROR = "POP3 pass:" . ' ' . "connection not established";
 			return false;
 		} else {
 			$reply = $this->send_cmd("PASS $pass");
 			if(!$this->is_ok($reply)) {
-				$this->ERROR = _("POP3 pass:") . ' ' . _("authentication failed ") . "[$reply]";
+				$this->ERROR = "POP3 pass:". ' ' . "authentication failed " . "[$reply]";
 				$this->quit();
 				return false;
 			} else {
@@ -155,7 +155,7 @@ class D3diary_POP3 {
 				$this->COUNT = $count;
 				$this->RFC1939 = $this->noop();
 				if(!$this->RFC1939) {
-					$this->ERROR = _("POP3 pass:") . ' ' . _("NOOP failed. Server not RFC 1939 compliant");
+					$this->ERROR = "POP3 pass:" . ' ' . "NOOP failed. Server not RFC 1939 compliant";
 					$this->quit();
 					return false;
 				} else
@@ -170,22 +170,22 @@ class D3diary_POP3 {
 		//  THE USE OF THE APOP COMMAND!
 		//  (apop is optional per rfc1939)
 		if(!isset($this->FP)) {
-			$this->ERROR = _("POP3 apop:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 apop:" . ' ' . "No connection to server";
 
 			return false;
 		} elseif(!$this->ALLOWAPOP) {
 			$retVal = $this->login($login,$pass);
 			return $retVal;
 		} elseif(empty($login)) {
-			$this->ERROR = _("POP3 apop:") . ' ' . _("No login ID submitted");
+			$this->ERROR = "POP3 apop:" . ' ' . "No login ID submitted";
 			return false;
 		} elseif(empty($pass)) {
-			$this->ERROR = _("POP3 apop:") . ' ' . _("No password submitted");
+			$this->ERROR = "POP3 apop:" . ' ' . "No password submitted";
 			return false;
 		} else {
 			$banner = $this->BANNER;
 			if( (!$banner) or (empty($banner)) ) {
-				$this->ERROR = _("POP3 apop:") . ' ' . _("No server banner") . ' - ' . _("abort");
+				$this->ERROR = "POP3 apop:" . ' ' . "No server banner" . ' - ' . "abort";
 				$retVal = $this->login($login,$pass);
 				return $retVal;
 			} else {
@@ -195,7 +195,7 @@ class D3diary_POP3 {
 				$cmd = "APOP $login $APOPString";
 				$reply = $this->send_cmd($cmd);
 				if(!$this->is_ok($reply)) {
-					$this->ERROR = _("POP3 apop:") . ' ' . _("apop authentication failed") . ' - ' . _("abort");
+					$this->ERROR = "POP3 apop:" . ' ' . "apop authentication failed" . ' - ' . "abort";
 					$retVal = $this->login($login,$pass);
 					return $retVal;
 				} else {
@@ -204,7 +204,7 @@ class D3diary_POP3 {
 					$this->COUNT = $count;
 					$this->RFC1939 = $this->noop();
 					if(!$this->RFC1939) {
-						$this->ERROR = _("POP3 apop:") . ' ' . _("NOOP failed. Server not RFC 1939 compliant");
+						$this->ERROR = "POP3 apop:" . ' ' . "NOOP failed. Server not RFC 1939 compliant";
 						$this->quit();
 						return false;
 					} else
@@ -220,7 +220,7 @@ class D3diary_POP3 {
 		// the number of messages.)
 
 		if( !isset($this->FP) ) {
-			$this->ERROR = _("POP3 login:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 login:" . ' ' . "No connection to server";
 			return false;
 		} else {
 			$fp = $this->FP;
@@ -245,7 +245,7 @@ class D3diary_POP3 {
 		//  only the header information, and none of the body.
 
 		if(!isset($this->FP)) {
-			$this->ERROR = _("POP3 top:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 top:" . ' ' . "No connection to server";
 			return false;
 		}
 		$this->update_timer();
@@ -261,7 +261,7 @@ class D3diary_POP3 {
 		}
 		if(!$this->is_ok($reply))
 		{
-			$this->ERROR = _("POP3 top:") . ' ' . _("Error ") . "[$reply]";
+			$this->ERROR = "POP3 top:" . ' ' . "Error " . "[$reply]";
 			return false;
 		}
 
@@ -269,7 +269,7 @@ class D3diary_POP3 {
 		$MsgArray = array();
 
 		$line = fgets($fp,$buffer);
-		while ( !ereg("^\.\r\n",$line))
+		while ( !preg_match("/^\.\r\n/",$line))
 		{
 			$MsgArray[$count] = $line;
 			$count++;
@@ -287,7 +287,7 @@ class D3diary_POP3 {
 
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 pop_list:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 pop_list:" . ' ' . "No connection to server";
 			return false;
 		}
 		$fp = $this->FP;
@@ -315,7 +315,7 @@ class D3diary_POP3 {
 			}
 			if(!$this->is_ok($reply))
 			{
-				$this->ERROR = _("POP3 pop_list:") . ' ' . _("Error ") . "[$reply]";
+				$this->ERROR = "POP3 pop_list:" . ' ' . "Error " . "[$reply]";
 				return false;
 			}
 			list($junk,$num,$size) = explode(" ",$reply);
@@ -326,7 +326,7 @@ class D3diary_POP3 {
 		if(!$this->is_ok($reply))
 		{
 			$reply = $this->strip_clf($reply);
-			$this->ERROR = _("POP3 pop_list:") . ' ' . _("Error ") .  "[$reply]";
+			$this->ERROR = "POP3 pop_list:" . ' ' . "Error " .  "[$reply]";
 			return false;
 		}
 		$MsgArray = array();
@@ -336,9 +336,9 @@ class D3diary_POP3 {
 			if($msgC > $Total) { break; }
 			$line = fgets($fp,$this->BUFFER);
 			$line = $this->strip_clf($line);
-			if(ereg("^\.",$line))
+			if(preg_match("/^\./",$line))
 			{
-				$this->ERROR = _("POP3 pop_list:") . ' ' . _("Premature end of list");
+				$this->ERROR = "POP3 pop_list:" . ' ' . "Premature end of list";
 				return false;
 			}
 			list($thisMsg,$msgSize) = explode(" ",$line);
@@ -361,7 +361,7 @@ class D3diary_POP3 {
 
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 get:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 get:" . ' ' . "No connection to server";
 			return false;
 		}
 
@@ -374,7 +374,7 @@ class D3diary_POP3 {
 
 		if(!$this->is_ok($reply))
 		{
-			$this->ERROR = _("POP3 get:") . ' ' . _("Error ") . "[$reply]";
+			$this->ERROR = "POP3 get:" . ' ' . "Error " . "[$reply]";
 			return false;
 		}
 
@@ -382,7 +382,7 @@ class D3diary_POP3 {
 		$MsgArray = array();
 
 		$line = fgets($fp,$buffer);
-		while ( !ereg("^\.\r\n",$line))
+		while ( !preg_match("/^\.\r\n/",$line))
 		{
 			$MsgArray[$count] = $line;
 			$count++;
@@ -400,14 +400,14 @@ class D3diary_POP3 {
 		$last = -1;
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 last:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 last:" . ' ' . "No connection to server";
 			return $last;
 		}
 
 		$reply = $this->send_cmd("STAT");
 		if(!$this->is_ok($reply))
 		{
-			$this->ERROR = _("POP3 last:") . ' ' . _("Error ") . "[$reply]";
+			$this->ERROR = "POP3 last:" . ' ' . "Error " . "[$reply]";
 			return $last;
 		}
 
@@ -430,7 +430,7 @@ class D3diary_POP3 {
 
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 reset:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 reset:" . ' ' . "No connection to server";
 			return false;
 		}
 		$reply = $this->send_cmd("RSET");
@@ -440,7 +440,7 @@ class D3diary_POP3 {
 			//  response - if it ever does, something truely
 			//  wild is going on.
 
-			$this->ERROR = _("POP3 reset:") . ' ' . _("Error ") . "[$reply]";
+			$this->ERROR = "POP3 reset:" . ' ' . "Error " . "[$reply]";
 			@error_log("POP3 reset: ERROR [$reply]",0);
 		}
 		$this->quit();
@@ -464,13 +464,13 @@ class D3diary_POP3 {
 
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 send_cmd:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 send_cmd:" . ' ' . "No connection to server";
 			return false;
 		}
 
 		if(empty($cmd))
 		{
-			$this->ERROR = _("POP3 send_cmd:") . ' ' . _("Empty command string");
+			$this->ERROR = "POP3 send_cmd:" . ' ' . "Empty command string";
 			return "";
 		}
 
@@ -490,7 +490,7 @@ class D3diary_POP3 {
 
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 quit:") . ' ' . _("connection does not exist");
+			$this->ERROR = "POP3 quit:" . ' ' . "connection does not exist";
 			return false;
 		}
 		$fp = $this->FP;
@@ -527,7 +527,7 @@ class D3diary_POP3 {
 		//  Array element 0 will contain the total number of msgs
 
 		if(!isset($this->FP)) {
-			$this->ERROR = _("POP3 uidl:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 uidl:" . ' ' . "No connection to server";
 			return false;
 		}
 
@@ -539,7 +539,7 @@ class D3diary_POP3 {
 			$reply = $this->send_cmd($cmd);
 			if(!$this->is_ok($reply))
 			{
-				$this->ERROR = _("POP3 uidl:") . ' ' . _("Error ") . "[$reply]";
+				$this->ERROR = "POP3 uidl:" . ' ' . "Error " . "[$reply]";
 				return false;
 			}
 			list ($ok,$num,$myUidl) = explode(" ",$reply);
@@ -562,15 +562,15 @@ class D3diary_POP3 {
 			if($this->DEBUG) { @error_log("POP3 SEND [$cmd] GOT [$reply]",0); }
 			if(!$this->is_ok($reply))
 			{
-				$this->ERROR = _("POP3 uidl:") . ' ' . _("Error ") . "[$reply]";
+				$this->ERROR = "POP3 uidl:" . ' ' . "Error " . "[$reply]";
 				return false;
 			}
 
 			$line = "";
 			$count = 1;
 			$line = fgets($fp,$buffer);
-			while ( !ereg("^\.\r\n",$line)) {
-				if(ereg("^\.\r\n",$line)) {
+			while ( !preg_match("/^\.\r\n/",$line)) {
+				if(preg_match("/^\.\r\n/",$line)) {
 					break;
 				}
 				list ($msg,$msgUidl) = explode(" ",$line);
@@ -595,18 +595,18 @@ class D3diary_POP3 {
 
 		if(!isset($this->FP))
 		{
-			$this->ERROR = _("POP3 delete:") . ' ' . _("No connection to server");
+			$this->ERROR = "POP3 delete:" . ' ' . "No connection to server";
 			return false;
 		}
 		if(empty($msgNum))
 		{
-			$this->ERROR = _("POP3 delete:") . ' ' . _("No msg number submitted");
+			$this->ERROR = "POP3 delete:" . ' ' . "No msg number submitted";
 			return false;
 		}
 		$reply = $this->send_cmd("DELE $msgNum");
 		if(!$this->is_ok($reply))
 		{
-			$this->ERROR = _("POP3 delete:") . ' ' . _("Command failed ") . "[$reply]";
+			$this->ERROR = "POP3 delete:" . ' ' . "Command failed " . "[$reply]";
 			return false;
 		}
 		return true;
@@ -621,7 +621,7 @@ class D3diary_POP3 {
 		if( empty($cmd) )
 			return false;
 		else
-			return( ereg ("^\+OK", $cmd ) );
+			return( preg_match("/^\+OK/", $cmd ) );
 	}
 
 	function strip_clf ($text = "") {

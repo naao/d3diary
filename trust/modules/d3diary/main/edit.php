@@ -1043,7 +1043,7 @@ function d3diary_showform($mydirname){
 		$tmp_time = $yd_data['create_time_unformat'];
 	} elseif(!empty($diary->create_time)){		//existing posted time
 		$yd_data['create_time']   = $diary->create_time;
-		$ctime = split("[-: ]", $diary->create_time);
+		$ctime = preg_split("/[-: ]/", $diary->create_time);
 		$tmp_time = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 		$yd_data['create_time_unformat'] = $tmp_time;
 	} else {
@@ -1065,6 +1065,7 @@ function d3diary_showform($mydirname){
 		$_oe = (int)$mod_config['use_open_entry'];
 		if( $_oe == 10 || $_oe == 20 ) {
 			$g_selcted = explode( "|", trim( $diary->vgids ,"|" ) );
+			$group_list = array();
 			foreach ( $gPerm->group_list as $_gid => $_name) {
 		    	    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
 				$group_list[$_gid]['gname'] = $_name;

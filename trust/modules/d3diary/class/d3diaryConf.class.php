@@ -54,7 +54,7 @@ var $server_TZ ;
 var $debug = array() ;
 var $start_time ;
 
-function D3diaryConf($mydirname, $req_uid=0, $caller="")
+public function __construct($mydirname, $req_uid=0, $caller="")
 {
 	global $xoopsUser, $xoopsConfig ;
 	
@@ -137,9 +137,9 @@ function D3diaryConf($mydirname, $req_uid=0, $caller="")
 		require_once dirname(__FILE__).'/func.class.php' ;
 		include_once dirname(__FILE__).'/diaryconfig.class.php';
 
-		$this->mPerm = & new $perm_class($this) ;
-		$this->gPerm = & new D3dGperm($this) ;
-		$this->func = & new D3diaryFunc($this) ;
+		$this->mPerm = new $perm_class($this) ;
+		$this->gPerm = new D3dGperm($this) ;
+		$this->func = new D3diaryFunc($this) ;
 
 		// needs req_uid
 		$this->mPerm->ini_set();
@@ -147,14 +147,14 @@ function D3diaryConf($mydirname, $req_uid=0, $caller="")
 		$this->func->ini_set();
 
 		// get personal config for req_uid
-		$this->dcfg = & new DiaryConfig();
+		$this->dcfg = new DiaryConfig();
 		$this->dcfg->uid = $this->req_uid;
 		$this->dcfg->readdb($this->mydirname);
 
 		// mail post class
 		if ($this->caller == "mailpost" || $this->caller == "index") {
 			require_once dirname(__FILE__).'/mailpost.class.php' ;
-			$this->mPost = & new D3diaryMailPost($this);
+			$this->mPost = new D3diaryMailPost($this);
 			$this->mPost->ini_set();
 		}
 
@@ -293,7 +293,7 @@ function & getInstance($mydirname, $req_uid=0, $caller="")
 {
 	static $instance ;
 	if( ! isset( $instance[$mydirname] ) ) {
-		$instance[$mydirname] = & new D3diaryConf($mydirname, $req_uid, $caller) ;
+		$instance[$mydirname] = new D3diaryConf($mydirname, $req_uid, $caller) ;
 	}
 	return $instance[$mydirname] ;
 }

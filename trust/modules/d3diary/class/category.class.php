@@ -18,7 +18,7 @@ class D3diaryCategory
 	var $vgids;
 	var $vpids;
 
-	function D3diaryCategory(){
+	public function __construct(){
 	}
 
     function &getInstance()

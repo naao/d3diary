@@ -59,8 +59,8 @@
 
 <div style="text-align:left;">
 <{if $yd_param.friend==1}><span class="d3dQueryInfo"><a href="<{$url4ex_fr}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_DIARY_FRIENDSVIEW}></a></span><{/if}>
-<{if $yd_param.day>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_param.year}>-<{$yd_param.month}>-<{$yd_param.day}>]</a></span>
-<{elseif $yd_param.month>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_param.year}>-<{$yd_param.month}>]</a></span><{/if}>
+<{if $yd_day>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_year}>-<{$yd_month}>-<{$yd_day}>]</a></span>
+<{elseif $yd_month>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_year}>-<{$yd_month}>]</a></span><{/if}>
 <{if $yd_param.mode=="category"}><span class="d3dQueryInfo"><a href="<{$url4ex_cat}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_CATEGORY}>&nbsp;[<{$yd_param.cname}>]</a></span><{/if}>
 <{if $yd_param.tag}><span class="d3dQueryInfo"><a href="<{$url4ex_tag}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]</a></span><{/if}>
 </div>

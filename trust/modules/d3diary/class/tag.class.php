@@ -13,7 +13,7 @@ class D3diaryTag
 	var $bids = array();	// for readdb_mul
 	var $tags = array();
 
-	function D3diaryTag(){
+	public function __construct(){
 	}
 
     function &getInstance()

@@ -14,7 +14,7 @@ class DiaryConfig
 	var $uptime;
 	var $updated;
 
-	function DiaryConfig(){
+	public function __construct(){
 	}
 
     function &getInstance()

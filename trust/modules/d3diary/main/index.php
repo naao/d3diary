@@ -358,7 +358,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 	// using d3diaryPageNav
 	if($num_rows>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^pofst=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+                if( preg_match("/^pofst=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&pofst=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
@@ -400,7 +400,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		$i = intval($dbdat['bid']);
 		$entry[$i]['bid']=$dbdat['bid'];
 
-		$ctime=split('[-: ]',$dbdat['create_time']);
+		$ctime=preg_split('/[-: ]/',$dbdat['create_time']);
 		$entry[$i]['tstamp'] = $tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 		$week = intval($func->myformatTimestamp($tstamp, "w"));
 
@@ -491,7 +491,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 
 	    $i=-1000;
 	    while($dbdat = $xoopsDB->fetchArray($result)){
-		$tmp = split("[-: ]",$dbdat['create_time']);
+		$tmp = preg_split("/[-: ]/",$dbdat['create_time']);
 		
 		$entry[$i]['tstamp'] = $tstamp = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
 		$week = intval($func->myformatTimestamp($tstamp, "w"));
@@ -747,7 +747,7 @@ function d3diary_auto_mailpost () {
 				$params['chk_time'][$i] = $mail['create_time'];
 			}
 				$params['f_query'] = true;	// force sql insert for GET method
-			$ret = $mPost->regist_list( &$diary, &$photo, &$tag, $params );
+			$ret = $mPost->regist_list( $diary, $photo, $tag, $params );
 			if ( $ret == true ) {
 				$params['keep'] = 0;
 				$ret = $mPost->del_list( $params );

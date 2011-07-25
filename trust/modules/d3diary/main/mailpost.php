@@ -117,7 +117,7 @@ require_once XOOPS_ROOT_PATH.'/header.php';
 				$params['chk_vpids'] = $chk_vpids ? "|".implode("|", array_map("intval" ,explode("," , $chk_vpids)))."|" : "";
 				$params['post_tags'] = $func->getpost_param('tags');
 
-				$ret = $mPost->regist_list( &$diary, &$photo, &$tag, $params );
+				$ret = $mPost->regist_list( $diary, $photo, $tag, $params );
 			} else { $ret == true ;}
 
 			if ( $ret == true ) {

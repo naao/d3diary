@@ -23,7 +23,7 @@ class D3dGperm
 	var $use_gp ;
 	var $use_pp ;
 
-	function D3dGperm( & $d3dConf ){
+	public function __construct( & $d3dConf ){
 
 		$this->d3dConf = & $d3dConf;
 

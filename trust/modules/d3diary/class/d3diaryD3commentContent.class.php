@@ -7,7 +7,7 @@ class d3diaryD3commentContent extends D3commentAbstract {
 
 	var $d3dConf = null;
 
-function d3diaryD3commentContent( $d3forum_dirname , $target_dirname , $target_trustdirname = '' )
+public function __construct( $d3forum_dirname , $target_dirname , $target_trustdirname = '' )
 {
 	parent::D3commentAbstract( $d3forum_dirname , $target_dirname , $target_trustdirname = '' );
 	

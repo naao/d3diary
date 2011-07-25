@@ -59,7 +59,7 @@ function d3diary_onupdate_base( $module , $mydirname )
 	// 0.01 -> 0.01
 	$check_sql = "SELECT tag_id FROM ".$db->prefix($mydirname."_tag") ;
 	if( ! $db->query( $check_sql ) ) {
-		$db->queryF( "CREATE TABLE ".$db->prefix($mydirname."_tag")." ( tag_id int(11) unsigned NOT NULL auto_increment, tag_name varchar(64) NOT NULL default '',	bid int(11) unsigned NOT NULL default '0', uid mediumint(8) unsigned NOT NULL default '0',	tag_group int(11) unsigned NOT NULL default '0', reg_unixtime int(11) unsigned NOT NULL default '0', PRIMARY KEY  (tag_id), KEY (tag_name), KEY (bid), KEY (uid) ) TYPE=MyISAM" ) ;
+		$db->queryF( "CREATE TABLE ".$db->prefix($mydirname."_tag")." ( tag_id int(11) unsigned NOT NULL auto_increment, tag_name varchar(64) NOT NULL default '',	bid int(11) unsigned NOT NULL default '0', uid mediumint(8) unsigned NOT NULL default '0',	tag_group int(11) unsigned NOT NULL default '0', reg_unixtime int(11) unsigned NOT NULL default '0', PRIMARY KEY  (tag_id), KEY (tag_name), KEY (bid), KEY (uid) ) ENGINE=MyISAM" ) ;
 	}
 	
 	// 0.01 -> 0.01
@@ -114,7 +114,7 @@ function d3diary_onupdate_base( $module , $mydirname )
 				WHERE t.bid=d.bid AND t.reg_unixtime='0'";
 	if( $result = $db->query( $sql ) ) {
 		while ( $dbdat = $db->fetchArray($result) ) {
-			$ctime = split("[-: ]", $dbdat['create_time']);
+			$ctime = preg_split("/[-: ]/", $dbdat['create_time']);
 			$tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 			$sql = "UPDATE ".$db->prefix($mydirname."_tag")." SET 
 					reg_unixtime='".$tstamp."' WHERE tag_id='".$dbdat['tag_id']."'";

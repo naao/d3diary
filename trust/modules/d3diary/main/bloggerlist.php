@@ -36,7 +36,7 @@ $mod_config =& $d3dConf->mod_config ;
 	// create url for sort
 	$url = '';
 	if( !empty($_SERVER['QUERY_STRING'])) {
-		if( !ereg("^odr=[0-9a-z_]+", $_SERVER['QUERY_STRING']) ) {
+		if( !preg_match("/^odr=[0-9a-z_]+/", $_SERVER['QUERY_STRING']) ) {
 			$url = preg_replace("/^(.*)\&odr=[0-9a-z_]+/", "$1", $_SERVER['QUERY_STRING']);
 		}
 	}

@@ -10,8 +10,7 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 -- XOOPS 2.0.16a-JP (JPEXでも多分、動くと思います。)
 -- XOOPS Cube Legacy（2.1.6で動作を確認）
 -PHP
--- PHP4.3.x以上
--- PHP5
+-- PHP5.1.x以上
 -MySQL
 -- MySQL-4.0.x以上 (詳細は未調査)
 -- (MyISAM)
@@ -97,6 +96,10 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2010/ 7/ 8  ver0.20 RC
+	- 動作環境から、php4を削除。php5.0以上必須、php5.1以上推奨。
+	- php5.3環境でのNoticeを抑制。
+
 2010/ 6/16  ver0.18 alpha
 	- photolistページで日付が表示されない件の修正。　モジュールアップデート必須。
 

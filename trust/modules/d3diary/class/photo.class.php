@@ -14,7 +14,7 @@ class D3diaryPhoto
 	var $photos = array();
 	var $pids   = array();	// for deletedb_mul
 
-	function D3diaryPhoto(){
+	public function __construct(){
 	}
 
     function &getInstance()

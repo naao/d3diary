@@ -80,7 +80,7 @@ $xoops_pagetitle = ($mod_config['use_name']==1) ?
 		$yd_data['title'].' - '.$yd_uname.constant("_MD_DIARY_PERSON") ;
 
 $yd_data['create_time']   = $diary->create_time;
-	$ctime = split("[-: ]", $diary->create_time);
+	$ctime = preg_split("/[-: ]/", $diary->create_time);
 $yd_data['tstamp'] = $tmp_time = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 	$week = intval($func->myformatTimestamp($tmp_time, "w"));
 $yd_data['year']   = $func->myformatTimestamp($tmp_time, "Y");
@@ -242,7 +242,8 @@ include XOOPS_ROOT_PATH."/header.php";
 	//var_dump($breadcrumbs);
 
 if($mod_config['menu_layout']<=1){
-	list( $yd_calender, $yd_cal_month ) = $func->get_calender ($diary->uid,$yd_data['year'],$yd_data['month'],$uid);
+	list( $yd_calender, $yd_cal_month ) = $func->get_calender ($diary->uid,$yd_data['year'],$yd_data['month'],$uid, 
+			$d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;");
 	list( $yd_friends, $yd_friendsnavi ) =  $func->get_friends ($mPerm->req_friends);
 	$yd_list = $func->get_blist ($diary->uid,$uid,10);
 	list( $yd_comment, $yd_com_key ) =  $func->get_commentlist ($diary->uid,$uid,10,false);

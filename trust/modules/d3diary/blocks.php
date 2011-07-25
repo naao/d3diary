@@ -15,9 +15,11 @@ require_once "$mytrustdirpath/blocks/block_functions.php" ;
 
     global $xoopsTpl;
 
-	$d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=block_css" />'."\r\n";
+	if( is_object($xoopsTpl) ) {
+		$d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=block_css" />'."\r\n";
 
-	$xoopsTpl->assign( "xoops_module_header" ,
-		$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header);
+		$xoopsTpl->assign( "xoops_module_header" ,
+			$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header);
+	}
 
 ?>

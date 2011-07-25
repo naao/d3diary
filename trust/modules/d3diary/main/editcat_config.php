@@ -130,6 +130,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$_oc = (int)$mod_config['use_open_cat'];
 	if( $_oc == 10 || $_oc == 20 ) {
 		$_selcted = explode( "|", trim( $category->vgids ,"|" ) );
+		$group_list = array();
 		foreach ( $gPerm->group_list as $_gid => $_name) {
 		    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
 			$group_list[$_gid]['gname'] = $_name;

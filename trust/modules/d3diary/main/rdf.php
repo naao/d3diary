@@ -110,9 +110,9 @@ $tpl = new XoopsTpl();
 		}
 		$entry['cid']   = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
-		$tmp = split("[-: ]",$dbdat['update_time']);
+		$tmp = preg_split("/[-: ]/",$dbdat['update_time']);
 		$entry['update'] = xoops_getUserTimestamp(mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]), $tzd);
-		$tmp = split("[-: ]",$dbdat['create_time']);
+		$tmp = preg_split("/[-: ]/",$dbdat['create_time']);
 		$entry['tstamp'] = xoops_getUserTimestamp(mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]), $tzd);
 		$entry['description'] = htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 300, true, "UTF-8")), ENT_QUOTES);
 		$entry['diary'] = htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 0, false, "UTF-8")), ENT_QUOTES);

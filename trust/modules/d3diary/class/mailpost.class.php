@@ -41,7 +41,7 @@ class D3diaryMailPost {
 	var $_scc_msg = '' ;
 	var $_err_msg = '' ;
 
-function D3diaryMailPost( & $d3dConf ){
+public function __construct( & $d3dConf ){
 
 	$this->d3dConf = & $d3dConf;
 }
@@ -65,7 +65,7 @@ function ini_set()
 	require_once dirname( dirname(__FILE__) ).'/include/mimeDecode.php';
 
 	//retrieve mail
-	$this->pop3 = & new D3diary_POP3();
+	$this->pop3 = new D3diary_POP3();
 
 	// get pop3 prefferences
 	$this->server_url  = $this->mod_config['pop3_server'];

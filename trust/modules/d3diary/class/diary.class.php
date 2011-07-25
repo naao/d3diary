@@ -19,7 +19,7 @@ class D3diaryDiary
 	var $bids;	// for multiread
 	var $diaries=array();
 
-	function D3diaryDiary(){
+	public function __construct(){
 	}
 
     function &getInstance()

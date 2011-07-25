@@ -86,8 +86,8 @@ function attachfile_check_download_permission_plugin( $target_id )
 	include_once $mytrustdirpath.'/class/category.class.php';
 	include_once $mytrustdirpath.'/class/d3diaryConf.class.php' ;
 
-	$diary =& new D3diaryDiary();
-	$cat =& new D3diaryCategory();
+	$diary = new D3diaryDiary();
+	$cat = new D3diaryCategory();
 	
 	$diary->bid = $target_id ;
 	$diary->readdb($mydirname);

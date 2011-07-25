@@ -20,7 +20,7 @@ class D3diaryFunc {
 	var $arr_dclass ;
 	var $arr_wclass ;
 
-function D3diaryFunc( & $d3dConf ){
+public function __construct( & $d3dConf ){
 
 	$this->d3dConf = & $d3dConf;
 }
@@ -363,7 +363,7 @@ function get_calender( $req_uid, $year, $month, $uid, $base_url="", $block=false
 	
 	$result = $db->query($sql);
 	while ( $dbdat = $db->fetchArray($result)){
-		$ctime=split("[-: ]",$dbdat['create_time']);
+		$ctime=preg_split("/[-: ]/",$dbdat['create_time']);
 		$tmp=$this->myformatTimestamp(mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]), "d");
 		$dcnt[intval($tmp)]=(empty($dcnt[intval($tmp)])) ? 1 : $dcnt[intval($tmp)]+1;
 	}
@@ -391,7 +391,7 @@ function get_calender( $req_uid, $year, $month, $uid, $base_url="", $block=false
 	
 	$result = $db->query($sql);
 	while ( $dbdat = $db->fetchArray($result)){
-		$ctime=split("[-: ]",$dbdat['create_time']);
+		$ctime=preg_split("/[-: ]/",$dbdat['create_time']);
 		$tmp=$this->myformatTimestamp(mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]), "d");
 		$dcnt[intval($tmp)]=(empty($dcnt[intval($tmp)])) ? 1 : $dcnt[intval($tmp)]+1;
 	}
@@ -475,7 +475,7 @@ function get_friends($my_friends){
 	
 	if($count>$max_size){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^offset=[0-9]+$", $_SERVER['QUERY_STRING']) ) {
+                if( preg_match("/^offset=[0-9]+$/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&offset=[0-9]+$/", "$1", $_SERVER['QUERY_STRING']);
@@ -553,7 +553,7 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 	while ( $dbdat = $db->fetchArray($result) ) {
 		if (!empty($dbdat['thismonth'])){
 			$str_montharray[$i] = $dbdat['thismonth'];
-			list($yd_monlist[$i]['year'],$yd_monlist[$i]['month']) = split("[-]", $dbdat['thismonth']);
+			list($yd_monlist[$i]['year'],$yd_monlist[$i]['month']) = preg_split("/[-]/", $dbdat['thismonth']);
 			$yd_monlist[$i]['count'] = intval($dbdat['entries']);
 			$i++;
 	    	}
@@ -565,7 +565,7 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 
 	if($count>$max_size){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^mofst=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+                if(preg_match("/^mofst=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&mofst=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
@@ -693,7 +693,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 			$yd_list['openarea'] = intval($dbdat['openarea_cat']);
 		}
 
-		$ctime = split("[-: ]", $dbdat['create_time']);
+		$ctime = preg_split("/[-: ]/", $dbdat['create_time']);
 		$tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 		$yd_list['tstamp']   = $tstamp;
 		$yd_list['year']   = $this->myformatTimestamp($tstamp, "Y");
@@ -760,7 +760,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		
 		if (intval($dbdat['openarea_cat'])>0) { $yd_list['openarea'] = $dbdat['openarea_cat'];}
 
-		$ctime = split("[-: ]", $dbdat['create_time']);
+		$ctime = preg_split("/[-: ]/", $dbdat['create_time']);
 		$tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 		$yd_list['tstamp']   = $tstamp;
 		$yd_list['year']   = $this->myformatTimestamp($tstamp, "Y");
@@ -1153,7 +1153,7 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
 	
 	if($count>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^".$ofst_key."=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+                if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&".$ofst_key."=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
@@ -1323,7 +1323,7 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 	list ($count) = $db->fetchRow($result);
 	if($count>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
-                if( ereg("^".$ofst_key."=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+                if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
                 } else {
                     $url = preg_replace("/^(.*)\&".$ofst_key."=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
@@ -1355,7 +1355,7 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 		$photo['pname'] = $this->myts->makeTboxData4Show($photo['pid'].$photo['ptype']);
 		$photo['thumbnail'] = "t_".$photo['pid'].$photo['ptype'];
 		$photo['info'] = $dbdat['info'] ? $this->substrTarea( $dbdat['info'], 0, $max_info, $f_truncate, $enc ) : "" ;
-		$tmp = split("[-: ]",$dbdat['tstamp']);
+		$tmp = preg_split("/[-: ]/",$dbdat['tstamp']);
 		$photo['tstamp'] = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
 		$photo['time'] = $dbdat['tstamp'] ;
 		$photo['title'] = $this->myts->makeTboxData4Show($dbdat['title']);
@@ -1844,7 +1844,7 @@ function getTagCloud ( $where = null, $min_size = 80, $max_size = 160, $max_entr
 	} else {
 		if( $count>$max_entry ){
 	            if( !empty($_SERVER['QUERY_STRING'])) {
-	                if( ereg("^".$ofst_key."=[0-9]+", $_SERVER['QUERY_STRING']) ) {
+	                if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
 	                    $url = "";
 	                } else {
 	                    $url = preg_replace("/^(.*)\&".$ofst_key."=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
@@ -2258,7 +2258,7 @@ function d3diaryD3commentObj($params )
 
 	if( empty( $params['classname'] ) ) {
 		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
-		$this->d3comObj =& new D3commentAbstract( $forum_dirname , '' ) ;
+		$this->d3comObj = new D3commentAbstract( $forum_dirname , '' ) ;
 	}
 
 	// search the class file
@@ -2279,10 +2279,10 @@ function d3diaryD3commentObj($params )
 	// check the class
 	if( ! $params['classname'] || ! class_exists( $params['classname'] ) ) {
 		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
-		$this->d3comObj =& new D3commentAbstract( $params['forum_dirname'] , $params['external_dirname'] ) ;
+		$this->d3comObj = new D3commentAbstract( $params['forum_dirname'] , $params['external_dirname'] ) ;
 	}
 
-	$this->d3comObj =& new $params['classname']( $params['forum_dirname'] , 
+	$this->d3comObj = new $params['classname']( $params['forum_dirname'] , 
 			$params['external_dirname'] , $params['external_trustdirname'] ) ;
 }
 
@@ -2292,7 +2292,7 @@ function & getInstance( $params )
 
 	static $instance ;
 	if( ! isset( $instance[$external_dirname] ) ) {
-		$instance[$external_dirname] = & new d3diaryD3commentObj( $params ) ;
+		$instance[$external_dirname] = new d3diaryD3commentObj( $params ) ;
 	}
 	return $instance[$external_dirname] ;
 }

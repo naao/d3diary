@@ -13,7 +13,7 @@ CREATE TABLE category (
   `vgids` varchar(255) default NULL,
   `vpids` varchar(255) default NULL,
   PRIMARY KEY  (`uid`,`cid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE cnt (
@@ -21,7 +21,7 @@ CREATE TABLE cnt (
   `cnt` int(10) unsigned NOT NULL,
   `ymd` date NOT NULL,
   PRIMARY KEY  (`uid`,`ymd`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE cnt_ip (
@@ -29,7 +29,7 @@ CREATE TABLE cnt_ip (
   `accip` varchar(255) NOT NULL,
   `acctime` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`uid`,`accip`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE config (
@@ -44,7 +44,7 @@ CREATE TABLE config (
   `uptime` int(10) unsigned NOT NULL default '0',
   `updated` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`uid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE diary (
@@ -61,7 +61,7 @@ CREATE TABLE diary (
   `vpids` varchar(255) default NULL,
   `view` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`bid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE newentry (
@@ -73,7 +73,7 @@ CREATE TABLE newentry (
   `blogtype` tinyint(1) unsigned NOT NULL,
   `diary` text NOT NULL,
   PRIMARY KEY  (`uid`,`cid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE photo (
@@ -84,7 +84,7 @@ CREATE TABLE photo (
   `tstamp` datetime NOT NULL,
   `info` text,
   PRIMARY KEY  (`bid`,`pid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE tag (
   `tag_id` int(11) unsigned NOT NULL auto_increment,
@@ -97,5 +97,5 @@ CREATE TABLE tag (
   KEY `tag_name` (`tag_name`),
   KEY `bid` (`bid`),
   KEY `uid` (`uid`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 

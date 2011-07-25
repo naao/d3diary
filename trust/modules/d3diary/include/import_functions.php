@@ -205,7 +205,7 @@ if ( ! function_exists('d3diary_import_trackbacks') ) {
 				KEY bid (bid),
 				KEY tbkey (tbkey),
 				KEY trackback_url (trackback_url)
-				) TYPE=MyISAM" );
+				) ENGINE=MyISAM" );
 		}
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` 

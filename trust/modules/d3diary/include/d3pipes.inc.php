@@ -45,7 +45,7 @@ class D3pipesBlockD3diarylistSubstance extends D3pipesBlockAbstract {
 		$myts =& MyTextSanitizer::getInstance();
 		$entries = array() ;
 		foreach( $data['entry'] as $item ) {
-				$ctime = split("[-: ]", $item['create_time']);
+				$ctime = preg_split("/[-: ]/", $item['create_time']);
 				$yd_timestamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 			$entry = array(
 				'pubtime'=> $yd_timestamp ,

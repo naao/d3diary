@@ -11,7 +11,7 @@ require_once dirname(__FILE__).'/d3diaryPermissionAbstract.class.php' ;
 // singleton
 class d3diaryPermission extends d3diaryPermissionAbstract{
 
-function d3diaryPermission( & $d3dConf )
+public function __construct( & $d3dConf )
 {
 	if (!defined('XOOPS_ROOT_PATH')) {
 	    exit();

@@ -48,7 +48,7 @@ function b_d3diary_list_show( $options ){
 	unset($photo->photos);
 	
 	// comment counts, newest comments
-	list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,$got_bids,100,true);
+	list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,100,true,false);
 	if(!empty($yd_comment)){
 		foreach( $yd_comment as $_com){
 			$i = (int)$_com['bid'];
@@ -107,7 +107,7 @@ function b_d3diary_list_show( $options ){
 
 	if( empty( $options['disable_renderer'] ) ) {
 		require_once XOOPS_ROOT_PATH.'/class/template.php' ;
-		$tpl =& new XoopsTpl() ;
+		$tpl = new XoopsTpl() ;
 		$tpl->assign( 'block' , $block ) ;
 		$ret['content'] = $tpl->fetch( $this_template ) ;
 		return $ret ;
