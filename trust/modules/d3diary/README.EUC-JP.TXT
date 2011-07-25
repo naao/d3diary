@@ -7,8 +7,8 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 
 ** 必要な環境
 -コア
--- XOOPS 2.0.16a-JP (JPEXでも多分、動くと思います。)
--- XOOPS Cube Legacy（2.1.6で動作を確認）
+-- XOOPS 2.0.16a-JP、JPEx
+-- XOOPS Cube Legacy（2.1.8で動作を確認）
 -PHP
 -- PHP5.1.x以上
 -MySQL
@@ -96,6 +96,10 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2010/ 7/25  ver0.20
+	- xoops-2.0.16a-JP、JPExで、ブロックオプションの編集ができない不具合の修正。(thx ズッキーナ)
+	- pagenaviの現在の選択ページを色指定。
+
 2010/ 7/ 8  ver0.20 RC
 	- 動作環境から、php4を削除。php5.0以上必須、php5.1以上推奨。
 	- php5.3環境でのNoticeを抑制。

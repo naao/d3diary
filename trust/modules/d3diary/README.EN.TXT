@@ -5,8 +5,8 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 
 ** Necessary environment
 -Core
--- XOOPS 2.0.16a-JP (Mybe JPEX available)
--- XOOPS Cube Legacy（checked on 2.1.6）
+-- XOOPS 2.0.16a-JP, JPEx
+-- XOOPS Cube Legacy（checked on 2.1.8）
 -PHP
 -- PHP5.1 over
 -MySQL
@@ -100,6 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 7/25  ver0.20
+	- Block option cannot be edited on xoops-2 cores (thx zukkiina)
+	- Added color select on pagenavi's present page.
+
 2010/ 7/ 8  ver0.20 RC
 	- Remove the neccesary environment php4. php5.0 over is neccesary, php5.1 over is reccomended.
 	- Reduce notices for php5.3 environment.
