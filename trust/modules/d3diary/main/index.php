@@ -560,7 +560,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		unset($tag->tags);
 
 		// tags list
-		$pop_tags=array(); $perso_tags=array(); $_entry_tags=array();
+		$pop_tags=array(); $person_tags=array(); $_entry_tags=array();
 		$func->get_taglist($req_uid, 0, $pop_tags, $person_tags, $_entry_tags);
 	}
 
