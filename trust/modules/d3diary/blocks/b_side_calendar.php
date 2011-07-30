@@ -38,8 +38,10 @@ function b_d3dside_calendar_show( $options ){
 	//$q_tag = & $d3dConf->q_tag ;
 	$q_fr = $d3dConf->q_fr ;
 
-		if( $req_uid > 0 || $d3dConf->page=="photolist" ) {
+		if( $req_uid > 0 ) {
 			$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
+		} elseif( strcmp( $d3dConf->page, "photolist" ) == 0 ) {
+			$base_url = $d3dConf->urluppr."page=photolist".$d3dConf->url4ex_date."&amp;";
 		} else {
 			$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_date."&amp;";
 		}

@@ -32,8 +32,11 @@ function b_d3dside_category_show( $options ){
 	//$q_month = $d3dConf->q_month ;
 	//$q_day = $d3dConf->q_day ;
 	$q_fr = $d3dConf->q_fr ;
-		if( $req_uid > 0 || $d3dConf->page=="photolist" ) {
+
+		if( $req_uid > 0 ) {
 			$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat."&amp;";
+		} elseif( strcmp( $d3dConf->page, "photolist" ) == 0 ) {
+			$base_url = $d3dConf->urluppr."page=photolist".$d3dConf->url4ex_cat."&amp;";
 		} else {
 			$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_cat."&amp;";
 		}

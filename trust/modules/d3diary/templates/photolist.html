@@ -105,7 +105,7 @@
    		<{/if}>
 		<a href="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$entry.pname}>" target="_blank">
 		<img src="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$entry.thumbnail}>" /></a>
-	  	<{if $yd_uid<=0 || $yd_param.friend==1}><br /><a href="<{$urluppr}>?page=photolist&amp;req_uid=<{$entry.uid}><{$qstr4ex_fr}>">
+	  	<{if $yd_uid<=0 || $yd_param.friend==1}><br /><a href="<{$urluppr}>page=photolist&amp;req_uid=<{$entry.uid}><{$qstr4ex_fr}>">
 	  	<{if $mod_config.use_name==1 && $entry.name}><{$entry.name}>
 	  	<{else}><{$entry.uname}>
 	  	<{/if}></a>
