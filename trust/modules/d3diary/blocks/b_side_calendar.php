@@ -28,9 +28,6 @@ function b_d3dside_calendar_show( $options ){
 		$d3dConf->get_month ($_year, $_month);
 		$year = isset($_year) ? (int)$_year : intval(date("Y")) ;
 		$month = isset($_month) ? (int)$_month : intval(date("n")) ;
-		//var_dump( $d3dConf->mydirname );
-		//var_dump($_year);var_dump($_month);
-		//var_dump($year);var_dump($month);
 		
 		$page = $d3dConf->page ;
 
@@ -41,7 +38,11 @@ function b_d3dside_calendar_show( $options ){
 	//$q_tag = & $d3dConf->q_tag ;
 	$q_fr = $d3dConf->q_fr ;
 
-		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
+		if( $req_uid > 0 || $d3dConf->page=="photolist" ) {
+			$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
+		} else {
+			$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_date."&amp;";
+		}
 
 		list( $yd_calender, $yd_cal_month ) = $func->get_calender ( $req_uid, $year, $month, $uid, $base_url, true );
 

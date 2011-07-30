@@ -100,6 +100,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 7/30  ver0.20a
+	- Fixed bug that jump to the shown personnel url although selected the block option
+	  "Show limitation" to "No limit, show all items even when each personal page"
+	  on category block, calendar block, and monthlist block. Åithx ZAL2000Åj
+
 2010/ 7/25  ver0.20
 	- Block option cannot be edited on xoops-2 cores (thx zukkiina)
 	- Added color select on pagenavi's present page.

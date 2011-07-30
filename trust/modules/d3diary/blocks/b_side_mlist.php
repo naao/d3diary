@@ -32,7 +32,11 @@ function b_d3dside_mlist_show( $options ){
 	//$q_tag = $d3dConf->q_tag ;
 	$q_fr = $d3dConf->q_fr ;
 
-	$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
+	if( $req_uid > 0 || $d3dConf->page=="photolist" ) {
+		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date."&amp;";
+	} else {
+		$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_date."&amp;";
+	}
 
 	list( $yd_monlist, $yd_monthnavi ) =  $func->get_monlist ($req_uid, $uid, $max_entry );
 

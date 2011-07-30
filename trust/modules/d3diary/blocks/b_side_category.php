@@ -32,8 +32,12 @@ function b_d3dside_category_show( $options ){
 	//$q_month = $d3dConf->q_month ;
 	//$q_day = $d3dConf->q_day ;
 	$q_fr = $d3dConf->q_fr ;
-		$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat."&amp;";
-	
+		if( $req_uid > 0 || $d3dConf->page=="photolist" ) {
+			$base_url = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_cat."&amp;";
+		} else {
+			$base_url = $d3dConf->urluppr.$d3dConf->urlbase_dlst.$d3dConf->url4ex_cat."&amp;";
+		}
+
 		$catopt = $func->get_categories($req_uid,$uid,true);
 		$tag_name = rawurlencode(rawurldecode($d3dConf->getpost_param('tag_name'))) ;
 		//$tag_name = $d3dConf->getpost_param('tag_name') ;
