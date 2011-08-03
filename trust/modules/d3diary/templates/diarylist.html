@@ -76,6 +76,7 @@
 <{/if}>
 </div><!-- /boxNavi -->
 
+<div class="item" style="border:0px ;">
 <div class="itemInfo" style="text-align:center;">
 
 <span class="d3dlinkEntry" style="float:left;" /></span>
@@ -87,14 +88,15 @@
 <{if $yd_param.mode=="category"}><span class="d3dQueryInfo"><a href="<{$url4ex_cat}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_CATEGORY}>&nbsp;[<{$yd_param.cname}>]</a></span><{/if}>
 <{if $yd_param.tag}><span class="d3dQueryInfo"><a href="<{$url4ex_tag}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]</a></span><{/if}>
 </div>
-
-<div class="clear"></div>
+<br />
 
 [<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="<{$style_s.time_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=time_asc" class="<{$style_s.time_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 [<{$smarty.const._MD_DIARY_TITLE}><a href="<{$sort_baseurl}>&amp;odr=title_dsc" class="<{$style_s.title_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=title_asc" class="<{$style_s.title_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 [<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="<{$style_s.hit_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="<{$style_s.hit_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 
+<div class="clear"></div>
 </div><!-- /itemInfo -->
+</div><!-- /item -->
 
 <{foreach from=$yd_data item=entry}>
 <{if $entry.can_disp}>

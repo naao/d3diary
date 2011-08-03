@@ -232,7 +232,8 @@ function regist_list( &$diary, &$_photo, &$_tag, $params ) {
 			$diary->openarea = !empty($params['openarea']) ? $params['openarea'] : 0 ;
 			
 			// body and dohtml are set in got_content()
-			$this->get_content($this->structure[$i],$create_time);
+			$body_read = false;
+			$this->get_content($this->structure[$i],$create_time,$body_read);
 
 			$diary->dohtml = $this->dohtml;
 			if ($diary->dohtml == 1) {
@@ -304,14 +305,14 @@ function regist_list( &$diary, &$_photo, &$_tag, $params ) {
 	return false;
 }
 
-function get_content($part,$create_time) {
-	global $xoopsDB;
+function get_content($part,$create_time, & $body_read) {
+
 	$myts =& $this->d3dConf->myts;
 	switch (strtolower($part->ctype_primary))	{
 		case 'multipart':
 			$meta_return = '';
 			foreach ($part->parts as $section) {
-				$meta_return = $this->get_content($section,$create_time).$meta_return;
+				$meta_return = $this->get_content($section,$create_time,$body_read).$meta_return;
 			}
 			break;
 
@@ -325,7 +326,11 @@ function get_content($part,$create_time) {
 				$this->dohtml = 0;
 			}
 			$meta_return = $body_content."\n";
-			$this->body = $body_content;
+
+			if ( $body_read != true ) {
+				$this->body = $body_content;
+				$body_read = true;
+			}
 			break;
 
 		case 'image':
@@ -361,18 +366,19 @@ function write_photos( $bid ) {
 			$photo = array();
 			$photo['pid'] = $this->req_uid.'_'.$bid.'_'.substr("0".(string)count($this->photos), -2).'_'.rand();
 			$photo['ptype'] = '.' . $part->ctype_secondary;
-			$filename = $photosdir . $photo['pid'] . $photo['ptype'];
-			$fp = fopen($filename, 'w');
-			fwrite($fp, $part->body);
-			fclose($fp);
-
-			$this->photos[] = $photo;
 
 		// start legacy function
 			if(strcasecmp($photo['ptype'], ".png")!=0 and strcasecmp($photo['ptype'], ".jpg")!=0 and
 			   strcasecmp($photo['ptype'], ".jpeg")!=0 and strcasecmp($photo['ptype'], ".gif")!=0){
 			   continue;
 			}
+
+			$filename = $photosdir . $photo['pid'] . $photo['ptype'];
+			$fp = fopen($filename, 'w');
+			fwrite($fp, $part->body);
+			fclose($fp);
+
+			$this->photos[] = $photo;
 
 			list($width, $height, $type, $attr) = getimagesize($filename);
 			//$this->_err_msg .= $width."-".$height."-".$type."-".$attr;

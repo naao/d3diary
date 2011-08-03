@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 8/ 2  ver0.20a
+	- Fixed no body text of mail importing from iPhone.(thx Honda)
+
 2010/ 7/30  ver0.20a
 	- Fixed bug that jump to the shown personnel url although selected the block option
 	  "Show limitation" to "No limit, show all items even when each personal page"
