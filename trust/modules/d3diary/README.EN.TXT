@@ -100,6 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2010/ 8/ 8  ver0.20a
+	- With using d3comment class, since the constructor coding was wrong,
+	Å@screen whiteout occurs after d3forum version up to 0.86. It is fixed.
+
 2010/ 8/ 2  ver0.20a
 	- Fixed no body text of mail importing from iPhone.(thx Honda)
 
