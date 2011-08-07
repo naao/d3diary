@@ -9,8 +9,7 @@ class d3diaryD3commentContent extends D3commentAbstract {
 
 public function __construct( $d3forum_dirname , $target_dirname , $target_trustdirname = '' )
 {
-	parent::D3commentAbstract( $d3forum_dirname , $target_dirname , $target_trustdirname = '' );
-	
+	parent::__construct( $d3forum_dirname , $target_dirname , $target_trustdirname = '' );
 	$mydirname = $this->mydirname ;
 
 	require_once dirname(__FILE__).'/d3diaryConf.class.php';
