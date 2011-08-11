@@ -232,8 +232,7 @@ function regist_list( &$diary, &$_photo, &$_tag, $params ) {
 			$diary->openarea = !empty($params['openarea']) ? $params['openarea'] : 0 ;
 			
 			// body and dohtml are set in got_content()
-			$body_read = false;
-			$this->get_content($this->structure[$i],$create_time,$body_read);
+			$this->get_content($this->structure[$i],$create_time);
 
 			$diary->dohtml = $this->dohtml;
 			if ($diary->dohtml == 1) {
@@ -305,14 +304,14 @@ function regist_list( &$diary, &$_photo, &$_tag, $params ) {
 	return false;
 }
 
-function get_content($part,$create_time, & $body_read) {
+function get_content($part,$create_time) {
 
 	$myts =& $this->d3dConf->myts;
 	switch (strtolower($part->ctype_primary))	{
 		case 'multipart':
 			$meta_return = '';
 			foreach ($part->parts as $section) {
-				$meta_return = $this->get_content($section,$create_time,$body_read).$meta_return;
+				$meta_return = $this->get_content($section,$create_time).$meta_return;
 			}
 			break;
 
@@ -328,8 +327,7 @@ function get_content($part,$create_time, & $body_read) {
 			$meta_return = $body_content."\n";
 
 			if ( $body_read != true ) {
-				$this->body = $body_content;
-				$body_read = true;
+				$this->body .= $body_content;
 			}
 			break;
 
