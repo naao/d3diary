@@ -29,8 +29,7 @@
 &nbsp;[&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=mailpost"><{$smarty.const._MD_CONF_USEMAIL}></a>&nbsp;]
 <{/if}>
 </p>
-<div id="d3dWrap">
-<div class="clear"></div> 
+<div id="d3dWrap" style="clear:both;">
 
 <{if $yd_layout=="left"}>
   <div id="d3dMainRight">
@@ -90,20 +89,18 @@
 <{if $yd_param.tag}><span class="d3dQueryInfo"><a href="<{$url4ex_tag}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]</a></span><{/if}>
 <br/>
 </div>
-
+<div style="clear:both;">
 [<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="<{$style_s.time_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=time_asc" class="<{$style_s.time_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 [<{$smarty.const._MD_DIARY_TITLE}><a href="<{$sort_baseurl}>&amp;odr=title_dsc" class="<{$style_s.title_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=title_asc" class="<{$style_s.title_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 [<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="<{$style_s.hit_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="<{$style_s.hit_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
-
-<div class="clear"></div>
-
+</div>
 </div><!-- /itemInfo -->
 </div><!-- /item -->
 
 <{if $yd_data}>
 <{foreach from=$yd_data item=entry}>
 
-<div class="boxdate_base">
+<div class="boxdate_base" style="clear:both;">
 <span class="boxdate_s">
 <div class="itemHead"><span class="itemText"><{$entry.b_month}></span></div>
 <div class="itemInfo"><span class="<{$entry.dclass}>"><{$entry.day}><{* $smarty.const._MD_DATE_DAY *}></span>
@@ -173,16 +170,15 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
   <{/if}>
   <a href="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$photo.pname}>" target="_blank">
   <img src="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$photo.thumbnail}>" style="border:1px solid gray;" /></a>
-  <{* <br/><{$photo.info|truncate:30}> *}>
+  <br/><{$photo.info|truncate:30}>
   </div>
   <{/if}>
 <{/foreach}>
 </div>
 <{/if}>
-<div class="clear"></div>
 </div><!-- /itemBody -->
 
-<div class="itemFoot">
+<div class="itemFoot" style="clear:both;">
 <span class="itemPermaLink">
 <{if $entry.com_num > 0}>
 	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;req_uid=<{$entry.uid}>&amp;bid=<{$entry.bid}><{$yd_com_key}><{$entry.unique_path}>" 
@@ -322,7 +318,7 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <{/if}>
 
 </div><!-- /d3dWrap --> 
-<div class="clear"></div>
+<div class="clear">&nbsp;</div>
 
 <font color="#FF0000"><{$err_msg}></font>
 <font color="#005555"><{$scc_msg}></font>

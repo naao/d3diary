@@ -227,7 +227,6 @@ switch ( $eparam['mode'] ) {
 			$yd_data['photo_num'] = $yd_data['photo_num'] + $photo_num;
 		}
 
-	//$eparam['mode'] = _D3DIARY_PROCMODE_PREVIEW ;
 	// input form
    	d3diary_showform( $mydirname ) ;
 	break ;
@@ -606,8 +605,8 @@ include XOOPS_ROOT_PATH."/header.php";
 // this page uses smarty template
 // this must be set before including main header.php
 	$_temp_preview = $func->getpost_param('preview');
-	if(!empty($_temp_preview) || intval($func->getpost_param('photodel'))==1){
-		$xoopsTpl->assign("preview", "1");	// naao 100731
+	if(!empty($_temp_preview) || $eparam['mode'] == _D3DIARY_PROCMODE_PHOTODEL){
+		$xoopsTpl->assign("preview", "1");
 	}
 
 	$xoopsTpl->assign("yd_data", $yd_data);
@@ -776,6 +775,7 @@ function d3diary_prevphoto($mydirname){
 			$trim_pid = str_replace($prevdir, "", $form_photos[$i]['pid']);
 			if ( ($trim_pname != $form_photos[$i]['pname'] ) and (strlen($trim_pid) !=  strlen($form_photos[$i]['pid']))
 			    and  !in_array( $form_photos[$i]['pid'], $psels ) ){
+				$prevphotos['prev']  = 1;
 				$prevphotos['pid']   = $form_photos[$i]['pid'];
 				$prevphotos['pname']   = $form_photos[$i]['pname'];
 				$prevphotos['thumbnail']   = $prevdir."t_".$trim_pname;
@@ -792,6 +792,7 @@ function d3diary_prevphoto($mydirname){
 	list( $photo_num , $prev_photo ) = d3diary_process_uploaded_photo( $mydirname , $updir) ;
 
 	foreach ( $prev_photo as $p_photo) {
+		$p_photo['prev']   = 1 ;
 		$p_photo['pid']   = $prevdir.$p_photo['pid'];
 		$p_photo['pname']   = $prevdir.$p_photo['pname'];
 		$p_photo['thumbnail']   = $prevdir.$p_photo['thumbnail'] ;

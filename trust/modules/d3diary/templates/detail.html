@@ -46,9 +46,8 @@
 <{if $yd_param.tag}><{$smarty.const._MD_TAG}>&nbsp;[<{$yd_param.tag}>]&nbsp;<{/if}>
 </div><!-- /itemInfo -->
 </div><!-- /item -->
-<div class="clear"></div>
 
-<div class="boxdate_base">
+<div class="boxdate_base" style="clear:both;">
 <span class="boxdate">
 <div class="itemHead"><span class="itemTitle"><{$yd_data.year}><{* $smarty.const._MD_DATE_YEAR *}></span></div>
 <div class="itemInfo"><span class="itemText"><{$yd_data.b_month}><{ *$smarty.const._MD_DATE_MONTH *}></span>
@@ -67,7 +66,7 @@
 </span>
 </div><!-- /itemHead -->
 
-<div class="itemInfo">
+<div class="itemInfo" style="text-align:right;">
 <span class="itemPermaLink">
 <{if $yd_before.bid >0}>
 <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$yd_before.bid}>&req_uid=<{$yd_uid}><{$base_qstr}>" title="<{$yd_before.title}>">
@@ -98,10 +97,9 @@
 </div><!-- /itemBody -->
 
 </div> <!--end item -->
-</div> <!--end itemList -->
-<div class="clear"></div>
+</div><!-- /diaryHead -->
 
-<div class="itemDiary">
+<div class="itemDiary" style="clear:both;">
 <div class="item">
 
 <div class="itemInfo" style="text-align:left;">
@@ -111,10 +109,9 @@
 <div class="itemBody">
 <div class="itemText">
 <{$yd_data.diary}>
-<br />
-</div><!-- /itemText -->
+
 <{if $yd_photo.0.pid|count_characters>0}>
-<div class="PhotoBox">
+<div class="PhotoBox" style="clear:both;">
  <{foreach from=$yd_photo key="num" item="photo" name="list"}>
    <{if $yd_photo|@count==1}>
     <div class="d3dPhotoCenter">
@@ -133,12 +130,11 @@
 <{/foreach}>
 </div><!-- /PhotoBox -->
 
-<br/>
-<div class="clear"></div>
 <{/if}>
+</div><!-- /itemText -->
 </div><!-- /itemBody -->
 
-<div class="itemFoot">
+<div class="itemFoot" style="clear:both;">
 <span class="itemPermaLink">
 
 <{* <{attachfile_attach_download dirname=attachfile target_id=$yd_data.bid}>&nbsp;|&nbsp; *}>
@@ -151,9 +147,13 @@
 </span>
 </div><!-- /itemFoot -->
 
+<{if $yd_data.can_disp!=true}>
+	<font color="#FF0000"><{$smarty.const._MD_DIARY_NOPERMBODY}></font>
+<{/if}>
 </div> <!--end item -->
 </div> <!--end itemDiary -->
 
+<{if $yd_data.can_disp==true || $yd_data.can_disp_com==true }>
 <!-- start comment area -->
 <div class="d3d_d3com">
 <{if $mod_config.comment_dirname}>
@@ -200,6 +200,7 @@
   <{/if}>
 <{/if}>
 </div><!-- /d3d_d3com -->
+<{/if}>
 </div>
 </div>
 

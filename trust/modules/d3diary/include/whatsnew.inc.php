@@ -60,7 +60,7 @@ if( ! function_exists( 'd3diary_new_base' ) ) {
 			$i=0;
 			foreach ( $entry as $b => $e){
 				$entry_temp[$i]	= $e;
-				$ret[$i]['description']	= trim($func->substrTarea($e['diary'], $e['dohtml'], 0, true));
+				$ret[$i]['description']	= trim($func->substrTarea($e['diary'], $e['dohtml'], 500, true));
 				$ret[$i]['link']	= $e['url'];
 				$ret[$i]['cname'] 	=  $myts->makeTboxData4Show($e['cname']);
 				$ret[$i]['cat_link'] 	= $URL_MOD."/index.php?page=category&amp;cid=".$e['cid'];

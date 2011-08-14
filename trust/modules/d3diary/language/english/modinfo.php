@@ -98,6 +98,16 @@ define($constpref."_USE_MYFRIENDS_Y","Cooperation with Myfriends module:ON");
 define($constpref."_FRIEND_DIRNAME","Directory name of Friend Cooperation module");
 define($constpref."_FRIEND_DIRNAMEDESC","If you use Cooperation function with Friend module, input the directory name.");
 
+define($constpref."_EXCERPTOK","Enable to show title and summary for not permitted entry.");
+define($constpref."_EXCERPTOKDESC","Select openarea to be enabled to show the title and summary<br /> for not permitted entry except the draft.");
+define($constpref."_EXCERPTOK_NOUSE","Do not show for not permitted entry");
+//define($constpref."_EXCERPTOK_BYPERSON","Transfer it to the setting of everybody");
+define($constpref."_EXCERPTOK_FORMEMBER","Open for login members");
+define($constpref."_EXCERPTOK_FORGUEST","Open for all guests");
+
+define($constpref."_DISP_EXCERPTCOM","Show comment in case of enabled showing title and summary.");
+define($constpref."_DISP_EXCERPTCOMDESC","Select 'YES' to show comments, 'NO' to hide them.");
+
 define($constpref."_USE_TAG","TAG function ON/OFF");
 define($constpref."_USE_TAGDESC","Using TAG function , select the area to show TAG-Cloud.");
 define($constpref."_USE_TAG_N","TAG function :OFF");

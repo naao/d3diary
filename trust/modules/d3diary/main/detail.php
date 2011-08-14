@@ -147,6 +147,7 @@ if($yd_data['cid']>0){
 			// var_dump($_tmp_gperms); var_dump($_tmp_pperms);
 		$yd_data['can_disp'] = $mPerm->can_display($diary->uid, $_got_op, 
 				$diary->create_time, $_tmp_isfriend, $_tmp_isfriend2, $_tmp_gperms, $_tmp_pperms);
+		$yd_data['can_disp_com'] = $yd_data['can_disp'] ;
 
 		$photo->uid  = $yd_data['uid'] ;
 		$photo->bids = array( $yd_data['bid'] ) ;
@@ -165,11 +166,16 @@ if($yd_data['cid']>0){
 
 
 // modified 10-06-20
-if(!$yd_data['can_disp'] === true)
+if($yd_data['can_disp'] !== true)
 {
 	//var_dump($diary->uid); var_dump($_got_op); var_dump($diary->create_time); var_dump($_tmp_isfriend); var_dump($_tmp_isfriend2); var_dump($_tmp_gperms); var_dump($_tmp_pperms); echo"<br />";
-	redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
-	exit();
+	if( $mPerm->exerpt_ok_bymod == true ) {
+		$yd_data['diary'] = $func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , true, "" );
+		$yd_data['can_disp_com'] = $mod_config['can_disp_com'] ? $mod_config['can_disp_com'] : false ;
+	} else {
+		redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
+		exit();
+	}
 }
 
 // for rightarea global_variables

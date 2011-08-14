@@ -10,7 +10,7 @@ $langman->read( 'modinfo.php' , $mydirname , $mytrustdirname , false ) ;
 $constpref = '_MI_' . strtoupper( $mydirname ) ;
 
 $modversion['name']        = $mydirname;
-$modversion['version']     = 0.20;
+$modversion['version']     = 0.21;
 $modversion['description'] = constant($constpref."_DIARY_DESC");
 $modversion['credits']     = 'Motion Create Inc. (http://www.mc8.jp/)';
 $modversion['author'] 	   = 'naaon (original-module "minidiary" by matoyan)';
@@ -199,6 +199,27 @@ $modversion['config'][] = array(
 	'formtype'		=> 'textbox',
 	'valuetype'		=> 'text',
 	'default'		=> ''
+);
+
+$modversion['config'][] = array(
+	'name'			=> 'can_read_excerpt' ,
+	'title'			=> $constpref.'_EXCERPTOK' ,
+	'description'		=> $constpref.'_EXCERPTOKDESC' ,
+	'formtype'		=> 'select',
+	'valuetype'		=> 'int',
+	'default'		=> '0',
+	'options'		=> array( $constpref.'_EXCERPTOK_NOUSE' => 0, 
+		  					  $constpref.'_EXCERPTOK_FORMEMBER' => 2,
+		  					  $constpref.'_EXCERPTOK_FORGUEST' => 3)
+);
+		  					  //$constpref.'_EXCERPTOK_BYPERSON' => 1, 
+$modversion['config'][] = array(
+	'name'			=> 'can_disp_com' ,
+	'title'			=> $constpref.'_DISP_EXCERPTCOM' ,
+	'description'		=> $constpref.'_DISP_EXCERPTCOMDESC' ,
+	'formtype'		=> 'yesno' ,
+	'valuetype'		=> 'int' ,
+	'default'		=> '0'
 );
 
 $modversion['config'][] = array(

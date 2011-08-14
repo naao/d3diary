@@ -25,6 +25,7 @@ var $isadmin = false ;	// boolean
 var $isauthor = false ;	// boolean
 var $d3d_conf = array();
 var $initialized = 0;
+var $exerpt_ok_bymod = false ;// allowed excerpt by mod_config
 
 public function __construct(& $d3dConf)
 {
@@ -88,6 +89,11 @@ function ini_set()
 		$this->d3d_conf['use_friend']=false;
 	}
 	//var_dump($this->mydirname); 
+
+	if( $this->mod_config['can_read_excerpt'] == 3 ){ $this->exerpt_ok_bymod = true ;	}
+	elseif( $this->uid > 0 && $this->mod_config['can_read_excerpt'] == 2 ){ $this->exerpt_ok_bymod = true ;	}
+
+
    //}
 }
 
@@ -146,7 +152,7 @@ function check_editperm($bid, $uid)
   	return true;
 }
 
-function get_allowed_openarea()
+function get_allowed_openarea( $for_exerptok = true )
 {	// call from a specified personnel page only ( do not from diarylist, b_diarylist)
 	// return values are:
 	// 0=open, 1=members, 2=friends, 3=friends^2, 10=group, 20=personel, 100=scratch
@@ -154,9 +160,10 @@ function get_allowed_openarea()
 	$allowed_b = array();		// access uid's requiry permission
 	
 	// a return value
-	if( $this->uid <= 0 ) {			$allowed_b = array(0);		}
-	elseif ( $this->isauthor == true){	$allowed_b = array(0,1,3,2,100);	}
-	elseif ( $this->isadmin == true ){	$allowed_b = array(0,1,3,2,100);	}
+	if( $for_exerptok === true && $this->exerpt_ok_bymod == true ) { $allowed_b = array(0,1,3,2,10,20);	}
+	elseif( $this->uid <= 0 ) {			$allowed_b = array(0);		}
+	elseif ( $this->isauthor == true){		$allowed_b = array(0,1,3,2,10,20,100);	}
+	elseif ( $this->isadmin == true ){		$allowed_b = array(0,1,3,2,10,20,100);	}
 	elseif ( $this->d3d_conf['use_friend'] != true ) { $allowed_b = array(0,1);}
 	else {	//use friends
 		if( $this->is_friend == true){	$allowed_b = array(0,1,3,2);	}
@@ -214,6 +221,10 @@ function can_display($chk_uid, $op, $create_time = 0, $is_friend=false ,
 		}
 	}
 	return false;
+
+	// *** do not ovverride by "excerpt_ok" function
+	// *** to hide body text and d3 comments
+
 }
 
 function can_disp()
@@ -443,6 +454,18 @@ function get_open_query( $caller, $params ) {
 		case "detail1":		// for req_uid > 0 pages
 			$allowed_openarea = implode(",",$this->get_allowed_openarea());
 			$whr_openarea = " ((d.openarea IN (".$allowed_openarea.")) 
+					AND (c.openarea IN (".$allowed_openarea.") OR c.openarea IS NULL)) " ;
+			break;
+
+		case "viewcomment1":
+		case "b_side_com":	// for comments
+			if ( $this->mod_config['can_disp_com'] == 1 ) {
+				$allowed_openarea = implode(",",$this->get_allowed_openarea( true ));
+			} else {
+				$allowed_openarea = implode(",",$this->get_allowed_openarea( false ));
+			}
+			$whr_openarea = " ((d.openarea IN (".$allowed_openarea.")) 
+					AND (cfg.openarea IN (".$allowed_openarea.") OR cfg.openarea IS NULL) 
 					AND (c.openarea IN (".$allowed_openarea.") OR c.openarea IS NULL)) " ;
 			break;
 

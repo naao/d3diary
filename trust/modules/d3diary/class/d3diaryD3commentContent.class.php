@@ -14,6 +14,9 @@ public function __construct( $d3forum_dirname , $target_dirname , $target_trustd
 
 	require_once dirname(__FILE__).'/d3diaryConf.class.php';
 	$this->d3dConf =& D3diaryConf::getInstance($mydirname, 0, "d3comment");
+	$this->mPerm =& $this->d3dConf->mPerm;
+	$this->func =& $this->d3dConf->func;
+	$this->mod_config =& $this->d3dConf->mod_config;
 
 }
 
@@ -46,8 +49,8 @@ function fetchSummary( $external_link_id )
 	$diary_uid = (int)$content_row['uid'];
 	$dohtml = (int)$content_row['dohtml'];
 
-	$_tmp_isfriend  = $this->d3dConf->mPerm->check_is_friend($diary_uid);
-	$_tmp_isfriend2 = $this->d3dConf->mPerm->check_is_friend2($diary_uid);
+	$_tmp_isfriend  = $this->mPerm->check_is_friend($diary_uid);
+	$_tmp_isfriend2 = $this->mPerm->check_is_friend2($diary_uid);
 	
 	$_tmp_op = (int)$content_row['openarea'];
 
@@ -62,7 +65,7 @@ function fetchSummary( $external_link_id )
 	//var_dump($diary_uid); var_dump($_got_op);   var_dump($_slctd_op); var_dump($content_row['create_time']); var_dump($_tmp_isfriend); var_dump($_tmp_isfriend2); var_dump($_tmp_gperms); var_dump($_tmp_pperms);  var_dump($content_row['openarea_entry']); var_dump($content_row['openarea_cat']); echo"<br />";
 
 	//checking permission : if false, redirect
-		if( $permission != true ) {
+		if( $permission != true && $this->d3dConf->mPerm->exerpt_ok_bymod !== true ) {
 			redirect_header(XOOPS_URL.'/user.php',3,_NOPERM);
 			exit();
 		}
@@ -70,13 +73,7 @@ function fetchSummary( $external_link_id )
 	$categoryID = $content_row['cid'];
 	$uri = XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$entryID.'&req_uid='.$diary_uid;
 
-	//if ($dohtml ==1){
-	//	$str = strip_tags($myts->displayTarea($content_row['diary'],1,1,0,1));
-	//} else {
-	//	$str = strip_tags($myts->displayTarea($content_row['diary'],0,1,1,0));
-	//}
-	//$summary = xoops_substr( $str , 0 , 255 );
-	$summary =  $this->d3dConf->func->substrTarea( $content_row['diary'], $dohtml, 255, true ) ;
+	$summary =  $this->func->substrTarea( $content_row['diary'], $dohtml, 255, true ) ;
 
 	return array(
 		'dirname' => $mydirname ,
@@ -109,7 +106,7 @@ function onUpdate( $mode , $link_id , $forum_id , $topic_id , $post_id = 0 )
 		$uname = $xoopsUser->getVar('uname');
 		$name = $xoopsUser->getVar('name');
 	}
-	$notif_name = $this->d3dConf->mod_config['use_name']==1 ? $name : $uname;
+	$notif_name = $this->mod_config['use_name']==1 ? $name : $uname;
 	
 	$openarea_entry = 0; //default
 	
@@ -139,8 +136,7 @@ function onUpdate( $mode , $link_id , $forum_id , $topic_id , $post_id = 0 )
 	//$openarea_cat = $this->d3dConf->func->get_openarea_cat($uid,$cid);
 	
 	// Trigger Notification
-	//$users2notify = $this->d3dConf->mPerm->get_users_can_read_entry( $uid, $openarea_entry, $openarea_cat);
-	$users2notify = $this->d3dConf->mPerm->get_users_can_read_entry( $openarea, $openarea_entry, $openarea_cat, 
+	$users2notify = $this->mPerm->get_users_can_read_entry( $openarea, $openarea_entry, $openarea_cat, 
 				$vgids, $vpids, $vgids_cat, $vpids_cat );
 	$not_handler =& D3NotificationHandler::getInstance() ;
 	
@@ -181,25 +177,26 @@ function validate_id( $link_id )
 
 	$this->d3dConf->set_mod_config( $diary_uid  , "D3com_validate_id");	// needs $dcfg, $diary_uid
 
-	$_tmp_isfriend  = $this->d3dConf->mPerm->check_is_friend($diary_uid);
-	$_tmp_isfriend2 = $this->d3dConf->mPerm->check_is_friend2($diary_uid);
+	$_tmp_isfriend  = $this->mPerm->check_is_friend($diary_uid);
+	$_tmp_isfriend2 = $this->mPerm->check_is_friend2($diary_uid);
 	
 	$_tmp_op = (int)$content_row['openarea'];
 		list( $_got_op , $_slctd_op , $_tmp_gperms, $_tmp_pperms ) 
-			= $this->d3dConf->mPerm->override_openarea( $_tmp_op, $content_row['openarea_entry'], $content_row['openarea_cat'], 
+			= $this->mPerm->override_openarea( $_tmp_op, $content_row['openarea_entry'], $content_row['openarea_cat'], 
 				$content_row['vgids'], $content_row['vpids'], $content_row['vgids_cat'], $content_row['vpids_cat'] );
 
 			// var_dump($_tmp_gperms); var_dump($_tmp_pperms);
-		$permission = $this->d3dConf->mPerm->can_display($diary_uid, $_got_op, 
+		$permission = $this->mPerm->can_display($diary_uid, $_got_op, 
 				$content_row['create_time'], $_tmp_isfriend, $_tmp_isfriend2, $_tmp_gperms, $_tmp_pperms);
 
 	//var_dump($diary_uid); var_dump($_got_op);   var_dump($_slctd_op); var_dump($content_row['create_time']); var_dump($_tmp_isfriend); var_dump($_tmp_isfriend2); var_dump($_tmp_gperms); var_dump($_tmp_pperms);  var_dump($content_row['openarea_entry']); var_dump($content_row['openarea_cat']); echo"<br />";
 
 	if( $permission === true ) {
 		return $link_id  ;
+	} elseif ( $this->mPerm->exerpt_ok_bymod == true && $this->mod_config['can_disp_com'] == true ) {
+		return $link_id  ;
 	}
-	return false;
-
+		return false;
 }
 
 // set forum_dirname from config.comment_dirname

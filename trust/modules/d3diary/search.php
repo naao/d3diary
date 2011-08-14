@@ -19,6 +19,8 @@ function d3diary_global_search_base($mydirname , $queryarray, $andor, $limit, $o
 	require dirname(__FILE__).'/class/d3diaryConf.class.php';
 
 	$d3dConf =& D3diaryConf::getInstance($mydirname, 0, "search");
+	$func =& $d3dConf->func;
+	$mod_config =& $d3dConf->mod_config;
 	// for sanitizing contents
 	$myts =& $d3dConf->myts;
 
@@ -97,7 +99,8 @@ function d3diary_global_search_base($mydirname , $queryarray, $andor, $limit, $o
 			//start main
 			$context = $dbdat['diary'];
 //			$context = strip_tags($myts->displayTarea(strip_tags($context)));
-			$context = strip_tags($context);
+//			$context = strip_tags($context);
+			$context = $func->substrTarea( $context, (int)$dbdat['dohtml'], $mod_config['preview_charmax'] , true, "" );
 			$ret[$i]['context'] = d3diary_search_make_context3($context,$queryarray);
 			//end main
 		}

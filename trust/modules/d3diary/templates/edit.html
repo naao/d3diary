@@ -310,12 +310,14 @@
   <tr>
     <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_PHOTO}><{$num+1}></td>
     <td class="even" style="border:1px solid gray;">
+	<{if $photo.prev==1}><font color="#FF0000"><{$smarty.const._MD_PREVIEW}><{$smarty.const._MD_PHOTO}></font><br /><{/if}>
 	<img src='upimg/<{$photo.thumbnail}>'>
 	<input type='hidden' name='pid<{$num}>' id='pid<{$num}>' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname<{$num}>' id='pname<{$num}>' value='<{$photo.pname}>' />
+	<input type='hidden' name='pprev<{$num}>' id='pprev<{$num}>' value='<{$photo.prev}>' />
 	<input type='hidden' name='pid[]' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname[]' value='<{$photo.pname}>' />
-	<{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' value='<{$photo.pid}>::<{$photo.pname}>' />
+	<{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' id='psel<{$num}>' value='<{$photo.pid}>::<{$photo.pname}>' />
 	<{if $mod_config.photo_useinfo==1}>
 		<textarea name='pvinfo[]' rows="2" cols="50"><{$photo.pinfo}></textarea>
 	<{/if}>
@@ -424,7 +426,6 @@
 <{/if}>
 
 <script type="text/javascript">
-<!--
 
 var image_form_count = 0;
 var image_form_c = 0;
@@ -563,26 +564,45 @@ function fckeditor_exec() {
 	}
 }
 
-function d3diary_delfile(p_num) {
-	document.getElementById('del_pid').value=document.getElementById('pid'+p_num).value;
-	document.getElementById('del_pname').value=document.getElementById('pname'+p_num).value;
+function d3diary_pmanage_confirm() {
+	var pprev_exist = 0; 
+	var pprev_checked = 0; 
+	var pcount = <{$yd_data.photo_num}>;
+	var p_action = document.getElementById('action').value; 
+	var p_checked = 0; 
 
-	document.getElementById('photodel').value=1;
-	if(window.confirm('<{$smarty.const._MD_PHOTO}> '+document.getElementById('del_pname').value+' <{$smarty.const._MD_FILEDEL_CONFIRM}>')==true){
-		document.fm1.submit();
+	for (var i = 0; i < pcount; i ++) {
+		if(document.getElementById('psel'+i).checked == true){
+			p_checked = 1; 
+		}
+		if(document.getElementById('pprev'+i).value=='1'){
+			pprev_exist=1;
+			if(document.getElementById('psel'+i).checked == true){
+				pprev_checked = 1;
+			}
+		}
 	}
 
-}
-
-function d3diary_pmanage_confirm() {
-	if(document.getElementById('action').value==5){
-		if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_FILEDEL_CONFIRM}>')==true){
-			document.fm1.phandle();
+	if(p_checked==1){
+		if(p_action==5){
+			if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_FILEDEL_CONFIRM}>')==true){
+				document.fm1.phandle();
+			}
+		} else if(p_checked==1 && (p_action==2 || p_action==3)) {
+			if(pprev_exist==0) {
+				if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_ROTATE_CONFIRM}>')==true){
+					document.fm1.phandle();
+				}
+			} else {
+				if(pprev_checked==0) {
+					alert("\n<{$smarty.const._MD_ROTATE_NOPREVIEW}>");
+				} else {
+					alert("\n<{$smarty.const._MD_ROTATE_NOPREVIEW2}>");
+				}
+			}
 		}
 	} else {
-		if(window.confirm('<{$smarty.const._MD_PHOTO}> <{$smarty.const._MD_ROTATE_CONFIRM}>')==true){
-			document.fm1.phandle();
-		}
+					alert("\n<{$smarty.const._MD_FILE_NOCHECK}>");
 	}
 }
 
@@ -599,5 +619,4 @@ document.observe("dom:loaded", function(){
     D3dSuggest1 = new D3diaryUnameSuggest('<{$xoops_url}>/modules/<{$mydirname}>/','d3d_tag_input1','d3d_suggest_list1','d3d_tag_hidden1','d3d_tag_list1','<{$charset}>');
 });
 <{/if}>
-//-->
 </script>

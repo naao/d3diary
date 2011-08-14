@@ -40,8 +40,7 @@ define("_MD_CATEGORY_ADD","新しいカテゴリー ⇒");
 define("_MD_CATEGORY_ADD_DO","カテゴリーの追加");
 define("_MD_CATEGORY_EDIT","カテゴリーの編集");
 define("_MD_CATEGORY_ORDER","並び順");
-define("_MD_CATEGORY_SWAPDSC","カテゴリーの並び順、名前を変更できます。<br />
-カテゴリーを削除すると、そのカテゴリーに入っていた日記は「未分類」に移動します。");
+define("_MD_CATEGORY_SWAPDSC","カテゴリーの並び順、名前を変更できます。<br />カテゴリーを削除すると、そのカテゴリーに入っていた日記は「未分類」に移動します。");
 define("_MD_CATEGORY_UP","▲上へ移動");
 define("_MD_CATEGORY_DOWN","▼下へ移動");
 define("_MD_CATEGORY_SWAPPED","並び替えを行いました");
@@ -96,6 +95,7 @@ define("_MD_DIARY_EDIT","日記の投稿／編集");
 define("_MD_DIARY_DEL","削除する");
 define("_MD_DIARY_DELDEC","※この日記を削除します。");
 define("_MD_DIARY_DELASC","表示中の日記を削除してもよろしいですか？");
+define("_MD_DIARY_NOPERMBODY","この記事の続きを表示する権限がありません。");
 
 define("_MD_YT_URL","YouTubeの動画URL：");
 define("_MD_YT_ADD","文中に挿入");
@@ -122,6 +122,9 @@ define("_MD_LROTATE","左90度回転");
 define("_MD_ROTATE_CONFIRM","を回転します。よろしいですか？");
 define("_MD_EDIT_PINFO","説明の編集");
 define("_MD_PMOVE","添付先の移動");
+define("_MD_ROTATE_NOPREVIEW","プレビュー画像があるためこの操作はできません。\\n一旦確定送信後に、再度操作してください。");
+define("_MD_ROTATE_NOPREVIEW2","プレビュー画像の回転はできません。\\n一旦確定送信後に、再度操作してください。");
+define("_MD_FILE_NOCHECK","操作対処の画像が選択されていません。");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERROR:入力内容を確認してください。</font>");

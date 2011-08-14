@@ -90,11 +90,12 @@
 </div>
 <br />
 
+<div style="clear:both;">
 [<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="<{$style_s.time_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=time_asc" class="<{$style_s.time_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 [<{$smarty.const._MD_DIARY_TITLE}><a href="<{$sort_baseurl}>&amp;odr=title_dsc" class="<{$style_s.title_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=title_asc" class="<{$style_s.title_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
 [<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="<{$style_s.hit_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="<{$style_s.hit_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+</div>
 
-<div class="clear"></div>
 </div><!-- /itemInfo -->
 </div><!-- /item -->
 
@@ -156,10 +157,9 @@
 	<div class="itemText">
 	<{$entry.diary}>
 	</div>
-<div class="clear"></div>
 </div><!-- /itemBody -->
 
-<div class="itemFoot">
+<div class="itemFoot" style="clear:both;">>
 <span class="itemPermaLink">
   <{if $entry.com_num > 0}>
 	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;req_uid=<{$entry.uid}>&amp;bid=<{$entry.bid}><{$yd_com_key}><{$entry.unique_path}>" 

@@ -98,6 +98,16 @@ define($constpref."_USE_MYFRIENDS_Y","myfriendsとの連携：ON");
 define($constpref."_FRIEND_DIRNAME","友人機能モジュールのディレクトリ名");
 define($constpref."_FRIEND_DIRNAMEDESC","友人機能との連携を行う場合、友人機能モジュールのディレクトリ名を入力してください。");
 
+define($constpref."_EXCERPTOK","タイトル・要約部分は閲覧可能");
+define($constpref."_EXCERPTOKDESC","記事単位で権限のない閲覧者に、「下書き」以外の<br/>記事タイトル・要約部分をオープンにする範囲を選択します。");
+define($constpref."_EXCERPTOK_NOUSE","閲覧権限の無い記事はタイトル・要約も表示しない");
+//define($constpref."_EXCERPTOK_BYPERSON","各人の日記全体の設定に委譲する");
+define($constpref."_EXCERPTOK_FORMEMBER","ログインメンバーまでオープンにする");
+define($constpref."_EXCERPTOK_FORGUEST","ゲストまでオープンにする");
+
+define($constpref."_DISP_EXCERPTCOM","タイトル・要約部分のみ閲覧可能の場合のコメント表示");
+define($constpref."_DISP_EXCERPTCOMDESC","コメントを表示する場合は「はい」、<br/>非表示にしておく場合は「いいえ」を選択。");
+
 define($constpref."_USE_TAG","タグ機能のON/OFF");
 define($constpref."_USE_TAGDESC","タグ機能を使用する場合、タグクラウドを表示するページを選択してください。");
 define($constpref."_USE_TAG_N","タグ機能：OFF");

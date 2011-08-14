@@ -95,6 +95,7 @@ define("_MD_DIARY_EDIT","Regist/Edit");
 define("_MD_DIARY_DEL","Delete");
 define("_MD_DIARY_DELDEC","## Delete this diary");
 define("_MD_DIARY_DELASC","Do you delete the displayed diary?");
+define("_MD_DIARY_NOPERMBODY","No permission to show detail of this entry.");
 
 define("_MD_YT_URL","URL of YouTube Video");
 define("_MD_YT_ADD","Insert to textarea");
@@ -121,6 +122,9 @@ define("_MD_LROTATE","Rotate left 90deg.");
 define("_MD_ROTATE_CONFIRM","will be rotated. Are you sure?");
 define("_MD_EDIT_PINFO","Edit photo infomation");
 define("_MD_PMOVE","Move diary attached");
+define("_MD_ROTATE_NOPREVIEW","This operation cannot be done because there is a preview image. \\nPlease operate it again once after submit transmitting.");
+define("_MD_ROTATE_NOPREVIEW2","You can not rotate preview images. \\nPlease operate it again once after submit transmitting.");
+define("_MD_FILE_NOCHECK","No images is selected to be operated.");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERROR: Check the content you input.</font>");
