@@ -65,7 +65,8 @@ function fetchSummary( $external_link_id )
 	//var_dump($diary_uid); var_dump($_got_op);   var_dump($_slctd_op); var_dump($content_row['create_time']); var_dump($_tmp_isfriend); var_dump($_tmp_isfriend2); var_dump($_tmp_gperms); var_dump($_tmp_pperms);  var_dump($content_row['openarea_entry']); var_dump($content_row['openarea_cat']); echo"<br />";
 
 	//checking permission : if false, redirect
-		if( $permission != true && $this->d3dConf->mPerm->exerpt_ok_bymod !== true ) {
+		//if( $permission != true ) {
+		if( $permission != true && ($this->mPerm->exerpt_ok_bymod !== true || $this->mod_config['can_disp_com'] !== 1) ) {
 			redirect_header(XOOPS_URL.'/user.php',3,_NOPERM);
 			exit();
 		}
@@ -193,7 +194,7 @@ function validate_id( $link_id )
 
 	if( $permission === true ) {
 		return $link_id  ;
-	} elseif ( $this->mPerm->exerpt_ok_bymod == true && $this->mod_config['can_disp_com'] == true ) {
+	} elseif ( $this->mPerm->exerpt_ok_bymod === true && $this->mod_config['can_disp_com'] === 1 ) {
 		return $link_id  ;
 	}
 		return false;
