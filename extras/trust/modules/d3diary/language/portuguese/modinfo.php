@@ -99,6 +99,16 @@ define($constpref."_USE_MYFRIENDS_Y","Cooperação com o módulo Myfriend: ON");
 define($constpref."_FRIEND_DIRNAME","Nome do diretório do módulo Myfriend cooperação");
 define($constpref."_FRIEND_DIRNAMEDESC","Informe o nome do diretório, se você usa a funçao cooperação com o módulo Myfriend.");
 
+define($constpref."_EXCERPTOK","Permita a mostrar título e resumo para entrada permitida.");
+define($constpref."_EXCERPTOKDESC","Openarea seleto ser permitido a mostrar o título e resumo para entrada permitida menos o desenho.");
+define($constpref."_EXCERPTOK_NOUSE","Não mostre para entrada permitida");
+//define($constpref."_EXCERPTOK_BYPERSON","Transfira à colocação de todo o mundo");
+define($constpref."_EXCERPTOK_FORMEMBER","Abra para sócios de login");
+define($constpref."_EXCERPTOK_FORGUEST","Abra para todos os convidados");
+
+define($constpref."_DISP_EXCERPTCOM","Show comment in case of enabled showing title and summary.");
+define($constpref."_DISP_EXCERPTCOMDESC","Select 'YES' to show comments, 'NO' to hide them.");
+
 define($constpref."_USE_TAG","Função etiqueta ON/OFF");
 define($constpref."_USE_TAGDESC","Selecione a área para mostrar a nuvem de etiquetas, caso você esteja usando a função etiqueta.");
 define($constpref."_USE_TAG_N","Funçao etiqueta: OFF");

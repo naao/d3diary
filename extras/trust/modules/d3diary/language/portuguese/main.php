@@ -40,8 +40,7 @@ define("_MD_CATEGORY_ADD","Nova categoria --&gt;");
 define("_MD_CATEGORY_ADD_DO","Adicionar uma categoria");
 define("_MD_CATEGORY_EDIT","Editar categoria");
 define("_MD_CATEGORY_ORDER","Ordem");
-define("_MD_CATEGORY_SWAPDSC","Você pode mudar a classificação ou nome da categoria<br />
-Se você deletar ma categoria, os posts são movidos para itens não categorizados.");
+define("_MD_CATEGORY_SWAPDSC","Você pode mudar a classificação ou nome da categoria<br />Se você deletar ma categoria, os posts são movidos para itens não categorizados.");
 define("_MD_CATEGORY_UP","Para cima");
 define("_MD_CATEGORY_DOWN","Para baixo");
 define("_MD_CATEGORY_SWAPPED","A classificação está concluida");
@@ -96,6 +95,7 @@ define("_MD_DIARY_EDIT","Registrar e/ou Editar");
 define("_MD_DIARY_DEL","Excluir");
 define("_MD_DIARY_DELDEC","## excluir este diário");
 define("_MD_DIARY_DELASC","Você deseja excluir o diário mostrado?");
+define("_MD_DIARY_NOPERMBODY","Nenhuma permissão para mostrar detalhe desta entrada.");
 
 define("_MD_YT_URL","URL do vídeo no YouTube");
 define("_MD_YT_ADD","Inserir área de texto");
@@ -122,6 +122,9 @@ define("_MD_LROTATE","Gire esquerda 90deg.");
 define("_MD_ROTATE_CONFIRM","será girado. O senhor está seguro?");
 define("_MD_EDIT_PINFO","Edite infomation de fotografia");
 define("_MD_PMOVE","Diário de movimento prendeu");
+define("_MD_ROTATE_NOPREVIEW","Esta operação não pode ser feita porque há uma imagem de pré-estréia. \\nPlease operam novamente uma vez isto depois de submeta transmitindo.");
+define("_MD_ROTATE_NOPREVIEW2","O senhor não pode girar imagens de pré-estréia. \\nPlease operam novamente uma vez isto depois de submeta transmitindo.");
+define("_MD_FILE_NOCHECK","Nenhuma imagem é selecionada para ser operada.");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERRO: Cheque o conteúdo que você informou.</font>");
