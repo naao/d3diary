@@ -170,7 +170,7 @@ if($yd_data['can_disp'] !== true)
 {
 	//var_dump($diary->uid); var_dump($_got_op); var_dump($diary->create_time); var_dump($_tmp_isfriend); var_dump($_tmp_isfriend2); var_dump($_tmp_gperms); var_dump($_tmp_pperms); echo"<br />";
 	if( $mPerm->exerpt_ok_bymod == true ) {
-		$yd_data['diary'] = $func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , true, "" );
+		$yd_data['diary'] = $func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , false, "" );
 		$yd_data['can_disp_com'] = $mod_config['can_disp_com'] ? $mod_config['can_disp_com'] : false ;
 	} else {
 		redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
