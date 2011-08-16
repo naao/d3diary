@@ -1,5 +1,5 @@
 <?php
-// this is wrapper file for d3blog alternative
+// this is wrapper file for d3blog and weblogD3 alternative
 require '../../mainfile.php' ;
 if( ! defined( 'XOOPS_TRUST_PATH' ) ) die( 'set XOOPS_TRUST_PATH in mainfile.php' ) ;
 
@@ -10,6 +10,7 @@ $mydirurl = XOOPS_URL.'/modules/'.$mydirname;
 require $mydirpath.'/mytrustdirname.php' ; // set $mytrustdirname
 
 $_GET['page'] = 'detail';
+$_GET['bid'] = $_GET['blog_id'];	// for weblogD3 wrapper
 
 require XOOPS_TRUST_PATH.'/modules/'.$mytrustdirname.'/main.php' ;
 ?>
