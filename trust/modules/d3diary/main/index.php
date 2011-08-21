@@ -543,8 +543,19 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 	$photo->bids = $got_bids;
 	$photo->readdb_mul($mydirname);
 	foreach ( $photo->photos as $i => $_photo ) {
-		$entry[$i]['photo'] = $_photo;
-		$entry[$i]['photo_num'] = count($_photo);
+		// hide photos which is inserted diray body text
+		$temp_entry = $entry[$i]['diary'];
+		$j=0;
+		$_photo_r = array();
+		foreach ( $_photo as $each_photo ) {
+			$_photo_r[$j] = $each_photo ;
+			if ( strstr( $temp_entry, $each_photo['pid'] )) {
+				$_photo_r[$j]['body_in'] = true ;
+			}
+			$j++;
+		}
+		$entry[$i]['photo'] = $_photo_r;
+		$entry[$i]['photo_num'] = count($_photo_r);
 	}
 	unset($photo->photos);
 

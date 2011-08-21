@@ -396,7 +396,11 @@ if($mod_config['menu_layout']==1){
 	$photo->bids = $got_bids;
 	$photo->readrand_mul($mydirname);
 	foreach ( $photo->photos as $i => $_photo ) {
-			$entry[$i]['photo'] = $_photo['pid'].$_photo['ptype'];
+		$entry[$i]['photo'] = $_photo['pid'].$_photo['ptype'];
+		// hide photos which is inserted diray body text
+		if ( strstr( $entry[$i]['diary'], $_photo['pid'] )) {
+			$entry[$i]['photo_body_in'] = true ;
+		}
 	}
 	unset($photo->photos);
 	

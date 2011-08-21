@@ -88,6 +88,7 @@
 <{if $yd_photo.0.pid|count_characters>0}>
 <div class="PhotoBox">
  <{foreach from=$yd_photo key="num" item="photo" name="list"}>
+ <{if $photo.body_in != true}>
    <{if $yd_photo|@count==1}>
     <div class="d3dPhotoCenter">
    <{elseif ($yd_photo|@count==2)&&$num==1}>
@@ -102,6 +103,7 @@
   </div>
   <{* <{if $num==2 || $num==5 }><div class="clear"></div><{/if}> *}>
   <{* <{if $num==1 || $num==3 || $num==5 || $num==7 }><div class="clear"></div><{/if}> *}>
+<{/if}>
 <{/foreach}>
 </div><!-- /PhotoBox -->
 <br/>
@@ -220,7 +222,7 @@
 <tr>
 <td class="head" valign="top" nowrap style="border:1px solid gray;"><{$smarty.const._MD_DIARY_TEXT}>
 <{if $mod_config.body_htmleditor=="common_fckeditor"}>
-  <input type="button" class="formButton" value="FCKeditor" name="contentman_preview"  onclick='fckeditor_exec("100%", "350", "<{$xoops_url}>");' />
+  <input type="button" class="formButton" value="FCKeditor" name="contentman_preview"  onclick='fckeditor_exec();' />
   <input type="hidden" name="fck_loaded" id='fck_loaded' value="0" />
 <{/if}>
 </td>
@@ -241,7 +243,29 @@
 <input type="button" name="yt_sub" value="<{$smarty.const._MD_YT_ADD}>" onclick="return yt_input();" /><br />
 <{$smarty.const._MD_ND_URL}>
 <input type="text" name="nd" id="nd" value="" />
-<input type="button" name="nd_sub" value="<{$smarty.const._MD_YT_ADD}>" onclick="return nd_input();" />
+<input type="button" name="nd_sub" value="<{$smarty.const._MD_YT_ADD}>" onclick="return nd_input();" /><br />
+
+<{if $yd_photo }>
+<hr />
+<span id="pinserter" style="cursor:pointer;font-weight:normal;font-size:100%;border:gray 1px solid;" onclick="pinserter_area()"><{$smarty.const._MD_P_INSOPEN}></span><br />
+<div id="imginserter" style="display:none;">
+	img<input type='radio' name='p_method' value="img" checked="checked" />&nbsp;|&nbsp;
+	siteimg<input type='radio' name='p_method' value="siteimg" />
+	<{if $allow_html}>&nbsp;|&nbsp;html<input type='radio' name='p_method' value="html" /><{/if}>
+	<br />
+	<input type='checkbox' name='withinfo' id='p_withinfo' value='yes' checked="checked" /><{$smarty.const._MD_P_WITHINFO}>
+	<br />
+	<span id="img_1" style="cursor:pointer;" onclick="return photo2body('l');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignleft.gif" alt="<{$smarty.const._MD_P_INSLEFT}>" title="<{$smarty.const._MD_P_INSLEFT}>" /></span>
+	<span id="img_2" style="cursor:pointer;" onclick="return photo2body('c');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/aligncenter.gif" alt="<{$smarty.const._MD_P_INSCENTER}>" title="<{$smarty.const._MD_P_INSCENTER}>" /></span>
+	<span id="img_3" style="cursor:pointer;" onclick="return photo2body('r');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignright.gif" alt="<{$smarty.const._MD_P_INSRIGHT}>" title="<{$smarty.const._MD_P_INSRIGHT}>" /></span>
+	<br />
+	<span id="img_4" style="cursor:pointer;" onclick="return photo2body('lb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigleft.gif" alt="<{$smarty.const._MD_P_INSLEFT}>" title="<{$smarty.const._MD_P_INSLEFT}>" /></span>
+	<span id="img_5" style="cursor:pointer;" onclick="return photo2body('cb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigcenter.gif" alt="<{$smarty.const._MD_P_INSCENTER}>" title="<{$smarty.const._MD_P_INSCENTER}>" /></span>
+	<span id="img_6" style="cursor:pointer;" onclick="return photo2body('rb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigright.gif" alt="<{$smarty.const._MD_P_INSRIGHT}>" title="<{$smarty.const._MD_P_INSRIGHT}>" /></span>
+	<br />
+	<input type="button" name="clear" value="<{$smarty.const._MD_P_CLEARFLOAT}>" onclick="return d3diary_clear();" /><br />
+</div>
+<{/if}>
 </td>
 </tr>
 
@@ -317,9 +341,10 @@
 	<input type='hidden' name='pprev<{$num}>' id='pprev<{$num}>' value='<{$photo.prev}>' />
 	<input type='hidden' name='pid[]' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname[]' value='<{$photo.pname}>' />
-	<{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' id='psel<{$num}>' value='<{$photo.pid}>::<{$photo.pname}>' />
+	<p><{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' id='psel<{$num}>' value='<{$photo.pid}>::<{$photo.pname}>' /></p>
+	<{if !$photo.prev}><p><{$smarty.const._MD_P_INSSELECT}><input type='radio' name='pins' value='<{$photo.thumbnail}>::<{$photo.pname}>'/></p><{/if}>
 	<{if $mod_config.photo_useinfo==1}>
-		<textarea name='pvinfo[]' rows="2" cols="50"><{$photo.pinfo}></textarea>
+		<textarea name='pvinfo[]' id='pvinfo<{$num}>' rows="2" cols="50"><{$photo.pinfo}></textarea>
 	<{/if}>
     </td>
   </tr>
@@ -337,6 +362,8 @@
 <input type=submit name="phandle" value="<{$smarty.const._SUBMIT}>" onClick="d3diary_pmanage_confirm();return false;"/>
 </td></tr>
 <{/if}>
+
+
 <!-- Images : Start --> 
 <tr>
 <td class="head" style="border:1px solid gray;">
@@ -363,7 +390,6 @@
 
 </td>
 </tr>
-
 <tr><td colspan=2>
 <{$smarty.const._MD_PHOTO_MAXSIZE}><{$yd_photo_maxsize}>KB<br/>
 <{if $yd_useresize > 0}>
@@ -619,4 +645,86 @@ document.observe("dom:loaded", function(){
     D3dSuggest1 = new D3diaryUnameSuggest('<{$xoops_url}>/modules/<{$mydirname}>/','d3d_tag_input1','d3d_suggest_list1','d3d_tag_hidden1','d3d_tag_list1','<{$charset}>');
 });
 <{/if}>
+
+function pinserter_area(){
+	
+	if(document.getElementById('imginserter').style.display=='none'){
+		document.getElementById('imginserter').style.display='block';
+	} else {
+		document.getElementById('imginserter').style.display='none';
+	}
+}
+
+function d3diary_clear(){
+	xoopsCodeSmilie("diary", "[clearfloat]");
+}
+
+function photo2body(side){
+	var radio_pins = document.getElementsByName('pins');
+	var radio_method = document.getElementsByName('p_method');
+	var p_withinfo = document.getElementById('p_withinfo');
+	var p_info ;
+
+	var input_str ;
+	p_info = "" ;
+	for(var i=0;i<radio_pins.length;i++) {
+		if (radio_pins[i].checked) {
+			input_str = radio_pins[i].value;
+			if (p_withinfo.checked){
+				p_info = document.getElementById('pvinfo'+i).value;
+			}
+		}
+	}
+	if (!input_str) { alert("\n<{$smarty.const._MD_FILE_NOCHECK}>"); return false; }
+
+	var method_str ;
+	for(var i=0;i<radio_method.length;i++) {
+		if (radio_method[i].checked) {
+			method_str = radio_method[i].value;
+		}
+	}
+
+	var p_align; var p_align_h; var use_thumb; 
+	switch(side){
+	    case 'l':
+		p_align = " align=left"; p_align_h = " style=float:left"; use_thumb = 1; break;
+	    case 'c':
+		p_align = ""; p_align_h = ""; use_thumb = 1; break;
+	    case 'r':
+		p_align = " align=right"; p_align_h = " style=float:right"; use_thumb = 1; break;
+	    case 'lb':
+		p_align = " align=left"; p_align_h = ""; use_thumb = 0; break;
+	    case 'cb':
+		p_align = ""; p_align_h = ""; use_thumb = 0; break;
+	    case 'rb':
+		p_align = " align=right"; p_align_h = ""; use_thumb = 0; break;
+ 	   default:
+	}
+
+	var myArr = input_str.split("::");
+	var fname ;
+	var url_txt= "\n" ;
+	if (use_thumb==1) {fname=myArr[0];} else {fname=myArr[1];}
+
+	if (use_thumb==1){
+		if (method_str == 'img'){
+			url_txt += "[url=<{$xoops_url}>/modules/<{$mydirname}>/upimg/"+myArr[1]+"][img"+p_align+"]<{$xoops_url}>/modules/<{$mydirname}>/upimg/"+fname+"[/img][/url]\n";
+		} else if (method_str == 'siteimg'){
+			url_txt += "[siteurl=modules/<{$mydirname}>/upimg/"+myArr[1]+"][siteimg"+p_align+"]modules/<{$mydirname}>/upimg/"+fname+"[/siteimg][/siteurl]\n";
+		} else if (method_str == 'html'){
+			url_txt += "<a href=<{$xoops_url}>/modules/<{$mydirname}>/upimg/"+myArr[1]+"><img src=<{$xoops_url}>/modules/<{$mydirname}>/upimg/"+fname+p_align_h+";></a><br />";
+		}
+	} else {
+		if (method_str == 'img'){
+			url_txt += "[img"+p_align+"]<{$xoops_url}>/modules/<{$mydirname}>/upimg/"+fname+"[/img]\n";
+		} else if (method_str == 'siteimg'){
+			url_txt += "[siteimg"+p_align+"]modules/<{$mydirname}>/upimg/"+fname+"[/siteimg]\n";
+		} else if (method_str == 'html'){
+			url_txt += "<img src=<{$xoops_url}>/modules/<{$mydirname}>/upimg/"+fname+p_align_h+"; /><br />";
+		}
+	}
+	url_txt += p_info; 
+	xoopsCodeSmilie("diary", url_txt);
+}
+
 </script>

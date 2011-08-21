@@ -100,6 +100,14 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2011/ 8/21  ver0.22  (Requires module update)
+	- In diarylist block, added two sort order, new comment first and comment numbers .
+	  Both are only for sorting after licked up new diaries.
+	- Added diarylist block option that force eliminate tag. In case of selected "No" ,
+	  summary text before [pagebreak] as it is.
+	- Fixed bug of diarylist block option "Assign tetail text was not valid.
+	- Added function to insert and show the uploaded image into body text.
+
 2011/ 8/14  ver0.21  (Requires module update)
 	- Added function of d3blog's "Enable to show title and summary for not permitted entry".
 	Å@Added following two settings on prefferences screen.

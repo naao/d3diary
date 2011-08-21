@@ -24,6 +24,9 @@ define("_MB_D3DIARY_ORDERREPLIESD","コメント数降順");
 define("_MB_D3DIARY_ORDERVOTESD","投票数降順"); 
 define("_MB_D3DIARY_ORDERPOINTSD","得票総計降順"); 
 define("_MB_D3DIARY_ORDERAVERAGED","得票平均降順"); 
+define("_MB_D3DIARY_ORDERCOMTIMED","コメント新着順"); 
+define("_MB_D3DIARY_ORDERCOMNUMS","コメント数降順"); 
+define("_MB_D3DIARY_FSTRIPTAG","強制的にタグ・改行を除去する"); 
 
 define("_MB_D3DIARY_LIMITSELF","表示対象の限定"); 
 define("_MB_D3DIARY_LIMITSELF_NO","限定なし、各人ページ表示時は自動切替"); 

@@ -189,6 +189,7 @@ if( !empty($post_val['phandle']) && $action == 5 && $diary->bid>0 ) {
 // STEP 2: get registered diary and photos if existed
 	if($diary->bid>0){
 		$diary->readdb($mydirname);
+		if ( $eparam['is_prev'] == 1 ) { $diary->diary = $func->getpost_param('diary'); }
 		// get registered photos
 		list( $yd_data['photo_num'] , $yd_photo )= d3diary_readdb_photo($mydirname);
 		if ( 0 < count($form_photos) ) { d3diary_swap_photoinfo (); }
@@ -709,6 +710,9 @@ function d3diary_readdb_photo($mydirname){
 			} elseif ( !empty($form_photos[$i]['info']) and ($form_photos[$i]['pid'] != $del_pid) ) {
 				$_photo['pinfo']   = $myts->makeTboxData4Show( $form_photos[$i]['info'] );
 				$_photo['info']    = $func->stripPb_Tarea( $form_photos[$i]['info'] );
+			}
+			if ( strstr( $diary->diary, $_photo['pname'] )) {
+				$_photo['body_in'] = true;
 			}
 			$rtn_photo[] = $_photo;
 			$i++;

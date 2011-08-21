@@ -24,6 +24,9 @@ define("_MB_D3DIARY_ORDERREPLIESD","Most commented is the first");
 define("_MB_D3DIARY_ORDERVOTESD","Most voted is the first"); 
 define("_MB_D3DIARY_ORDERPOINTSD","Most scored is the first"); 
 define("_MB_D3DIARY_ORDERAVERAGED","The highest average of scores is the first");
+define("_MB_D3DIARY_ORDERCOMTIMED","New comment first"); 
+define("_MB_D3DIARY_ORDERCOMNUMS","Many comments first"); 
+define("_MB_D3DIARY_FSTRIPTAG","Force eliminate tags and breaks"); 
 
 define("_MB_D3DIARY_LIMITSELF","Show limitation"); 
 define("_MB_D3DIARY_LIMITSELF_NO","No limit, auto change to each personal page"); 

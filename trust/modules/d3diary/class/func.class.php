@@ -1542,7 +1542,6 @@ function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
 	$_pos = mb_strpos($tex, $pbreak, 0, $_enc);
 	//$_pos = mb_strpos($tex, $pbreak, 0);
 
-	//$pattern = array('/\[\[YT:([0-9a-z_-]+)\]\]/i','/\[\[ND:([\w\-]+)\]\]/i');
 	$pattern = array('/\[\[YT:([0-9a-z_\-]+)\]\]/i','/\[\[ND:([0-9a-z_\-]+)\]\]/i');
  	$replacement = array('','');
  	$tex = preg_replace($pattern,$replacement,$tex);
@@ -1579,6 +1578,11 @@ function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
 		$t_conv = $this->myts->displayTarea($_temptex,0,1,1,1,1);
 	}
     }
+
+	$pattern = array('/\[clearfloat\]/i');
+ 	$replacement = array("<div style='clear:both;'></div>");
+ 	$t_conv = preg_replace($pattern,$replacement,$t_conv);
+
 	return $t_conv;
 }
 
@@ -1592,8 +1596,7 @@ function stripPb_Tarea($tex, $html = 0)
 		$t_conv = $this->myts->displayTarea($tex,0,1,1,1,1);
 	}
 
-	//$pattern ='/\[\[YT:([\w\-]+)\]\]/i';
-	$pattern = array('/\[\[YT:([0-9a-z_-]+)\]\]/i','/\[\[ND:([0-9a-z_-]+)\]\]/i');
+	$pattern = array('/\[\[YT:([0-9a-z_-]+)\]\]/i','/\[\[ND:([0-9a-z_-]+)\]\]/i','/\[clearfloat\]/i');
 	$replacement1 = '<br /><object width="425" height="344">'.
 		'<param name="movie" value="http://www.youtube.com/v/$1&hl=ja&fs=1"></param>'.
 		'<param name="allowFullScreen" value="true"></param>'.
@@ -1601,7 +1604,7 @@ function stripPb_Tarea($tex, $html = 0)
 		'type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed>'.
 		'</object><br />';
 	$replacement2 = '<br /><script type="text/javascript" src="http://ext.nicovideo.jp/thumb_watch/$1?w=490&h=307"></script><noscript><a href="http://www.nicovideo.jp/watch/$1">Jump to Video</a></noscript><br />';
-	$replacement = array( $replacement1, $replacement2 );
+	$replacement = array( $replacement1, $replacement2, "<div style='clear:both;'></div>");
  	$t_conv = preg_replace($pattern,$replacement,$t_conv);
  	$_tex = str_replace($this->d3dConf->pbreak,"",$t_conv);
 

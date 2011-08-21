@@ -124,7 +124,14 @@ define("_MD_EDIT_PINFO","説明の編集");
 define("_MD_PMOVE","添付先の移動");
 define("_MD_ROTATE_NOPREVIEW","プレビュー画像があるためこの操作はできません。\\n一旦確定送信後に、再度操作してください。");
 define("_MD_ROTATE_NOPREVIEW2","プレビュー画像の回転はできません。\\n一旦確定送信後に、再度操作してください。");
-define("_MD_FILE_NOCHECK","操作対処の画像が選択されていません。");
+define("_MD_FILE_NOCHECK","操作対象の画像が選択されていません。");
+define("_MD_P_INSOPEN","画像の本文挿入操作ブロックの開閉");
+define("_MD_P_WITHINFO","添え書き文も追加");
+define("_MD_P_INSLEFT","左");
+define("_MD_P_INSCENTER","中央");
+define("_MD_P_INSRIGHT","右");
+define("_MD_P_CLEARFLOAT","[clearfloat]タグ(文字の回り込み解除)を挿入");
+define("_MD_P_INSSELECT","本文挿入画像の選択");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERROR:入力内容を確認してください。</font>");

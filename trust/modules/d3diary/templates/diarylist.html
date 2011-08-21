@@ -150,7 +150,7 @@
 	<{if $mod_config.use_avatar}><img src="<{$entry.avatarurl}>"><{/if}>
 	</div>
 	<div class="thumb">
-	<{if $entry.photo|count_characters>0}>
+	<{if $entry.photo|count_characters>0 && $entry.photo_body_in != true}>
 	<img src="<{$xoops_url}>/modules/<{$mydirname}>/include/imgresize.php?maxsize=120&amp;fname=modules/<{$mydirname}>/upimg/t_<{$entry.photo}>" />
 	<{/if}>
 	</div>

@@ -156,8 +156,12 @@ if($yd_data['cid']>0){
 		$yd_photos   = array() ;
 		if ( 0 < $yd_data['photo_num'] ) {
 			foreach ( $photo->photos[$yd_data['bid']] as $_photo) {
+				// hide photos which is inserted diray body text
 				if (!empty( $_photo['info'] )) {
 					$_photo['info']    = $func->stripPb_Tarea( $_photo['info'] );
+				}
+				if ( strstr( $yd_data['diary'], $_photo['pname'] )) {
+					$_photo['body_in'] = true;
 				}
 				$rtn_photo[] = $_photo;
 			}

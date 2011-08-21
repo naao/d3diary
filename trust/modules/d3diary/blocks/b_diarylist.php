@@ -19,6 +19,7 @@ function b_d3diary_list_show( $options ){
 		$params['categories'] = empty( $options[7] ) ? array() : explode( ',', $options[7] ) ;
 		$params['tags'] = empty( $options[8] ) ? array() : explode( ',', $options[8] ) ;
 	}
+	$f_strip_tag = empty( $options[9] ) ? false : true ;	// forse strip tags or not in body text
 
 	if( preg_match( '/[^0-9a-zA-Z_-]/' , $mydirname ) ) die( 'Invalid mydirname' ) ;
 	$constpref = '_MB_' . strtoupper( $mydirname ) ;
@@ -49,10 +50,11 @@ function b_d3diary_list_show( $options ){
 	
 	// comment counts, newest comments
 	list($yd_comment,$yd_com_key) = $func->get_commentlist(0,$uid,100,true,false);
+	$comnums = array();
 	if(!empty($yd_comment)){
 		foreach( $yd_comment as $_com){
 			$i = (int)$_com['bid'];
-			$entry[$i]['com_num'] = $_com['com_num'];
+			$entry[$i]['com_num'] = (int)$_com['com_num'];
 			$entry[$i]['unique_path'] = $_com['unique_path'];
 			$entry[$i]['com_uname'] = $myts->makeTboxData4Show($_com['uname']);
 			$entry[$i]['com_name'] = $myts->makeTboxData4Show($_com['name']);
@@ -62,9 +64,9 @@ function b_d3diary_list_show( $options ){
 		//echo "<br />"; var_dump($i); var_dump($mydirname); var_dump($entry[$i]); echo "<br />";echo "<br />";
 		}
 	}
-
 	$entry_temp = array();
-	if (!empty($mytstamp) && !empty($entry)) {
+	if ( ( $now_order=="time" && !empty($mytstamp) || $now_order=="com_time" || $now_order=="com_nums" ) && !empty($entry) ) {
+		// sort by entry time
 		array_multisort($mytstamp, SORT_DESC, $entry);
 		$i=0; $j=0;
 		$usrcnt = array();
@@ -75,17 +77,29 @@ function b_d3diary_list_show( $options ){
 		    if(isset($usrcnt[$e['uid']])){
 			if( $usrcnt[$e['uid']]<$max_entryby_person ){
 				$entry_temp[$j] = $e;
-				$entry_temp[$j]['diary'] = $func->substrTarea($e['diary'], $e['dohtml'], $max_length, true);
+				$com_datetime[$j] = !empty($entry_temp[$j]['com_datetime']) ? $entry_temp[$j]['com_datetime'] : 0 ;
+				$com_nums[$j] = !empty($entry_temp[$j]['com_num']) ? $entry_temp[$j]['com_num'] : 0 ;
+				if($use_detail !== true){ $entry_temp[$j]['diary']=""; }
+				else { $entry_temp[$j]['diary'] = $func->substrTarea($e['diary'], $e['dohtml'], $max_length, $f_strip_tag); }
 				$usrcnt[$e['uid']] ++;
 				$j++;
 			}
 		    } else {
 				$entry_temp[$j] = $e;
-				$entry_temp[$j]['diary'] = $func->substrTarea($e['diary'], $e['dohtml'], $max_length, true);
+				$com_datetime[$j] = !empty($entry_temp[$j]['com_datetime']) ? $entry_temp[$j]['com_datetime'] : 0 ;
+				$com_nums[$j] = !empty($entry_temp[$j]['com_num']) ? $entry_temp[$j]['com_num'] : 0 ;
+				if($use_detail !== true){ $entry_temp[$j]['diary']=""; }
+				else {$entry_temp[$j]['diary'] = $func->substrTarea($e['diary'], $e['dohtml'], $max_length, $f_strip_tag); }
 				$usrcnt[$e['uid']] = 1;
 				$j++;
 		    }
 				$i++;
+		}
+		// sort by last comment time
+		if ( $now_order=="com_time" && !empty($com_datetime) ) {
+				array_multisort($com_datetime, SORT_DESC, $entry_temp);
+		} elseif ( $now_order=="com_nums" && !empty($com_datetime) ) {
+				array_multisort($com_nums, SORT_DESC, $entry_temp);
 		}
 	}
 		$lang = array();
@@ -127,12 +141,15 @@ function b_d3diary_list_edit( $options )
 	$max_entryby_person = empty( $options[6] ) ? 3 : intval( $options[6] ) ;
 	$categories = empty( $options[7] ) ? "" : $options[7] ;
 	$tags = empty( $options[8] ) ? "" : $options[8] ;
+	$f_strip_tag = empty( $options[9] ) ? false : true ;	// forse strip tags or not in body text
 
 	if( preg_match( '/[^0-9a-zA-Z_-]/' , $mydirname ) ) die( 'Invalid mydirname' ) ;
 
 	$orders = array(
 		'time' => _MB_D3DIARY_ORDERTIMED ,
-		'posted' => _MB_D3DIARY_ORDERPOSTED ,
+	//	'posted' => _MB_D3DIARY_ORDERPOSTED ,
+		'com_time' => _MB_D3DIARY_ORDERCOMTIMED ,
+		'com_nums' => _MB_D3DIARY_ORDERCOMNUMS ,
 	) ;
 	
 	$order_options = '' ;
@@ -141,12 +158,20 @@ function b_d3diary_list_edit( $options )
 		$order_options .= "<option value='$order_value' $selected>$order_name</option>\n" ;
 	}
 
-	if( $use_detail ) {
+	if( $use_detail === true ) {
 		$use_detailyes_checked = "checked='checked'" ;
 		$use_detailno_checked = "" ;
 	} else {
 		$use_detailno_checked = "checked='checked'" ;
 		$use_detailyes_checked = "" ;
+	}
+	
+	if( $f_strip_tag === true ) {
+		$f_strip_tagyes_checked = "checked='checked'" ;
+		$f_strip_tagno_checked = "" ;
+	} else {
+		$f_strip_tagno_checked = "checked='checked'" ;
+		$f_strip_tagyes_checked = "" ;
 	}
 
 	$form = "
@@ -174,6 +199,10 @@ function b_d3diary_list_edit( $options )
 		<br />
 		<label for='o8'>"._MB_D3DIARY_QUERY_TAG."</label>&nbsp;:
 		<input type='text' size='60' name='options[8]' id='o8' value='".htmlspecialchars($tags,ENT_QUOTES)."' />
+		<br />
+		<label for='o9'>"._MB_D3DIARY_FSTRIPTAG."</label>&nbsp;:
+		<input type='radio' name='options[9]' id='o91' value='1' $f_strip_tagyes_checked /><label for='o91'>"._YES."</label>
+		<input type='radio' name='options[9]' id='o90' value='0' $f_strip_tagno_checked /><label for='o90'>"._NO."</label>
 		<br />
 \n" ;
 	return $form;

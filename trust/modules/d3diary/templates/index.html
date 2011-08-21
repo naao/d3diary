@@ -160,6 +160,7 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <{if $entry.photo.0.pname|count_characters>0}>
 <div align="center">
  <{foreach from=$entry.photo key="num2" item="photo" name="list"}>
+  <{if $photo.body_in != true}>
   <{if $num2<2}>
   <{if $entry.photo|@count==1}>
     <div class="d3dPhotoCenter">
@@ -172,6 +173,7 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
   <img src="<{$xoops_url}>/modules/<{$mydirname}>/upimg/<{$photo.thumbnail}>" style="border:1px solid gray;" /></a>
   <br/><{$photo.info|truncate:30}>
   </div>
+  <{/if}>
   <{/if}>
 <{/foreach}>
 </div>

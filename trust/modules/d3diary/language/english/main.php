@@ -125,6 +125,13 @@ define("_MD_PMOVE","Move diary attached");
 define("_MD_ROTATE_NOPREVIEW","This operation cannot be done because there is a preview image. \\nPlease operate it again once after submit transmitting.");
 define("_MD_ROTATE_NOPREVIEW2","You can not rotate preview images. \\nPlease operate it again once after submit transmitting.");
 define("_MD_FILE_NOCHECK","No images is selected to be operated.");
+define("_MD_P_INSOPEN","Open/Close block of insertion of image operation to body");
+define("_MD_P_WITHINFO","Add also photo info");
+define("_MD_P_INSLEFT","left");
+define("_MD_P_INSCENTER","center");
+define("_MD_P_INSRIGHT","right");
+define("_MD_P_CLEARFLOAT","Insert [clearfloat] tag into textarea");
+define("_MD_P_INSSELECT","Select for insertion to body text");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERROR: Check the content you input.</font>");
