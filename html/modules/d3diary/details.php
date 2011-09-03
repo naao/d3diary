@@ -10,7 +10,7 @@ $mydirurl = XOOPS_URL.'/modules/'.$mydirname;
 require $mydirpath.'/mytrustdirname.php' ; // set $mytrustdirname
 
 $_GET['page'] = 'detail';
-$_GET['bid'] = $_GET['blog_id'];	// for weblogD3 wrapper
+$_GET['bid'] = isset($_GET['blog_id']) ? $_GET['blog_id'] : $_GET['bid'] ; // for weblogD3 wrapper
 
 require XOOPS_TRUST_PATH.'/modules/'.$mytrustdirname.'/main.php' ;
 ?>
