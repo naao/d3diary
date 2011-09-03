@@ -2246,17 +2246,14 @@ function &get_d3com_object( $forum_dirname, $external_link_format )
 }
 
  // a class for Attachfile plugin D3comment Authorization
-if( ! class_exists( 'd3dD3commentObj' ) ) {
+if( ! class_exists( 'd3diaryD3commentObj' ) ) {
 class d3diaryD3commentObj {
 
 var $d3comObj = null ;
 
-function d3diaryD3commentObj($params )
+public function __construct( $params )
 //  $params['forum_dirname'] , $params['external_dirname'] , $params['classname'] , $params['external_trustdirname']
 {
-	//$this->mPlug = & $parentObj;
-	//$mytrustdirpath = !empty($params['external_trustdirname']) ? XOOPS_TRUST_PATH.'/modules/'.$params['external_trustdirname'] : XOOPS_TRUST_PATH.'/modules/d3forum' ;
-
 	$mytrustdirpath = XOOPS_TRUST_PATH.'/modules/d3forum';
 
 	if( empty( $params['classname'] ) ) {
