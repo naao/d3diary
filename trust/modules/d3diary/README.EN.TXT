@@ -100,6 +100,13 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2011/ 9/14  ver0.22a
+	- On detail view, overrides the meta tag 'description' of html_header by entry's detail.
+	- Fixed bug of wrapper file for inport user from d3blog was not effective.
+	- Fixed bug of redirect was not correct from index page when using each personal external blog
+	  on the personal whole setting.(thx taroj)
+	- Fixes some other items.
+
 2011/ 8/21  ver0.22  (Requires module update)
 	- In diarylist block, added two sort order, new comment first and comment numbers .
 	  Both are only for sorting after licked up new diaries.

@@ -64,7 +64,7 @@ if ( $yd_param['friend']==1 && $req_uid==0 ) {
 }
 
 if($dcfg->blogtype!=0){
-    header("Location:".  XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=other&req_uid='.$uid);
+    header("Location:".  XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=other&req_uid='.$req_uid);
 	exit();
 }
 

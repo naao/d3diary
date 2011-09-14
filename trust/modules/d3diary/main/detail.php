@@ -264,6 +264,8 @@ if($mod_config['menu_layout']<=1){
 	$yd_comment=""; $yd_monlist=""; $yd_monthnav=""; $yd_counter="";
 }
 
+ 	$d3diary_meta_description = preg_replace('/(\r\n|\n\r|\n|\r|\t)/i','',$func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , true, "" ));
+
 	$xoopsTpl->assign(array(
 			"yd_uid" => $diary->uid,
 			"yd_uname" => $yd_uname,
@@ -304,6 +306,7 @@ if($mod_config['menu_layout']<=1){
 			"xoops_breadcrumbs" => $breadcrumbs,
 			"xoops_module_header" => 
 				$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
+			"xoops_meta_description" => $d3diary_meta_description,
 			"mod_config" =>  $mod_config
 			));
 
