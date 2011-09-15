@@ -36,6 +36,8 @@ if( $d3dConf->include_footer == true ) {
 			$xclRoot =& XCube_Root::getSingleton();
 			$headerScript = $xclRoot->mContext->getAttribute('headerScript');
 			$headerScript->addMeta('description', $d3diary_meta_description);
+		} elseif (is_object($xoTheme)) {
+			$xoTheme->addMeta('meta', 'description', $d3diary_meta_description);
 		}
 	}
 	
