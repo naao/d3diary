@@ -295,8 +295,5 @@ function d3diary_assign_category_foredit2($mydirname){
 		return $neworder ;
 	}
 
-
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>
 	

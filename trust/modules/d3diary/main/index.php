@@ -726,8 +726,6 @@ $func->update_other_cat($req_uid);
 	$d3dConf->debug_appendtime('index');
 	if($mPerm->isadmin==true && $d3dConf->debug_mode==1){$xoopsTpl->assign("debug_time", $d3dConf->debug_gettime());}
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 // ***
 // *** mailpost function (ver0.16~) ***
 // ***

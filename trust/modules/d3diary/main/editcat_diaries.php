@@ -71,7 +71,4 @@ if($editperm != 1) {
 
 	redirect_header("index.php?req_uid=".$req_uid."&mode=category&cid=".$swap_cid,2,_MD_CATEGORY_UPDATED);
 
-
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>

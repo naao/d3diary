@@ -19,6 +19,8 @@ if( empty( $page ) ) {
 	$page = @$regs[1] ;
 }
 
+$d3diary_meta_description = '';
+
 // fork each pages
 if( file_exists( "$mytrustdirpath/main/$page.php" ) ) {
 	include "$mytrustdirpath/main/$page.php" ;
@@ -26,5 +28,15 @@ if( file_exists( "$mytrustdirpath/main/$page.php" ) ) {
 	include "$mytrustdirpath/main/index.php" ;
 }
 
+	// For XCL 2.2 Call addMeta
+	if ($d3diary_meta_description) {
+		if (defined('LEGACY_MODULE_VERSION') && version_compare(LEGACY_MODULE_VERSION, '2.2', '>=')) {
+			$xclRoot =& XCube_Root::getSingleton();
+			$headerScript = $xclRoot->mContext->getAttribute('headerScript');
+			$headerScript->addMeta('description', $d3diary_meta_description);
+		}
+	}
+
+include_once XOOPS_ROOT_PATH.'/footer.php';
 
 ?>

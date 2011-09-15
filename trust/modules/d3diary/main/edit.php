@@ -647,8 +647,6 @@ include XOOPS_ROOT_PATH."/header.php";
 	if(!empty($_tempGperm['allow_ppermission']) && ( $_oe == 20 ))
 		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 // 
 // private functions
 //

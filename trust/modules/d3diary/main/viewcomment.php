@@ -415,6 +415,4 @@ if ($req_uid>0){
 			"mod_config" =>  $mod_config
 			));
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>

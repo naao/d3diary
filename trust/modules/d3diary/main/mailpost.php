@@ -171,8 +171,6 @@ require_once XOOPS_ROOT_PATH.'/header.php';
 	if(!empty($_tempGperm['allow_ppermission']) && ( $_oe == 20 ))
 		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 function d3diary_reg_time($published){
 		$pub = array_map('intval', $published);
 		$tmp_time = mktime($pub['Time_Hour'],$pub['Time_Minute'],0,$pub['Date_Month'],$pub['Date_Day'],$pub['Date_Year']);

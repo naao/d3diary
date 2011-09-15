@@ -539,6 +539,4 @@ function d3diary_assign_common_category ($mydirname) {
 	return $catopts;
 }
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>

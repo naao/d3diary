@@ -126,6 +126,4 @@ case _D3DIARY_EDITTAG_ADD:
 default:
 }
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>

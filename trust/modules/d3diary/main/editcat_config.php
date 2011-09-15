@@ -210,8 +210,6 @@ $xoopsTpl->assign(array(
 		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
 	
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 // newentry¹¹¿·
 function d3diary_update_newentry_cat($mydirname, $uid, $cid)
 {

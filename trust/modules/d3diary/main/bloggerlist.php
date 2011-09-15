@@ -73,6 +73,4 @@ $d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XO
 			'xoops_breadcrumbs' => $breadcrumbs
 		));
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>

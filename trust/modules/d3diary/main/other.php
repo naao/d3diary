@@ -307,8 +307,6 @@ if ($d3dConf->dcfg->uid>0){
 
 $func->countup_diary($d3dConf->dcfg->uid);
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 function yr_strtotime($tstamp){
 		return strtotime($tstamp);
 }

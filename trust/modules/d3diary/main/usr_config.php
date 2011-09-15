@@ -237,6 +237,4 @@ function d3diary_check_existmail($mydirname, $uid, $_address)
 	return true;
 }
 
-include_once XOOPS_ROOT_PATH.'/footer.php';
-
 ?>
