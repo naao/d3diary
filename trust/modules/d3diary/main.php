@@ -28,6 +28,8 @@ if( file_exists( "$mytrustdirpath/main/$page.php" ) ) {
 	include "$mytrustdirpath/main/index.php" ;
 }
 
+if( $d3dConf->include_footer == true ) {
+
 	// For XCL 2.2 Call addMeta
 	if ($d3diary_meta_description) {
 		if (defined('LEGACY_MODULE_VERSION') && version_compare(LEGACY_MODULE_VERSION, '2.2', '>=')) {
@@ -36,7 +38,8 @@ if( file_exists( "$mytrustdirpath/main/$page.php" ) ) {
 			$headerScript->addMeta('description', $d3diary_meta_description);
 		}
 	}
-
-include_once XOOPS_ROOT_PATH.'/footer.php';
+	
+	include_once XOOPS_ROOT_PATH.'/footer.php';
+}
 
 ?>

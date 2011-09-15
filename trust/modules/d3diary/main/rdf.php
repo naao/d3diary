@@ -10,6 +10,8 @@ $d3dConf =& D3diaryConf::getInstance($mydirname);
 $func =& $d3dConf->func ;
 $mod_config =& $d3dConf->mod_config ;
 
+$d3dConf->include_footer = false ;
+
 $uid = 0; $uname = "";
 $_uid = $func->getpost_param('uid');
 if (!empty($_uid)) {

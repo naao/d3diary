@@ -3,6 +3,7 @@
 error_reporting(0);
 
 include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+$d3dConf->include_footer = false ;
 
 $q = (isset($_GET['q']))? (string)$_GET['q'] : "";
 $enc = (isset($_GET['e']))? (string)$_GET['e'] : "";

@@ -18,6 +18,7 @@ var $uid = 0 ; 		// intval
 var $uname = null ;
 var $req_uid = 0 ; 	// intval
 var $page = null ;
+var $include_footer = true ;
 var $params = array() ;	// photo upload dir or some parameters
 var $q_mode = null ;
 var $q_cid = 0 ;
