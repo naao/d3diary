@@ -30,13 +30,13 @@ if( file_exists( "$mytrustdirpath/main/$page.php" ) ) {
 
 if( is_object($d3dConf) ) {
 	if( $d3dConf->include_footer == true ) {
-		// For XCL 2.2 Call addMeta
 		if ($d3diary_meta_description) {
+			// For XCL 2.2 Call addMeta
 			if (defined('LEGACY_MODULE_VERSION') && version_compare(LEGACY_MODULE_VERSION, '2.2', '>=')) {
 				$xclRoot =& XCube_Root::getSingleton();
 				$headerScript = $xclRoot->mContext->getAttribute('headerScript');
 				$headerScript->addMeta('description', $d3diary_meta_description);
-			} elseif (is_object($xoTheme)) {
+			} elseif (isset($xoTheme) && is_object($xoTheme)) {	// for XOOPS 2.3 over
 				$xoTheme->addMeta('meta', 'description', $d3diary_meta_description);
 			}
 		}
