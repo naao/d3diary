@@ -24,6 +24,9 @@ define("_MB_D3DIARY_ORDERREPLIESD","Mais comentadas em primeiro");
 define("_MB_D3DIARY_ORDERVOTESD","Mais votadas em primeiro");
 define("_MB_D3DIARY_ORDERPOINTSD","Mais pontuadas em primeiro");
 define("_MB_D3DIARY_ORDERAVERAGED","Maior média de pontuação em primeiro");
+define("_MB_D3DIARY_ORDERCOMTIMED","Comentário novo primeiro"); 
+define("_MB_D3DIARY_ORDERCOMNUMS","Muitos comentários primeiro"); 
+define("_MB_D3DIARY_FSTRIPTAG","Força elimina etiquetas e fraturas"); 
 
 define("_MB_D3DIARY_LIMITSELF","Mostrar limitação");
 define("_MB_D3DIARY_LIMITSELF_NO","Sem limite. Mudança automática para cada página pessoal");

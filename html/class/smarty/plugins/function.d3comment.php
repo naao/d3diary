@@ -39,7 +39,7 @@ function smarty_function_d3comment($params, &$smarty)
 	}
 
 	if( class_exists( $classname ) ) {
-		$d3com =& new $classname( '' , $mydirname , $mytrustdirname ) ;
+		$d3com = new $classname( '' , $mydirname , $mytrustdirname ) ;
 		$d3com->setSmarty( $smarty ) ;
 		switch( $params['mode'] ) {
 			case 'count' :

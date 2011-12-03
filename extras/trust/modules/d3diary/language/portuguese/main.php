@@ -125,6 +125,13 @@ define("_MD_PMOVE","Diário de movimento prendeu");
 define("_MD_ROTATE_NOPREVIEW","Esta operação não pode ser feita porque há uma imagem de pré-estréia. \\nPlease operam novamente uma vez isto depois de submeta transmitindo.");
 define("_MD_ROTATE_NOPREVIEW2","O senhor não pode girar imagens de pré-estréia. \\nPlease operam novamente uma vez isto depois de submeta transmitindo.");
 define("_MD_FILE_NOCHECK","Nenhuma imagem é selecionada para ser operada.");
+define("_MD_P_INSOPEN","Bloco aberto e Íntimo de inserção de operação de imagem para corpo");
+define("_MD_P_WITHINFO","Também some info de fotografia");
+define("_MD_P_INSLEFT","esquerda");
+define("_MD_P_INSCENTER","centro");
+define("_MD_P_INSRIGHT","direito");
+define("_MD_P_CLEARFLOAT","Insira [clearfloat] etiqueta em textarea");
+define("_MD_P_INSSELECT","Selecione para inserção a texto de corpo");
 
 //error
 define("_MD_INPUT_ERR","<font color='red'>ERRO: Cheque o conteúdo que você informou.</font>");

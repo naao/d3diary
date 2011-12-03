@@ -149,7 +149,7 @@ class D3diary_Mail_mimeDecode extends PEAR
     function D3diary_Mail_mimeDecode($input)
     {
         list($header, $body)   = $this->_splitBodyHeader($input);
-
+	//var_dump("Header:<br />".$header."<br /><br /><br />"); var_dump("Body:<br />".$body."<br /><br /><br />");
         $this->_input          = $input;
         $this->_header         = $header;
         $this->_body           = $body;

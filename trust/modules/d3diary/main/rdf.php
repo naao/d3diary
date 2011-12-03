@@ -9,6 +9,7 @@ $category =& D3diaryCategory::getInstance();
 $d3dConf =& D3diaryConf::getInstance($mydirname);
 $func =& $d3dConf->func ;
 $mod_config =& $d3dConf->mod_config ;
+$mPerm =& $d3dConf->mPerm ;
 
 $d3dConf->include_footer = false ;
 
@@ -79,6 +80,12 @@ $tpl = new XoopsTpl();
 	$now = date( "Y-m-d H:i:s" );
 	$whr_ctime = " AND create_time<'".$now."'";
 
+	if( $mPerm->exerpt_ok_bymod == true ) {
+		$whr_openarea = "1 ";
+	} else {
+		$whr_openarea = "(d.openarea='0' OR d.openarea IS NULL) AND (cfg.openarea='0' OR cfg.openarea IS NULL) 
+				AND (c.openarea='0' OR c.openarea IS NULL) ";
+	}
 	// query
 	$sql = "SELECT d.uid AS uid, d.bid AS bid, d.title AS title, d.diary AS diary, d.update_time AS update_time,
 			d.create_time AS create_time, d.dohtml as dohtml, u.uname, u.name, c.cid AS cid, c.cname AS cname 
@@ -87,8 +94,7 @@ $tpl = new XoopsTpl();
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_config'). " cfg ON d.uid=cfg.uid 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
 			ON (d.cid=c.cid AND (d.uid=c.uid OR c.uid=0)) 
-			WHERE (d.openarea='0' OR d.openarea IS NULL) AND (cfg.openarea='0' OR cfg.openarea IS NULL) 
-			AND (c.openarea='0' OR c.openarea IS NULL) ".$whr_cid.$whr_ctime;
+			WHERE ".$whr_openarea.$whr_cid.$whr_ctime;
 
 	if($uid>0){
 		$sql .= " AND d.uid='".$uid."' ";
