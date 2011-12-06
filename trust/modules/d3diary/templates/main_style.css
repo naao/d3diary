@@ -309,7 +309,7 @@ div.boxdate_base {
 
 span.boxdate {
 	width: 60px;
-	height: 100%;
+/*	height: 100%; */
 	font-size: 12px;
 	font-family: Arial;
 	display: block;
@@ -403,7 +403,7 @@ span.boxdate div.itemFoot span.itemText {
 /* boxdate_s of Index,Diarylist,OtherBlog pages */
 span.boxdate_s {
 	width: 50px;
-	height: 100%;
+/*	height: 100%; */
 	font-size: 12px;
 	font-family: Arial;
 	display: block;
