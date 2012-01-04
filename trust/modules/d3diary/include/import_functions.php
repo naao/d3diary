@@ -45,49 +45,49 @@ if ( ! function_exists('d3diary_import_from_minidiary') ) {
 		$to_table = $db->prefix( $mydirname.'_category' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (uid,cid,cname,corder,blogtype,blogurl,rss,openarea) SELECT uid,cid,cname,corder,'0','','','0' FROM `$from_table`" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."1" ) ;
 
 		// cnt 
 		$from_table = $db->prefix( 'yd_cnt' ) ;
 		$to_table = $db->prefix( $mydirname.'_cnt' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (uid,cnt,ymd) SELECT uid,cnt,ymd FROM `$from_table` WHERE ymd='1111-11-11'" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."2" ) ;
 
 		// cnt_ip 
 		$from_table = $db->prefix( 'yd_cnt_ip' ) ;
 		$to_table = $db->prefix( $mydirname.'_cnt_ip' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (uid,accip,acctime) SELECT uid,accip,acctime FROM `$from_table`" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."3" ) ;
 
 		// config 
 		$from_table = $db->prefix( 'yd_config' ) ;
 		$to_table = $db->prefix( $mydirname.'_config' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
-		$irs = $db->query( "INSERT INTO `$to_table` (uid,blogtype,blogurl,rss,openarea,mailpost,address,keep,uptime,updated) SELECT uid,blogtype,blogurl,rss,openarea,mailpost,address,keep,uptime,updated FROM `$from_table`" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		$irs = $db->query( "INSERT INTO `$to_table` (uid,blogtype,blogurl,rss,openarea,mailpost,address,keep,uptime,updated) SELECT uid,blogtype,blogurl,rss,openarea,'0','','0','','' FROM `$from_table`" ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."4" ) ;
 
 		// diary 
 		$from_table = $db->prefix( 'yd_diary' ) ;
 		$to_table = $db->prefix( $mydirname.'_diary' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (bid,cid,uid,title,diary,update_time,create_time,openarea) SELECT bid,cid,uid,title,diary,update_time,create_time,'0' FROM `$from_table`" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."5" ) ;
 
 		// newentry 
 		$from_table = $db->prefix( 'yd_newentry' ) ;
 		$to_table = $db->prefix( $mydirname.'_newentry' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (uid,cid,title,url,create_time,blogtype,diary) SELECT uid,'0',title,url,create_time,blogtype,diary FROM `$from_table`" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."6" ) ;
 
 		// photo 
 		$from_table = $db->prefix( 'yd_photo' ) ;
 		$to_table = $db->prefix( $mydirname.'_photo' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (uid,bid,pid,ptype,tstamp) SELECT uid,bid,pid,ptype,tstamp FROM `$from_table`" ) ;
-		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
+		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR."7" ) ;
 
 		// deleted dayly cout up 
 		$db->queryF("DELETE FROM ".$db->prefix($mydirname."_cnt")." WHERE ymd<>'1111-11-11'");
