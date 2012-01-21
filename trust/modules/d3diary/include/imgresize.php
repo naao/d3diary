@@ -1,7 +1,11 @@
 <?php
 // image size conversion
 
-$cachedir=XOOPS_ROOT_PATH."/modules/".$mydirname."/cache/";
+$mytrustdirpath = dirname(dirname( __FILE__ )) ;
+require_once $mytrustdirpath."/class/d3diaryConf.class.php";
+$d3dConf = D3diaryConf::getInstance($mydirname, 0, "imgresize");
+
+$cachedir = $d3dConf->params['cachedir'];
 
 // check input
 if(empty($_GET['fname']) or preg_match ("/\.\.\//",$_GET['fname'])){
