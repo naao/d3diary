@@ -1,6 +1,4 @@
 <?php
-include_once XOOPS_ROOT_PATH."/class/xoopstree.php";
-
 class D3diaryTag
 {
 	var $tag_id;

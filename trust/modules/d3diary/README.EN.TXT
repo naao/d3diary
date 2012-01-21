@@ -6,11 +6,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 ** Necessary environment
 -Core
 -- XOOPS 2.0.16a-JP, JPEx
--- XOOPS Cube Legacy（checked on 2.1.8）
+-- XOOPS Cube Legacy（checked on 2.1.8, 2,2.1）
 -PHP
 -- PHP5.1 over
 -MySQL
--- MySQL-4.0.x or over (detail is not sure)
+-- MySQL-5.0.x or over (detail is not sure)
 -- (MyISAM)
 -Altsys is necessary
 
@@ -100,6 +100,14 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2012/ 1/    ver0.23
+	- show title and excerpt for rss feed without authority on setting show excerpt by preference.
+	- Added authority check of upload directory in prefference. (thx nao-pon)
+	- Fixed bug of piCal monthly plugin shows doubled link on final date to next month.
+	- Fixed import fault from minidiary (thx funnypainter)
+	- Changed smarty truncate plugin on index list (image info) to mb_truncate.
+	- Added GTicket valication on edit screen and timeout setting on preferences.
+
 2011/ 9/14  ver0.22a
 	- On detail view, overrides the meta tag 'description' of html_header by entry's detail.
 	- Fixed bug of wrapper file for inport user from d3blog was not effective.

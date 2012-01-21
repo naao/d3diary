@@ -293,4 +293,14 @@ define("_MD_RTNTO_NEWDIARY","日記一覧に戻る");
 define("_MD_DSC","降順");
 define("_MD_ASC","昇順");
 
+// GTicketエラー関連
+define("_MD_GTICKET_ERR_GENERAL","チケットエラー");
+define("_MD_GTICKET_ERR_NOSTUBS","ページ遷移が異常です");
+define("_MD_GTICKET_ERR_NOTICKET","チケットが見つかりません");
+define("_MD_GTICKET_ERR_NOPAIR","チケットの照合エラーです");
+define("_MD_GTICKET_ERR_TIMEOUT","タイムアウトエラーです");
+define("_MD_GTICKET_ERR_AREAORREF","送信元かリファラーエラーです");
+define("_MD_GTICKET_REPOSTDSC","以下の内容を確認し、このまま再送信することもできます。<br />タイムアウトエラー時以外には２重投稿になる可能性もあります。");
+define("_MD_GTICKET_REPOST","再送信");
+
 ?>

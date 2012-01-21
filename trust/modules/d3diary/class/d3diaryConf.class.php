@@ -121,6 +121,7 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 
 	$this->params['uploaddir_abs'] = XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/upimg/';	// photo upload dir
 	$this->params['previewdir'] = 'prev/';							// photo preview dir
+	$this->params['cachedir'] = XOOPS_ROOT_PATH.'/modules/'.$mydirname.'/cache/';		// photo cache dir
 
 	//if( $caller != "xoops_uname" ) { 
 		$_year = $this->getpost_param('year');

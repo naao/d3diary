@@ -121,6 +121,8 @@ define($constpref."_BODY_HTMLEDITOR","Display HTML editor button");
 define($constpref."_BODY_HTMLEDITORDSC","Allow HTML for specific groups on 'Permission Management' tab screen, then select 'common/FCKeditor' to show FCKeditor button.");
 define($constpref.'_HTMLPR_EXCEPT','Groups can avoid purification by HTMLPurifier');
 define($constpref.'_HTMLPR_EXCEPTDSC','Post from users who are not belonged these groups will be forced to purified as sanitized HTML by HTMLPurifier in Protector>=3.14. This purification cannot work with PHP4');
+define($constpref."_GTICKET_SET_TIME","Timeout on sentry form (sec)");
+define($constpref."_GTICKET_SET_TIMEDSC","Timeout setting after displayed entry form.<br />You can repost again after timeout error.");
 
 define($constpref."_USE_UPDATEPING","Enable update ping" );
 define($constpref."_USE_UPDATEPING_DSC","Select YES for using update ping" );

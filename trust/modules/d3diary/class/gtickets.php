@@ -14,23 +14,16 @@ class XoopsGTicket {
 	{
 		global $xoopsConfig ;
 
-		// language file
-		if( defined( 'XOOPS_ROOT_PATH' ) && ! empty( $xoopsConfig['language'] ) && ! strstr( $xoopsConfig['language'] , '/' ) ) {
-			if( file_exists( dirname( dirname( __FILE__ ) ) . '/language/' . $xoopsConfig['language'] . '/gticket_messages.phtml' ) ) {
-				include dirname( dirname( __FILE__ ) ) . '/language/' . $xoopsConfig['language'] . '/gticket_messages.phtml' ;
-			}
-		}
-
 		// default messages
 		if( empty( $this->messages ) ) $this->messages = array(
-			'err_general' => 'GTicket Error' ,
-			'err_nostubs' => 'No stubs found' ,
-			'err_noticket' => 'No ticket found' ,
-			'err_nopair' => 'No valid ticket-stub pair found' ,
-			'err_timeout' => 'Time out' ,
-			'err_areaorref' => 'Invalid area or referer' ,
-			'fmt_prompt4repost' => 'error(s) found:<br /><span style="background-color:red;font-weight:bold;color:white;">%s</span><br />Confirm it.<br />And do you want to post again?' ,
-			'btn_repost' => 'repost' ,
+			'err_general' => _MD_GTICKET_ERR_GENERAL ,
+			'err_nostubs' => _MD_GTICKET_ERR_NOSTUBS ,
+			'err_noticket' => _MD_GTICKET_ERR_NOTICKET ,
+			'err_nopair' => _MD_GTICKET_ERR_NOPAIR ,
+			'err_timeout' => _MD_GTICKET_ERR_TIMEOUT ,
+			'err_areaorref' => _MD_GTICKET_ERR_AREAORREF ,
+			'fmt_prompt4repost' => '<span style="background-color:red;font-weight:bold;color:white;">%s</span><br />'. _MD_GTICKET_REPOSTDSC ,
+			'btn_repost' => _MD_GTICKET_REPOST ,
 		) ;
 	}
 
@@ -217,7 +210,7 @@ class XoopsGTicket {
 		$table .= '</table>' ;
 		$form .= $this->getTicketHtml(__LINE__,300,$area).'<input type="submit" value="'.$this->messages['btn_repost'].'" /></form>' ;
 
-		echo '<html><head><title>'.$this->messages['err_general'].'</title><style>table,td,th {border:solid black 1px; border-collapse:collapse;}</style></head><body>' . sprintf( $this->messages['fmt_prompt4repost'] , $this->getErrors() ) . $table . $form . '</body></html>' ;
+		echo '<html><head><title>'.$this->messages['err_general'].'</title><style>table,td,th {border:solid black 1px; border-collapse:collapse;}</style></head><body>' . sprintf( $this->messages['fmt_prompt4repost'] , $this->getErrors() ) . $form . $table . '</body></html>' ;
 	}
 
 	function extract_post_recursive( $key_name , $tmp_array ) {

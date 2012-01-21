@@ -264,7 +264,7 @@ if($mod_config['menu_layout']<=1){
 	$yd_comment=""; $yd_monlist=""; $yd_monthnav=""; $yd_counter="";
 }
 
- 	$d3diary_meta_description = preg_replace('/(\r\n|\n\r|\n|\r|\t)/i','',$func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , true, "" ));
+ 	$d3diary_meta_description = preg_replace('/[\r\n\t]/','',$func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , true, "" ));
 
 	$xoopsTpl->assign(array(
 			"yd_uid" => $diary->uid,

@@ -293,4 +293,14 @@ define("_MD_RTNTO_NEWDIARY","Return to new diaries");
 define("_MD_DSC","Descending");
 define("_MD_ASC","Ascending");
 
+// GTicket Errors
+define("_MD_GTICKET_ERR_GENERAL","Ticket error");
+define("_MD_GTICKET_ERR_NOSTUBS","Page transfer error");
+define("_MD_GTICKET_ERR_NOTICKET","No ticket found");
+define("_MD_GTICKET_ERR_NOPAIR","Ticket validation error");
+define("_MD_GTICKET_ERR_TIMEOUT","Timeout error");
+define("_MD_GTICKET_ERR_AREAORREF","Area error or refferer error");
+define("_MD_GTICKET_REPOSTDSC","You can repost as below.<br />Doubled post may be occured except the timeout error.");
+define("_MD_GTICKET_REPOST","Repost");
+
 ?>

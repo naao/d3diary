@@ -142,6 +142,13 @@ if( !empty($post_val['phandle']) && $action == 5 && $diary->bid>0 ) {
 		exit();
 	}
 
+	require_once dirname( dirname(__FILE__) ).'/class/gtickets.php';
+	if( $eparam['mode'] != _D3DIARY_PROCMODE_FORM ) {
+ 	   if ( ! $xoopsGTicket->check( true , 'd3diary_edit' ) ) {
+  	      redirect_header(XOOPS_URL.'/',3,$xoopsGTicket->getErrors());
+	    }
+	}
+
 // STEP 1: get photos name
 
 // set "is preview" for preview or delete photo
@@ -285,7 +292,7 @@ switch ( $eparam['mode'] ) {
 	if ($func->getpost_param('reg_time')) {
 		d3diary_reg_time();
 	}
-	$cname=$func->getpost_param('cname');
+	$cname= strip_tags($func->getpost_param('cname'));
 	$msg=d3diary_checkphoto($mydirname);
 	if(empty($msg)){
 		// new category
@@ -435,7 +442,7 @@ switch ( $eparam['mode'] ) {
 	if ($func->getpost_param('reg_time')) {
 		d3diary_reg_time();
 	}
-	$cname=$func->getpost_param('cname');
+	$cname= strip_tags($func->getpost_param('cname'));
 	$msg=d3diary_checkphoto($mydirname);
 	// subscribe
 	if(empty($msg)){
@@ -639,7 +646,8 @@ include XOOPS_ROOT_PATH."/header.php";
 			"smilylist" => $smilylist,
 			"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$uid]) : false,
 			"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$uid]) : false,
-			"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? isset($_tempGperm['allow_regdate'][$uid]) : false
+			"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? isset($_tempGperm['allow_regdate'][$uid]) : false,
+    			"gticket_hidden" => $xoopsGTicket->getTicketHtml( __LINE__ , empty( $mod_config['gticket_timeout'] ) ? 1800 : (int)$mod_config['gticket_timeout'] , 'd3diary_edit')
 			));
 			
 	if(!empty($_tempGperm['allow_gpermission']) && ( $_oe == 10 || $_oe == 20 ))
@@ -1125,7 +1133,7 @@ function d3diary_get_smilylist(){
 function d3diary_regtags($mydirname){
 	global $xoopsDB, $tag, $diary, $func ;
 
-	$post_tags = $func->getpost_param('tags');
+	$post_tags = strip_tags($func->getpost_param('tags'));
 
 	if(!empty($post_tags)) {
 		if (function_exists('mb_convert_kana')){

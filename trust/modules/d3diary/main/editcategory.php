@@ -78,7 +78,7 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 		$category->corder = d3diary_change_corder($mydirname, $category->cid, $category->corder, $corder);
 	}
 	
-	$category->cname= $func->getpost_param('cname');
+	$category->cname= strip_tags($func->getpost_param('cname'));
 	$category->subcat= intval($func->getpost_param('subcat'));
 	if(empty($category->cname)){
 		redirect_header("editcategory.php",2,_MD_CATEGORY_NONAME);exit();
@@ -88,7 +88,7 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 
 // create
 }elseif(!empty($_POST['createsub'])){
-	$category->cname= $func->getpost_param('cname');
+	$category->cname= strip_tags($func->getpost_param('cname'));
 	if(empty($category->cname)){
 		redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_NONAME);exit();
 	}

@@ -1,6 +1,4 @@
 <?php
-include_once XOOPS_ROOT_PATH."/class/xoopstree.php";
-
 class DiaryConfig
 {
 	var $uid;

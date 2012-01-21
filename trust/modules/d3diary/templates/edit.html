@@ -145,6 +145,7 @@
 <{/if}>
 
 <form name="fm1" enctype="multipart/form-data" method='POST' action='index.php?page=edit' onsubmit="return d3diary_inputchk(this)">
+<{$gticket_hidden}>
 <input type="hidden" name="bid" value="<{$yd_data.bid}>" />
 <table>
 <tr>
@@ -437,6 +438,7 @@
 </tr><tr>
 <td colspan=2>
 <form name="fm2" method='POST' action='index.php?page=edit' onsubmit='return delconfirm();'>
+<{$gticket_hidden}>
 <input type="hidden" name="bid" value="<{$yd_data.bid}>" />
 <{$smarty.const._MD_DIARY_DELDEC}>
 <input type=submit name="delsub" value="<{$smarty.const._MD_DIARY_DEL}>"/>

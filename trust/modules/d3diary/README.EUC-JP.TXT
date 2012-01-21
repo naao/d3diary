@@ -8,11 +8,11 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 ** 必要な環境
 -コア
 -- XOOPS 2.0.16a-JP、JPEx
--- XOOPS Cube Legacy（2.1.8で動作を確認）
+-- XOOPS Cube Legacy（2.1.8, 2,2.1で動作を確認）
 -PHP
 -- PHP5.1.x以上
 -MySQL
--- MySQL-4.0.x以上 (詳細は未調査)
+-- MySQL-5.0.x以上 (詳細は未調査)
 -- (MyISAM)
 -Altsys必須
 
@@ -96,6 +96,14 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2012/ 1/    ver0.23
+	- RSSフィードで閲覧権限の無い記事のタイトルと要約表示の設定された状態で表示した。
+	- 画像アップディレクトリ関連の書き込み権限チェックを管理画面に追加。(thx nao-pon)
+	- exrasに同梱したpiCalもmonthlyプラグインで、月末日の投稿が翌月末日にも表示される不具合を修正。
+	- minidiaryからのインポートができなくなっていた不具合の修正。(thx funnypainter)
+	- indexリストで、画像info文字の文字数詰めで文字化けあり、smartyプラグインをmb_truncateに変更。
+	- 投稿フォームにGTicketチケット照合を追加。管理画面にタイムアウト設定を追加。
+
 2011/ 9/14  ver0.22a
 	- 記事詳細表示の際に、html_header のmetaタグ「description」に、記事本文の要約を上書き表示。
 	- d3blog からのインポートユーザー用に用意したhtml側ラッパーファイルdetails.phpが有効でなかった不具合の修正。

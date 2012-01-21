@@ -295,4 +295,15 @@ define("_MD_QUERYOFF","Examine Fora");
 define("_MD_RTNTO_NEWDIARY","Volte a diários novos");
 define("_MD_DSC","Descendingdiaries");
 define("_MD_ASC","Ascendendo");
+
+// GTicket Errors
+define("_MD_GTICKET_ERR_GENERAL","Etiquete erro");
+define("_MD_GTICKET_ERR_NOSTUBS","Erro de transferência de página");
+define("_MD_GTICKET_ERR_NOTICKET","Nenhum ingresso achou");
+define("_MD_GTICKET_ERR_NOPAIR","Etiquete erro de validação");
+define("_MD_GTICKET_ERR_TIMEOUT","Erro de intervalo");
+define("_MD_GTICKET_ERR_AREAORREF","Erro de área ou erro de refferer");
+define("_MD_GTICKET_REPOSTDSC","O senhor enlata repost como debaixo de. <br /> Dobrou poste pode ser occured excluem o erro de intervalo.");
+define("_MD_GTICKET_REPOST","Repost");
+
 ?>

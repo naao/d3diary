@@ -121,6 +121,8 @@ define($constpref."_BODY_HTMLEDITOR","本文HTMLエディタボタンの表示")
 define($constpref."_BODY_HTMLEDITORDSC","HTMLの許可を「パーミッション管理」タブ画面で行い、ここを「common/FCKeditor」を選択すると、FCKeditorボタンが表示されます。");
 define($constpref."_HTMLPR_EXCEPT","HTMLPurifierによる強制書き換えをしないグループ");
 define($constpref."_HTMLPR_EXCEPTDSC","ここに指定されて「いない」グループによるHTML投稿は、Protector3.14以上に付属しているHTMLPurifierによって強制的に正しく無毒なHTMLに書き換えられます。ただし、HTMLPurifier自体、PHPバージョンが5以上でないと機能しません。");
+define($constpref."_GTICKET_SET_TIME","記事送信フォームのチケットタイムアウト時間(秒)");
+define($constpref."_GTICKET_SET_TIMEDSC","フォームを表示してからタイムアウトになるまでの時間設定。<br />タイムアウトになっても再送信すれば投稿できます。");
 
 define($constpref."_USE_UPDATEPING","更新ping送信許可" );
 define($constpref."_USE_UPDATEPING_DSC","更新ping送信の許可を指定します。" );

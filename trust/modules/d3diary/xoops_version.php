@@ -10,7 +10,7 @@ $langman->read( 'modinfo.php' , $mydirname , $mytrustdirname , false ) ;
 $constpref = '_MI_' . strtoupper( $mydirname ) ;
 
 $modversion['name']        = $mydirname;
-$modversion['version']     = 0.22;
+$modversion['version']     = 0.23;
 $modversion['description'] = constant($constpref."_DIARY_DESC");
 $modversion['credits']     = 'Motion Create Inc. (http://www.mc8.jp/)';
 $modversion['author'] 	   = 'naaon (original-module "minidiary" by matoyan)';
@@ -19,6 +19,7 @@ $modversion['license']     = 'GPL see LICENSE';
 $modversion['official']    = 0;
 $modversion['image']       = file_exists( $mydirpath.'/module_icon.png' ) ? 'module_icon.png' : 'module_icon.php' ;
 $modversion['dirname']     = $mydirname;
+$modversion['trust_dirname'] = $mytrustdirname ;
 $modversion['read_any'] = true ;
 
 // Any tables can't be touched by modulesadmin.
@@ -263,6 +264,15 @@ $modversion['config'][] = array(
 	'valuetype'		=> 'array' ,
 	'default'		=> array(1,2,4) ,
 	'options'		=> array()
+) ;
+
+$modversion['config'][] = array(
+	'name'			=> 'gticket_timeout' ,
+	'title'			=> $constpref.'_GTICKET_SET_TIME' ,
+	'description'		=> $constpref.'_GTICKET_SET_TIMEDSC' ,
+	'formtype'		=> 'textbox',
+	'valuetype'		=> 'int',
+	'default'		=> '1800'
 ) ;
 
 $modversion['config'][] = array(

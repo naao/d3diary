@@ -64,7 +64,6 @@ define($constpref."_PHOTO_USERESIZE_N","Não encolher");
 
 define($constpref."_PHOTO_THUMBSIZE","Tamanho da miniatura da imagem");
 define($constpref."_PHOTO_THUMBSIZEDESC","Configuração do tamanho da miniatura da imagem em pixcels");
-
 // define($constpref."_PHOTO_RESIZEMAX","Maximum shrink size");
 // define($constpref."_PHOTO_RESIZEMAXDESC","Maximum shrink size setting by px (pixcel)");
 
@@ -122,6 +121,8 @@ define($constpref."_BODY_HTMLEDITOR","Mostrar botão do editor HTML");
 define($constpref."_BODY_HTMLEDITORDSC","Permitir HTML para grupos específicos em 'Administração das Permissões' tab screen, then select 'common/FCKeditor' to show FCKeditor button.");
 define($constpref."_HTMLPR_EXCEPT","Grupos que podem permitir purificação por HTMLPurifier");
 define($constpref."_HTMLPR_EXCEPTDSC","Post de usuários que não pertencem aos grupos que forçarão a purificação com sanitized HTML by HTMLPurifier in Protector>=3.14. Esta pirificação não pode trabalhar com PHP4");
+define($constpref."_GTICKET_SET_TIME","Intervalo em forma de sentinela (segundo)");
+define($constpref."_GTICKET_SET_TIMEDSC","Intervalo que fixa depois que entrada exibida form.<br />You enlata repost novamente depois de erro de intervalo.");
 
 define($constpref."_USE_UPDATEPING","Habilitar ping atualidado" );
 define($constpref."_USE_UPDATEPING_DSC","Selecione SIM para usar ping atualizado" );

@@ -91,7 +91,7 @@ case _D3DIARY_EDITTAG_REV:
 	// update edited tags
 	$tag->uid = $req_uid;
 	$tag->bids = $sel_bids;
-	$tag->tag_name = $org_tag;
+	$tag->tag_name = strip_tags($org_tag);
 	$tag->updatedb_byname_mul($mydirname, $rev_tag);
 
 	redirect_header( XOOPS_URL.'/modules/'.$mydirname.'/index.php?'.$q_string,2,_MD_TAG_UPDATED);
@@ -111,7 +111,7 @@ case _D3DIARY_EDITTAG_ADD:
 		$arr_tags = array_unique($tags[1]);
 		
 		foreach ( $arr_tags as $q_tag ) {
-			$tag->tag_name = $q_tag;
+			$tag->tag_name = strip_tags($q_tag);
 			$tag->read_bid_byname($mydirname);
 
 			// exclude existed bid which has the $q_tag

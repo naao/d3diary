@@ -756,7 +756,7 @@ function d3diary_auto_mailpost () {
 				$params['chk_time'][$i] = $mail['create_time'];
 			}
 				$params['f_query'] = true;	// force sql insert for GET method
-			$ret = $mPost->regist_list( $diary, $photo, $tag, $params );
+			$ret = $mPost->regist_list( $diary, $photo, strip_tags($tag), $params );
 			if ( $ret == true ) {
 				$params['keep'] = 0;
 				$ret = $mPost->del_list( $params );
