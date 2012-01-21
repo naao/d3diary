@@ -100,7 +100,7 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
-2012/ 1/    ver0.23
+2012/ 1/21  ver0.23
 	- show title and excerpt for rss feed without authority on setting show excerpt by preference.
 	- Added authority check of upload directory in prefference. (thx nao-pon)
 	- Fixed bug of piCal monthly plugin shows doubled link on final date to next month.
