@@ -1,0 +1,21 @@
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody">
+<ul class="<{$block.mydirname}>yd_rightarea">
+<{section name=num loop=$block.yd_monlist}>
+	<li>
+	<a href="<{$block.base_url}>year=<{$block.yd_monlist[num].year}>&amp;month=<{$block.yd_monlist[num].month}>">
+	<{$block.yd_monlist[num].year}><{$block.lang.year}><{$block.yd_monlist[num].month}><{$block.lang.month}>
+	</a>(<{$block.yd_monlist[num].count}>)
+</li>
+<{/section}>
+</ul>
+</div><!-- /itemBody -->
+<{if $block.yd_monthnavi}>
+<div class="itemInfo" style="text-align:center;">
+<{$block.yd_monthnavi}>
+</div><!-- /itemInfo -->
+<{/if}>
+</div><!-- /item -->
+</div><!-- /itemSide -->

@@ -1,0 +1,17 @@
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody">
+<{if $block.use_tag>=1}>
+<{foreach from=$block.tagCloud item=tags}>
+	<a href="<{$block.base_url}>tag_name=<{$tags.tag_urlenc}><{if $block.fr>0}>&amp;fr=<{$block.fr}><{/if}><{if $block.tofst>0}>&amp;tofst=<{$block.tofst}><{/if}>" style="font-size:<{$tags.size}>%"><{$tags.tag}></a> 
+<{/foreach}>
+<{/if}>
+</div><!-- /itemBody -->
+<{if $block.tagnavi}>
+<div class="itemInfo" style="text-align:center;">
+<{$block.tagnavi}>
+</div><!-- /itemInfo -->
+<{/if}>
+</div><!-- /item -->
+</div><!-- /itemSide -->

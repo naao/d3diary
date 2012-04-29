@@ -1,0 +1,54 @@
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody" style="text-align:center;">
+<a href="<{$xoops_url}>/userinfo.php?uid=<{$block.yd_uid}>">
+<{if $block.mod_config.use_name==1 && $block.yd_name}><{$block.yd_name}>
+	<{else}><{$block.yd_uname}>
+	<{/if}></a><{$block.lang.person}><br />
+</div><!-- /itemBody -->
+
+<{if $block.mod_config.use_avatar && $block.yd_avaterurl}>
+<div class="itemBody" style="text-align:center;">
+<img src="<{$block.yd_avaterurl}>">
+</div><!-- /itemBody -->
+<{/if}>
+
+<div class="itemBody" style="text-align:center;">
+<{$smarty.const._MD_PAGE_ACCESS}>:&nbsp;<{$block.yd_counter}>&nbsp;<br />
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/rdf.php?uid=<{$block.yd_uid}>&amp;cid=<{$block.yd_cid}>&amp;ver=atom">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/rssatom.png" border=0 />
+</a><br />
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/rdf.php?uid=<{$block.yd_uid}>&amp;cid=<{$block.yd_cid}>&amp;ver=rss1">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/rss10.png" border=0 />
+</a><br />
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/rdf.php?uid=<{$block.yd_uid}>&amp;cid=<{$block.yd_cid}>&amp;ver=rss2">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/rss20.png" border=0 />
+</a><br />
+</div><!-- /itemBody -->
+
+<{if $block.yd_editperm==1}>
+<div class="itemBody">
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=usr_config">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 />
+<{$block.lang.ucfg}><{$block.lang.edit}>
+</a>
+<br />
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=editcategory">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 />
+<{$block.lang.cat}><{$block.lang.edit}>
+</a>
+<br />
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=edit">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/pencil.gif" border=0 />
+<{$block.lang.write}>
+</a>
+<br />
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=mailpost">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 />
+<{$block.lang.mailpost}>
+</a>
+</div><!-- /itemBody -->
+<{/if}>
+</div><!-- /item -->
+</div><!-- /itemSide -->

@@ -1,0 +1,81 @@
+<!-- start module contents -->
+<{if $mod_config.show_breadcrumbs}>
+<div id="d3d_breadcrumbs">
+	<a href="<{$xoops_url}>/">TOP</a>
+	<{foreach from=$xoops_breadcrumbs key="i" item="item"}>
+	    <{* if $i!=0 *}>
+		&nbsp;>&nbsp;
+		<{if $item.url}>
+			<a href="<{$item.url}>"><{$item.name}></a>
+		<{else}>
+			<{$item.name}>
+		<{/if}>
+	    <{* /if *}>
+	<{/foreach}>
+</div><br/>
+<{/if}>
+
+<div class="itemSide" style="border:0px ;">
+<{if $bloggernavi}>
+<div class="boxNavi" style="text-align:center;">
+<{$lang_datanum}><br /><br />
+<ul class="itemBody">
+<{foreach from=$bloggernavi item=nav_}>
+<li class=<{$nav_.class}>><span>
+<{if $nav_.url}><a href="<{$nav_.url}>" title="go to page <{$nav_.txt}>"><{$nav_.txt}></a>
+<{else}>
+<{$nav_.txt}>
+<{/if}>
+</span></li>
+<{/foreach}>
+</ul><!-- /itemIBody -->
+</div><!-- /boxNavi -->
+<{/if}>
+
+<div class="item" style="border:0px ;">
+<div class="itemInfo" style="text-align:center;">
+
+[<{$smarty.const._MD_DIARY_DATE}><a href="<{$sort_baseurl}>&amp;odr=time_dsc" class="<{$style_s.time_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a><a href="<{$sort_baseurl}>&amp;odr=time_asc" class="<{$style_s.time_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+[<{$smarty.const._MD_DIARY_NAME}><a href="<{$sort_baseurl}>&amp;odr=name_dsc" class="<{$style_s.name_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a><a href="<{$sort_baseurl}>&amp;odr=name_asc" class="<{$style_s.name_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+[<{$smarty.const._MD_DIARY_COUNT}><a href="<{$sort_baseurl}>&amp;odr=count_dsc" class="<{$style_s.count_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a>
+<a href="<{$sort_baseurl}>&amp;odr=count_asc" class="<{$style_s.count_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+[<{$smarty.const._MD_PAGE_ACCESS}><a href="<{$sort_baseurl}>&amp;odr=hit_dsc" class="<{$style_s.hit_dsc}>" title="<{$smarty.const._MD_DSC}>"><span>&nbsp;</span></a> <a href="<{$sort_baseurl}>&amp;odr=hit_asc" class="<{$style_s.hit_asc}>" title="<{$smarty.const._MD_ASC}>"><span>&nbsp;</span></a>]
+
+</div><!-- /itemInfo -->
+<div class="itemInfo" style="text-align:left;">
+<{$smarty.const._MD_POSTER_LIST}>
+</div><!-- /itemInfo -->
+
+<div class="itemBody">
+<ul class="yd_rightarea">
+	<{foreach item=blogger from=$blogger}>
+	    <{if $blogger.uname}>
+	  	<li><{if $mod_config.use_name==1 && $blogger.name}><{$blogger.name}>
+	  	<{else}><{$blogger.uname}>
+	  	<{/if}>
+	  	<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>" title="<{$block.lang.newdiary}>" class="d3dlinkEntry">(<{$blogger.count}>)</a>
+	  	<{if $blogger.p_count>0}><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=photolist&amp;req_uid=<{$blogger.uid}>" title="<{$block.lang.newphoto}>" class="d3dlinkImage">(<{$blogger.p_count}>)</a><{/if}>
+	  	</li>
+
+	    <{/if}>
+	<{/foreach}>
+</ul>
+
+<p><{$lang.other}></p>
+<ul class="yd_rightarea">
+	<{foreach item=blogger from=$blogger2}>
+	    <{if $blogger.uname}>
+	  	<li><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$blogger.uid}>"><{$blogger.uname}></a></li>
+	    <{/if}>
+	<{/foreach}>
+</ul>
+
+</div><!-- /itemBody -->
+</div><!-- /item -->
+</div><!-- /itemSide -->
+
+<{if $debug_time}>
+ <{foreach from=$debug_time item="debug"}>
+	<{$debug.time}>:<{$debug.caller}><br />
+ <{/foreach}>
+<{/if}>

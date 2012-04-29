@@ -1,0 +1,121 @@
+STEP:<{$mpost_step}>
+<form name="MainForm" method="post" action="index.php?page=mailpost">
+<ul style="list-style-position: outside">
+<{if $mpost_step == 1}>
+
+<p><{$smarty.const._MD_CONF_USEMAIL}></p>
+<ul>
+<li><a href="index.php?page=usr_config"><{$smarty.const._MD_T_TOTAL}><{$smarty.const._MD_T_EDIT}></a>&nbsp;[<{$smarty.const._MD_CONF_LINK}>]</li>
+<li>
+
+<a href="mailto:<{$mod_config.post_email_fulladd}>"><{$mod_config.post_email_fulladd}></a>&nbsp;<{$smarty.const._MD_MAILTO}></li>
+<li><a href="index.php?page=mailpost&amp;mpost_step=1"><{$smarty.const._MD_MAIL_OPENMANUAL}></a>&nbsp;<{$smarty.const._MD_MAIL_CASEMANUAL}></li>
+</ul>
+
+<{elseif $mpost_step == 2}>
+<li><{$smarty.const._MD_CATEGORY}>
+<select name="cid" id="cid">
+<option value="0"><{$smarty.const._MD_NOCNAME}></option>
+<{section name=num loop=$catopt}>
+<{if $catopt[num].cid <= 10000}>
+ <option value="<{$catopt[num].cid}>"><{if $catopt[num].subcat == 1}>&nbsp;--&nbsp;<{/if}><{$catopt[num].cname}><{if $catopt[num].dohtml=="1"}> HTML<{/if}></option>
+<{/if}>
+<{/section}>
+<{section name=num loop=$catopt}>
+<{if $catopt[num].cid > 10000}>
+ <option value="<{$catopt[num].cid}>"><{if $catopt[num].subcat == 1}>&nbsp;--&nbsp;<{/if}><{$catopt[num].cname}><{if $catopt[num].dohtml=="1"}> HTML<{/if}></option>
+<{/if}>
+<{/section}>
+</select>
+</li>
+
+<{if $yd_use_open_entry}>
+
+<li>
+<{$smarty.const._MD_CONF_OPENAREA}>
+<select name="openarea" id="openarea" onchange="chgopenarea()">
+<option <{if $yd_data.openarea==0}>selected<{/if}> value="0"><{$smarty.const._MD_CONF2_FOLLOW}></option>
+<{if $yd_openarea==0}><option <{if $yd_data.openarea==1}>selected<{/if}> value="1"><{$smarty.const._MD_CONF2_1OLOSE}></option><{/if}>
+<{if $yd_use_friend>=1 && $yd_openarea<=1}><option <{if $yd_data.openarea==3}>selected<{/if}> value="3"><{$smarty.const._MD_CONF2_3FRIEND2}></option><{/if}>
+<{if $yd_use_friend>=1 && ($yd_openarea<=1 || $yd_openarea==3)}><option <{if $yd_data.openarea==2}>selected<{/if}> value="2"><{$smarty.const._MD_CONF2_2FRIEND}></option><{/if}>
+<{if $allow_gpermission}><option <{if $yd_data.openarea==10}>selected<{/if}> value="10"><{$smarty.const._MD_CONF2_10GROUP}></option><{/if}>
+<{if $allow_ppermission}><option <{if $yd_data.openarea==20}>selected<{/if}> value="20"><{$smarty.const._MD_CONF2_20PERSON}></option><{/if}>
+<{if $yd_openarea<=3}><option <{if $yd_data.openarea==100}>selected<{/if}> value="100"><{$smarty.const._MD_CONF2_100HIDE}></option><{/if}>
+</select>
+</li>
+
+<{if $allow_gpermission || $allow_ppermission}>
+<li>
+<{$smarty.const._MD_PERMED_VGROUP}>
+<select name="vgids[]" size="4" multiple>
+<{strip}><{foreach from=$yd_data.group_list key=groupid item=group}>
+<option value="<{$groupid}>"<{if $group.gsel==1}> selected="selected"<{/if}>><{$group.gname}></option>
+<{/foreach}><{/strip}></select>
+</li>
+<{/if}>
+
+<{if $allow_ppermission}>
+<{strip}>
+<li>
+    <{$smarty.const._MD_DIARY_REG_PERSON}>
+    <div id="d3d_tag_list1" class="d3d_tag_list"><{if $yd_data.pperm_names}>
+    <{foreach from=$yd_data.pperm_names item="pname"}><span class="exist"><{$pname}></span><{/foreach}><{/if}></div>
+    <input type="text" name="vpids" id="d3d_tag_hidden1" value="<{$yd_data.pperm_list}>">
+</li>
+<{/strip}>
+<{/if}>
+
+<{/if}>
+
+<{if $allow_regdate}>
+<input type="checkbox" name="reg_time" id="reg_time" value="1" <{if $yd_data.reg_time==1}>checked<{/if}>/>
+<{$smarty.const._MD_DIARY_REG_TIME}>
+<{html_select_date time=$yd_data.create_time_unformat start_year="-1" end_year="+2" month_format="%m" day_format="%d" field_order="YMD" field_array="published"}>
+<{html_select_time time=$yd_data.create_time_unformat minute_interval="10" display_seconds=false field_array="published"}><br />
+<{else}>
+        <input type="hidden" name="reg_time" id="reg_time" value="0" />
+<{/if}>
+
+<{if $mod_config.use_tag>0}>
+<li><{$smarty.const._MD_TAG_DESC}><br />
+<input type=text name=tags id=tags size=50 maxlength=255><br />
+</li>
+<{/if}>
+
+<li>
+<select name="keep">
+<option value="0" selected><{$smarty.const._MD_MAIL_KEEPNOUSE}></option>
+<option value="1"><{$smarty.const._MD_MAIL_KEEPUSE}></option>
+<option value="2"><{$smarty.const._MD_MAIL_DELONLY}></option>
+</select>
+<br />
+</li>
+
+<{$smarty.const._MD_MAILINFO_SUBMIT}>
+	<input name="<{$smarty.const._MD_SUBMIT}>" type="submit" />
+<hr>
+
+    <{foreach from=$mails key="num" item="mail" name="list"}>
+   	<li><input name="chk_mails[]" value="<{$mail.id}>" type="checkbox" />
+	<{$mail.title}>&nbsp;[<{$mail.create_time}>]
+	<input name="chk_time[<{$mail.id}>]" value="<{$mail.create_time}>" type="hidden" />
+	</li>
+    <{/foreach}>
+	<input name="mpost_step" value="2" type="hidden" />
+
+<{elseif $mpost_step == 3}>
+  <{if $got_mails|@count>0}>
+    <p><{$smarty.const._MD_MAIL_VIEWDIARY}></p>
+    <{foreach from=$got_mails key="num" item="mail" name="list"}>
+   	<li><a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=detail&amp;bid=<{$mail.bid}>"><{$mail.title}></a>&nbsp;[<{$mail.create_time}>]&nbsp;[<{$mail.bid}>]
+	</li>
+    <{/foreach}>
+	<input name="mpost_step" value="0" type="hidden" />
+  <{/if}>
+	<{$smarty.const._MD_MAIL_TOSTEP0}>&nbsp;<input name="<{$smarty.const._MD_SUBMIT}>" type="submit" />
+<hr>
+<{/if}>
+</ul>
+</form>
+<font color="#FF0000"><{$err_msg}></font>
+<font color="#005555"><{$scc_msg}></font>

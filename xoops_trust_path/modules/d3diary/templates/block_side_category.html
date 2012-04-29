@@ -1,0 +1,42 @@
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody">
+<ul class="<{$block.mydirname}>yd_rightarea">
+<{if $block.fr!=1}>
+<{section name=num loop=$block.catopt}>
+   <{if $block.catopt[num].cid<=10000}>
+	<li<{if $block.catopt[num].subcat==1}> style="margin-left:12px !important;"<{/if}>>
+	<{if $block.catopt[num].blogtype>0 && $block.catopt[num].cid>0}>
+	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
+	<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=other&amp;req_uid=<{$block.yd_uid}>&amp;cid=<{$block.catopt[num].cid}>"><{$block.catopt[num].cname}></a>
+	<{else}>
+	<a href="<{$block.base_url}>mode=category&amp;cid=<{$block.catopt[num].cid}>"><{$block.catopt[num].cname}>(<{$block.catopt[num].num}>)</a>
+	<{/if}>
+	</li>
+   <{/if}>
+<{/section}><{/if}>
+<hr />
+<{section name=num loop=$block.catopt}>
+   <{if $block.catopt[num].cid>10000}>
+	<li<{if $block.catopt[num].subcat==1}> style="margin-left:12px !important;"<{/if}>>
+	<{if $block.catopt[num].blogtype>0}>
+	<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=other&amp;req_uid=<{$block.yd_uid}>&amp;cid=<{$block.catopt[num].cid}>"><{$block.catopt[num].cname}></a>
+	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
+	<{else}>
+    <a href="<{$block.base_url}>mode=category&amp;cid=<{$block.catopt[num].cid}>"><{$block.catopt[num].cname}>(<{$block.catopt[num].num}>)</a>
+	<{/if}>
+	</li>
+   <{/if}>
+<{/section}>
+</ul>
+</div><!-- /itemBody -->
+<{if $block.yd_owner==1 && $block.yd_editperm==1}>
+<div class="itemFoot">
+<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=editcategory">
+<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" />
+<{$block.lang.edit}></a>
+</div><!-- /itemFoot -->
+<{/if}>
+</div><!-- /item -->
+</div><!-- /itemSide -->

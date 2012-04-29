@@ -1,0 +1,21 @@
+<!-- start module blocks -->
+<div class="<{$block.mydirname}>itemSide" style="border:0px ;">
+<div class="item" style="border:0px ;">
+<div class="itemBody">
+<ul class="<{$block.mydirname}>yd_rightarea">
+	<{foreach from=$block.yd_comment item=com}>
+	<li>
+	<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=detail&amp;bid=<{$com.bid}><{$block.yd_com_key}><{$com.unique_path}>"><{$com.title}></a>
+	<{if $block.mod_config.use_name==1 && $com.name}><{$com.name}>
+	<{elseif $com.uname}><{$com.uname}>
+	<{else}><{$com.guest_name}>
+	<{/if}>[<{$com.datetime|formatTimestamp:'m-d H:i'}>]
+	</li>
+	<{/foreach}>
+	</ul>
+</div><!-- /itemBody -->
+<div class="itemFoot">	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/arrow1.png" border=0 style="vertical-align:middle;" />
+	 <a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=viewcomment&amp;req_uid=<{$block.yd_uid}>"><{$block.lang.more}></a>
+</div><!-- /itemFoot -->
+</div><!-- /item -->
+</div><!-- /itemSide -->
