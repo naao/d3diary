@@ -1,20 +1,20 @@
 <?php
 class D3diaryCategory
 {
-	var $uid;
-	var $cid;
-	var $cname;
-	var $corder;
-	var $subcat;
+	var $uid = 0;
+	var $cid = 0;
+	var $cname = '';
+	var $corder = 0; 
+	var $subcat = 0;
 	var $children;
 	var $parent;
-	var $blogtype;
-	var $blogurl;
-	var $rss;
-	var $openarea;
-	var $dohtml;
-	var $vgids;
-	var $vpids;
+	var $blogtype = 0;
+	var $blogurl =0;
+	var $rss = '';
+	var $openarea = 0;
+	var $dohtml = 0;
+	var $vgids = '';
+	var $vpids = '';
 
 	public function __construct(){
 	}

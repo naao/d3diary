@@ -81,7 +81,7 @@ $tpl = new XoopsTpl();
 	$whr_ctime = " AND create_time<'".$now."'";
 
 	if( $mPerm->exerpt_ok_bymod == true ) {
-		$whr_openarea = "1 ";
+		$whr_openarea = "d.openarea<'100' ";
 	} else {
 		$whr_openarea = "(d.openarea='0' OR d.openarea IS NULL) AND (cfg.openarea='0' OR cfg.openarea IS NULL) 
 				AND (c.openarea='0' OR c.openarea IS NULL) ";
