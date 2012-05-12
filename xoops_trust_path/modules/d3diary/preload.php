@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 if( ! defined( 'XOOPS_ROOT_PATH' ) ) exit ;
 
@@ -8,18 +8,15 @@ if( ! class_exists( 'D3diaryPreloadBase' ) ) {
 
 class D3diaryPreloadBase extends XCube_ActionFilter
 {
-	/*******
-	   設定定数のオーバーライドを行う場合、
-	   html 側に'/include/preload.inc.php'　を置くか
-	   trust側に'/include/preload.inc.php'　を置くかして、
-	   その中に以下の如く記載して設定の上書きが可能
-
-	<?php
-	   	$this->mobile_diarynum = 8 ;	// 携帯端末でのリスト表示件数
-		$this->mobile_charmax = 40 ;	// 携帯端末での記事リスト要旨文字数
-	?>
-
-	********/
+	//*******
+	//   設定定数のオーバーライドを行う場合、
+	//   html 側に'/include/preload.inc.php'　を置くか
+	//   trust側に'/include/preload.inc.php'　を置くかして、
+	//   その中に以下の如く記載して設定の上書きが可能
+	//
+	//   	$this->mobile_diarynum = 8 ;	// 携帯端末でのリスト表示件数
+	//	$this->mobile_charmax = 40 ;	// 携帯端末での記事リスト要旨文字数
+	//********
 
 	var $mobile_diarynum = 5 ;	// 携帯端末でのリスト表示件数初期値
 	var $mobile_charmax = 40 ;	// 携帯端末での記事リスト要旨文字数
