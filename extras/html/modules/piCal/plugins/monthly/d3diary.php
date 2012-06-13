@@ -47,8 +47,9 @@
 	if (!empty($entry)) {
 		$i=0;
 		foreach ( $entry as $b => $e){
+			$user_time = $e['tstamp']+$tzoffset_s2u;
 			if( date( 'n' , $user_time ) != $this->month ) continue ;
-			$target_date =  date('j', $e['tstamp']+$tzoffset_s2u);
+			$target_date =  date('j', $user_time);
 			$tmp_array = array(
 				'dotgif' => $plugin['dotgif'] ,
 				'dirname' => $plugin['dirname'] ,
