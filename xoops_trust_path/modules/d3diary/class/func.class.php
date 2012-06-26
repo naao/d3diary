@@ -1323,7 +1323,7 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 	$sql = "SELECT count(p.pid) as count ".$sql_base ;
 	$result = $db->query($sql);
 	list ($count) = $db->fetchRow($result);
-	if($count>$max_entry){
+	if($max_entry && $count>$max_entry){
             if( !empty($_SERVER['QUERY_STRING'])) {
                 if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
                     $url = "";
