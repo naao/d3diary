@@ -1225,12 +1225,14 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 			$whr_nofuture = "";
 		}
 
+	$whr_pid = "" ;
 	$whr_cid = "" ;
 	$whr_cat = "" ;
 	$whr_tag = "" ;
 	$table_tag = "" ;
 	$whr_time = "";
 
+	$odr = '';
 	if (!empty($params)){
 		$size = !empty($params['size']) ? (int)$params['size'] : 0 ;
 
@@ -1259,10 +1261,15 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 			default :
 				$odr = "d.create_time DESC" ;
 			}
+			
+			$odr = ' ORDER BY ' . $odr;
 		}
 
 		$ofst_key = !empty($params['ofst_key']) ? $params['ofst_key'] : "phofst";
 
+		if(!empty($params['pid'])){
+			$whr_pid = " AND p.pid = '".$params['pid']."'" ;
+		}
 		if(!empty($params['cids'])){
 			if( $params['cids'][0] == 0 ) {
 				$whr_cid = " AND c.cid IS NULL " ;
@@ -1314,35 +1321,35 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c ".$on_uid." 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_config')." cfg ON d.uid=cfg.uid 
 			".$table_tag."
-			WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_cid.$whr_cat.$whr_tag.$whr_time." 
-			ORDER BY ".$odr ;
+			WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_pid.$whr_cid.$whr_cat.$whr_tag.$whr_time.$odr ;
 
 	// get total photos count
-	$sql = "SELECT count(p.pid) as count ".$sql_base ;
-	$result = $db->query($sql);
-	list ($count) = $db->fetchRow($result);
-	if($count>$max_entry){
-            if( !empty($_SERVER['QUERY_STRING'])) {
-                if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
-                    $url = "";
-                } else {
-                    $url = preg_replace("/^(.*)\&".$ofst_key."=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
-                }
-            } else {
-                $url = "";
-            }
-	    include_once dirname( dirname(__FILE__) ).'/class/d3diaryPagenavi.class.php';
-            $nav = new d3diaryPageNav($count, $max_entry, $offset, $ofst_key, $url);
-            if (!empty($params['getnav'])) {
-        	$got_navi = $nav->getNav();
-         	$got_navi['count'] = $count ;
-          } else {
-        	$got_navi = $nav->renderNav();
-             }
-        } else {
-            $got_navi = array();
-        }
-
+	$got_navi = array();
+	if ($max_entry) {
+		$sql = "SELECT count(p.pid) as count ".$sql_base ;
+		$result = $db->query($sql);
+		list ($count) = $db->fetchRow($result);
+		if($count>$max_entry){
+			if( !empty($_SERVER['QUERY_STRING'])) {
+				if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
+					$url = "";
+				} else {
+					$url = preg_replace("/^(.*)\&".$ofst_key."=[0-9]+/", "$1", $_SERVER['QUERY_STRING']);
+				}
+			} else {
+				$url = "";
+			}
+			include_once dirname( dirname(__FILE__) ).'/class/d3diaryPagenavi.class.php';
+			$nav = new d3diaryPageNav($count, $max_entry, $offset, $ofst_key, $url);
+			if (!empty($params['getnav'])) {
+				$got_navi = $nav->getNav();
+				$got_navi['count'] = $count ;
+			} else {
+				$got_navi = $nav->renderNav();
+			}
+		}
+	}
+	
 	$sql = "SELECT p.pid as pid, p.ptype as ptype, p.tstamp as tstamp, p.info as info, p.bid as bid, p.uid as uid, 
 			title, uname, name "
 			.$sql_base ;
@@ -1911,7 +1918,7 @@ function update_other(){
 		$uid    = intval($line['uid']);
 		$cid    = 0;
 
-		# ��
+		# 鐃緒申
 		$query = "DELETE FROM ".$db->prefix($this->mydirname.'_newentry')." WHERE uid='".$uid
 			."' AND cid='".$cid."'";
 		$result2 = $db->queryF($query);
@@ -1930,7 +1937,7 @@ function update_other(){
 	    	$yd_data['link'] = $item['link'];
 	    	$yd_data['blogtype'] = $line['blogtype'];
 		
-			# ����se��ɦ����
+			# 鐃緒申鐃緒申se鐃緒申髭鐃緒申鐃緒申
 			if(!empty($item['dc']['date'])){
 				$tstamp=strtotime($item['dc']['date']);
 			}elseif(!empty($item['pubdate'])){
@@ -1976,7 +1983,7 @@ function update_other(){
 						)";
 			$result2 = $db->queryF($query);
 	
-			# �飨��ȥ꣪
+			# 鐃初�鐃緒申肇蝪�
 			break;
 		}
 	}
@@ -2003,7 +2010,7 @@ function update_other_cat($uid){
 		//$uid    = intval($line['uid']);
 		$cid = intval($line['cid']);
 
-		# ��
+		# 鐃緒申
 		$query = "DELETE FROM ".$db->prefix($this->mydirname.'_newentry')." WHERE uid='".$uid
 			."' AND cid='".$cid."'";
 		$result2 = $db->queryF($query);
@@ -2023,7 +2030,7 @@ function update_other_cat($uid){
 	    		$yd_data['blogtype'] = $line['blogtype'];
 			//var_dump($cid); var_dump($yd_data['title'] ); echo"<br />";
 
-			# ����se��ɦ����
+			# 鐃緒申鐃緒申se鐃緒申髭鐃緒申鐃緒申
 			if(!empty($item['dc']['date'])){
 				$tstamp=strtotime($item['dc']['date']);
 			}elseif(!empty($item['pubdate'])){
@@ -2070,7 +2077,7 @@ function update_other_cat($uid){
 						)";
 			$result2 = $db->queryF($query);
 	
-			# �飨��ȥ꣪
+			# 鐃初�鐃緒申肇蝪�
 			break;
 		}
 	}
