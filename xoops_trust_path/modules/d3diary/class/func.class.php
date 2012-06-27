@@ -1351,7 +1351,7 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 	}
 	
 	$sql = "SELECT p.pid as pid, p.ptype as ptype, p.tstamp as tstamp, p.info as info, p.bid as bid, p.uid as uid, 
-			title, uname, name "
+			title, uname, name, GREATEST(d.openarea, COALESCE(cfg.openarea, 0), COALESCE(c.openarea, 0)) as openarea "
 			.$sql_base ;
         $result = $db->query($sql, $max_entry, $offset);
 	$rtn_ = array();
@@ -1369,6 +1369,7 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 		$photo['uid'] = (int)$dbdat['uid'];
 		$photo['uname'] = htmlSpecialChars( $dbdat['uname'], ENT_QUOTES );
 		$photo['name'] = htmlSpecialChars( $dbdat['name'], ENT_QUOTES );
+		$photo['openarea'] = intval( $dbdat['openarea']);
 		
 		$rtn_[] = $photo;
 	}
