@@ -3,7 +3,7 @@
 //--------------------------------------------------------------------
 // Config
 //--------------------------------------------------------------------
-if ( !class_exists(XML_RPC_Base) ) { require_once(dirname( dirname(__FILE__) ).'/lib/PEAR/XML/RPC.php'); }
+if ( !class_exists('XML_RPC_Base') ) { require_once(dirname( dirname(__FILE__) ).'/lib/PEAR/XML/RPC.php'); }
 
 include_once dirname( dirname(__FILE__) ).'/class/diary.class.php';
 include_once dirname( dirname(__FILE__) ).'/class/category.class.php';
