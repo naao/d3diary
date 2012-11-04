@@ -100,8 +100,12 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2012/11/4  ver0.25
+	- Fixed notifications are performed for not permitted members of d3comment integrated parent entry.
+	  Also please update the d3forum to newest version over 0.87.
+	
 2012/ 6/26  ver0.24
-	- 携帯アクセス時のリスト表示件数と文字数を変更可能にした。但しプリロードを使うのでXCL2.1以上限定。
+	- Enabled list counts and charatcor counts on cellrar phones, it's limited over XCL2.1.
 	- Enabled to use X-elfinder module's d3diary plugin for X-elfinder version over 0.25.
 
 2012/ 1/21  ver0.23

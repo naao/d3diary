@@ -154,8 +154,6 @@ function onUpdate( $mode , $link_id , $forum_id , $topic_id , $post_id = 0 )
 // override function
 function validate_id( $link_id )
 {
-	global $xoopsUser;
-
 	$link_id = intval( $link_id ) ;
 	$mydirname = $this->mydirname ;
 
@@ -198,6 +196,46 @@ function validate_id( $link_id )
 		return $link_id  ;
 	}
 		return false;
+}
+
+// naao added Nov.2012
+// array of users id to be notified
+// if you want to check authrity validation for parent entry, override it
+function validate_users2notify( $link_id, $users2notify=array() )
+{
+	$link_id = intval( $link_id ) ;
+	$mydirname = $this->mydirname ;
+
+	$db =& Database::getInstance() ;
+
+	list( $count ) = $db->fetchRow( $db->query( "SELECT COUNT(*) FROM ".$db->prefix($mydirname."_diary")." WHERE bid='".$link_id."'" ) ) ;
+	if( $count <= 0 ) return false ;
+
+	$sql = "SELECT d.bid AS bid, d.uid AS uid, d.vgids AS vgids, d.vpids AS vpids, d.create_time, 
+			d.openarea AS openarea_entry, cfg.openarea AS openarea, 
+			c.openarea AS openarea_cat,  c.vgids AS vgids_cat, c.vpids AS vpids_cat 
+			FROM ".$db->prefix($mydirname.'_diary')." d LEFT JOIN "
+			.$db->prefix($mydirname.'_config')." cfg ON d.uid=cfg.uid LEFT JOIN "
+			.$db->prefix($mydirname.'_category')." c ON (d.cid=c.cid AND (d.uid=c.uid OR c.uid='0')) 
+			WHERE d.bid ='".$link_id."'" ;
+
+	$content_row = $db->fetchArray( $db->query( $sql ) );
+	
+	$diary_uid = (int)$content_row['uid'];
+
+	$this->d3dConf->set_mod_config( $diary_uid  , "D3com_validate_id");	// needs $dcfg, $diary_uid
+
+	$_tmp_isfriend  = $this->mPerm->check_is_friend($diary_uid);
+	$_tmp_isfriend2 = $this->mPerm->check_is_friend2($diary_uid);
+	
+	$_tmp_op = (int)$content_row['openarea'];
+
+		// 1st parameter $openarea is byref
+	$d3diary_users2notify = $this->mPerm->get_users_can_read_entry( 
+			$_tmp_op, $content_row['openarea_entry'], $content_row['openarea_cat'], 
+			$content_row['vgids'], $content_row['vpids'], $content_row['vgids_cat'], $content_row['vpids_cat'] );
+
+	return array_intersect( $users2notify, $d3diary_users2notify );
 }
 
 // set forum_dirname from config.comment_dirname
