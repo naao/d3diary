@@ -559,7 +559,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 	}
 	unset($photo->photos);
 
-	$pop_tags=array(); $perso_tags=array(); $_entry_tags=array();
+	$pop_tags=array(); $person_tags=array(); $_entry_tags=array();
 	if ( $mod_config['use_tag']>0 ) {
 		// tags
 		$tag->bids = $got_bids;
