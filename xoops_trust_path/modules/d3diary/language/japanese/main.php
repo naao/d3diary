@@ -162,6 +162,7 @@ define("_MD_NOENTRY","該当する日記はありません");
 define("_MD_SETTING","設定");
 define("_MD_NEWENTRY","日記を書く");
 define("_MD_POSTER_LIST","投稿者リスト");
+define("_MD_DB_ERR","データベースの更新に失敗しました");
 
 define("_MD_COM_RECENT","最近のコメント");
 define("_MD_COMMENT","コメント");

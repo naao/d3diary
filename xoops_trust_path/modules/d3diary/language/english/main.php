@@ -162,6 +162,7 @@ define("_MD_NOENTRY","The diary doesn't exist.");
 define("_MD_SETTING","Setting");
 define("_MD_NEWENTRY","Write diary");
 define("_MD_POSTER_LIST","Author list");
+define("_MD_DB_ERR","Failed to update DB");
 
 define("_MD_COM_RECENT","Recent Comment");
 define("_MD_COMMENT","Comment");
