@@ -319,7 +319,8 @@ function d3diary_get_prev_next($mydirname){
 	
 	$yd_prev = array(); $yd_next = array();
 	$openarea = $d3dConf->dcfg->openarea;
-	
+	$mod_config = $d3dConf->mod_config;
+
 	// openarea permissions 
 	$_params4op['use_gp'] = $gPerm->use_gp;
 	$_params4op['use_pp'] = $gPerm->use_pp;
