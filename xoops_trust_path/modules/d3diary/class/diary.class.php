@@ -75,55 +75,58 @@ class D3diaryDiary
 		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_diary')." WHERE bid='".$this->bid."'";
 		$result = $xoopsDB->query($sql);
 		
-		// newentry¹¹¿·
-		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_newentry')." WHERE uid='".$this->uid."' AND cid='0'";
+		// newentryºï½ü
+		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_newentry')." WHERE uid='".$this->uid."' AND blogtype='0'";
 		$result = $xoopsDB->query($sql);
 		
-		$sql = "SELECT *
-				  FROM ".$xoopsDB->prefix($mydirname.'_diary')."
-		          WHERE uid='".intval($this->uid)."' ORDER BY create_time DESC";
+	}
 
-		$result = $xoopsDB->query($sql);
-		if ( $dbdat = $xoopsDB->fetchArray($result) ) {
+	function deletedb_mul($mydirname){
+		global $xoopsDB;
 		
-	        if (!get_magic_quotes_gpc()) {
-				$tmptitle=addslashes($dbdat['title']);
-			}else{
-				$tmptitle=$dbdat['title'];
+		// at first, check bids for specified req_uid ( $this->uid must be set )
+		$whr_bids = " WHERE uid=".intval($this->uid)." AND bid IN (".implode(',',$this->bids).")";
+		$sql = "SELECT bid
+				  FROM ".$xoopsDB->prefix($mydirname.'_diary').$whr_bids;
+		$result = $xoopsDB->query($sql);
+		$num_rows = $xoopsDB->getRowsNum($result);
+		
+		if ( $num_rows > 0 ) {
+			$bids = array();
+			while ( $dbdat = $xoopsDB->fetchArray($result) ) {
+				$bids[] = $dbdat['bid'];
 			}
-			
-			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_newentry')."
-					(uid, cid, title, url, create_time, blogtype)
-					VALUES (
-					'".$dbdat['uid']."',
-					'".$dbdat['cid']."',
-					'".$tmptitle."',
-					'".XOOPS_URL."/modules".$mydirname."/index.php?page=detail&bid=".$dbdat['bid']."',
-					'".$dbdat['create_time']."',
-					'0',
-					'".$dbdat['openarea']."'
-					)";
+		
+			// delete checked bids
+			$whr_bids = " WHERE bid IN (".implode(',',$bids).")";
+			$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_diary').$whr_bids;
+			$result = $xoopsDB->query($sql);
+		
+			// newentryºï½ü
+			$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_newentry')." WHERE uid='".intval($this->uid)."' AND blogtype='0'";
 			$result = $xoopsDB->query($sql);
 		}
+		
+		return $bids;
 
 	}
 
 	function insertdb( $mydirname, $force=false ){
 		global $xoopsDB;
 
-	if ($this->create_time) {
-		$ctime= $this->create_time;
-	} else {
-		$ctime=date( "Y-m-d H:i:s" );
-	}
+		if ($this->create_time) {
+			$ctime= $this->create_time;
+		} else {
+			$ctime=date( "Y-m-d H:i:s" );
+		}
 
 		if ( $this->openarea != 100) {
 			$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_newentry').
-				" WHERE uid='".$this->uid."' AND cid='0'";
+				" WHERE uid='".$this->uid."' AND blogtype='0'";
 			$result = $xoopsDB->query($sql);
 		}
 
-        if (!get_magic_quotes_gpc()) {
+        	if (!get_magic_quotes_gpc()) {
 			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_diary')."
 					(uid, cid, title, diary, create_time, update_time, openarea, dohtml, vgids, vpids)
 					VALUES (
@@ -140,7 +143,7 @@ class D3diaryDiary
 					)";
 
 			$tmptitle=addslashes($this->title);
-	} else {
+		} else {
 			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_diary')."
 					(uid, cid, title, diary, create_time, update_time, openarea, dohtml, vgids, vpids)
 					VALUES (
@@ -156,7 +159,8 @@ class D3diaryDiary
 					'".$this->vpids."'
 					)";
 			$tmptitle=$this->title;
-	}
+		}
+
 		if ($force == true) {
 			$result = $xoopsDB->queryF($sql);
 		} else {
@@ -164,38 +168,6 @@ class D3diaryDiary
 		}
 		$this->bid=$xoopsDB->getInsertId();
 
-	if ( $this->openarea != 100) {
-	        if (!get_magic_quotes_gpc()) {
-			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_newentry')."
-				(uid, cid, title, url, create_time, blogtype, diary)
-				VALUES (
-				'".addslashes($this->uid)."',
-				'".addslashes($this->cid)."',
-				'".addslashes($tmptitle)."',
-				'".addslashes(XOOPS_URL."/modules/".$mydirname."/index.php?page=detail&bid=".$this->bid)."',
-				'".addslashes($ctime)."',
-				'0',
-				'".addslashes($this->diary)."'
-				)";
-		} else {
-			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_newentry')."
-				(uid, cid, title, url, create_time, blogtype, diary)
-				VALUES (
-				'".$this->uid."',
-				'".$this->cid."',
-				'".$tmptitle."',
-				'".XOOPS_URL."/modules/".$mydirname."/index.php?page=detail&bid=".$this->bid."',
-				'".$ctime."',
-				'0',
-				'".$this->diary."'
-				)";
-		}
-		if ($force == true) {
-			$result = $xoopsDB->queryF($sql);
-		} else {
-			$result = $xoopsDB->query($sql);
-		}
-	}
 		return $this->bid;
 	}
 
@@ -228,7 +200,7 @@ class D3diaryDiary
 		// update the create_time
 		if ($update_create_time) {
 			$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_newentry').
-				" WHERE uid='".$this->uid."' AND cid='0'";
+				" WHERE uid='".$this->uid."' AND blogtype='0'";
 			$result = $xoopsDB->query($sql);
 			
 			$sql = "UPDATE ".$xoopsDB->prefix($mydirname.'_diary')." SET
@@ -244,18 +216,6 @@ class D3diaryDiary
 					WHERE bid=".$bid;
 			$result = $xoopsDB->query($sql);
 
-			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_newentry')."
-				(uid, cid, title, url, create_time, blogtype)
-				VALUES (
-				'".$this->uid."',
-				'".$this->cid."',
-				'".$title."',
-				'".XOOPS_URL."/modules/".$mydirname."/index.php?page=detail&bid=".$this->bid."',
-				'".$utime."',
-				'0'
-				)";
-			$result = $xoopsDB->query($sql);
-			
 		// no-update the create_time
 		} else {
 			if ($this->create_time) {

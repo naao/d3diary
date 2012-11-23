@@ -45,6 +45,11 @@ $yd_param['day'] = $yd_day = $d3dConf->q_day;
 $yd_param['order'] = $d3dConf->q_odr ;
 $yd_param['fr_mode'] = $d3dConf->q_fr ;
 
+// set multi delete mode
+if ( (int)$func->getpost_param('multidel')==1 ) {
+	$yd_param['multidel_mode'] = 1;
+}
+
 if ( $yd_param['friend']==1 && $req_uid==0 ) {
    		header("Location:".  XOOPS_URL.'/modules/'.$mydirname.'/index.php?req_uid='.$uid.'&fr=1');
 } elseif ( $uid>0 && $req_uid==0 ) {
