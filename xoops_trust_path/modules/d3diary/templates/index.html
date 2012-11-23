@@ -86,9 +86,11 @@
 <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=photolist&amp;req_uid=<{$yd_uid}><{$base_qstr}>" class="d3dlinkImage" title="<{$smarty.const._MD_NEWPHOTO}>" style="float:left;" ></a>
 
 <div style="text-align:left;">
-<span class="d3dQueryInfo"><{if $yd_param.multidel_mode==1}>
+<{if $yd_data|@count>0 && $yd_editperm==1}>
+<{if $yd_param.multidel_mode==1}><span class="d3dQueryInfo">
 <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php" class="d3dTurnoff" title="<{$smarty.const._MD_DIARY_MULTIDELOUT}>"><{$smarty.const._MD_DIARY_MULTIDEL}></a>
-<{else}><a href="<{$sort_baseurl}>&amp;multidel=1"><{$smarty.const._MD_DIARY_MULTIDELTO}></a><{/if}></span>
+</a></span><{/if}>
+<{/if}>
 <{if $yd_param.friend==1}><span class="d3dQueryInfo"><a href="<{$url4ex_fr}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_DIARY_FRIENDSVIEW}></a></span><{/if}>
 <{if $yd_day>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_year}>-<{$yd_month}>-<{$yd_day}>]</a></span>
 <{elseif $yd_month>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_year}>-<{$yd_month}>]</a></span><{/if}>
@@ -227,6 +229,11 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <{/if}>
 
 <{if $entry && $yd_editperm==1}>
+<span class="d3dQueryInfo"><{if $yd_param.multidel_mode==1}>
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php" class="d3dTurnoff" title="<{$smarty.const._MD_DIARY_MULTIDELOUT}>"><{$smarty.const._MD_DIARY_MULTIDEL}></a>
+<{else}>
+<a href="<{$sort_baseurl}>&amp;multidel=1"><{$smarty.const._MD_DIARY_MULTIDELTO}></a><{/if}></span>
+
 <{if $yd_param.multidel_mode==1}>
 <div class="itemInfo">
 <input type="hidden" name="req_uid" value="<{$yd_uid}>" />
@@ -247,6 +254,7 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <option value="1"><{$smarty.const._MD_TAG_SELECTDEL}></option>
 <option value="2"><{$smarty.const._MD_TAG_SELECTEDIT}></option>
 <{/if}>
+
 <option value="3"><{$smarty.const._MD_TAG_SELECTADD}></option>
 </select>
 <input type="hidden" name="req_uid" value="<{$yd_uid}>" />

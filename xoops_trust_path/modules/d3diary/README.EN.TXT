@@ -100,6 +100,12 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2012/11/21 ver0.26
+	- Enabled deletion of multi selected entries on index page.
+	- Changed jump url on diarylist from external blog directly to the personal other list.
+	- Fixed wrong prev/ next links by tag query.
+	- Change message after failed insert entry.
+
 2012/11/4  ver0.25
 	- Fixed notifications are performed for not permitted members of d3comment integrated parent entry.
 	  Also please update the d3forum to newest version over 0.87.
