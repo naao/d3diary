@@ -28,6 +28,8 @@
 <{if $yd_editperm}>
 &nbsp;[&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=mailpost"><{$smarty.const._MD_CONF_USEMAIL}></a>&nbsp;]
 <{/if}>
+
+
 </p>
 <div id="d3dWrap" style="clear:both;">
 
@@ -43,7 +45,9 @@
 <{/if}>
 
 <{if $yd_data|@count>0 && $yd_editperm==1}>
-<{if $yd_param.tag_mode==1}>
+<{if $yd_param.multidel_mode==1}>
+<form name="MainForm" method="post" action="index.php?page=multidel" onsubmit="return delconfirm();">
+<{elseif $yd_param.tag_mode==1}>
 <form name="MainForm" method="post" action="index.php?page=edit_tags">
 <{else}>
 <form name="MainForm" method="post" action="index.php?page=editcat_diaries">
@@ -82,6 +86,9 @@
 <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=photolist&amp;req_uid=<{$yd_uid}><{$base_qstr}>" class="d3dlinkImage" title="<{$smarty.const._MD_NEWPHOTO}>" style="float:left;" ></a>
 
 <div style="text-align:left;">
+<span class="d3dQueryInfo"><{if $yd_param.multidel_mode==1}>
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php" class="d3dTurnoff" title="<{$smarty.const._MD_DIARY_MULTIDELOUT}>"><{$smarty.const._MD_DIARY_MULTIDEL}></a>
+<{else}><a href="<{$sort_baseurl}>&amp;multidel=1"><{$smarty.const._MD_DIARY_MULTIDELTO}></a><{/if}></span>
 <{if $yd_param.friend==1}><span class="d3dQueryInfo"><a href="<{$url4ex_fr}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>"><{$smarty.const._MD_DIARY_FRIENDSVIEW}></a></span><{/if}>
 <{if $yd_day>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_year}>-<{$yd_month}>-<{$yd_day}>]</a></span>
 <{elseif $yd_month>0}><span class="d3dQueryInfo"><a href="<{$url4ex_date}>" class="d3dTurnoff" title="<{$smarty.const._MD_QUERYOFF}>">[<{$yd_year}>-<{$yd_month}>]</a></span><{/if}>
@@ -203,7 +210,7 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <{/if}>
 
 <{if $entry.blogtype==0}>|&nbsp;<{$smarty.const._MD_T_VIEW}>(<{$entry.view}>)<{/if}>
-<{if ($yd_param.mode=="category" || $yd_param.tag_mode==1) && $yd_editperm==1}>
+<{if ($yd_param.mode=="category" || $yd_param.tag_mode==1 || $yd_param.multidel_mode==1) && $yd_editperm==1}>
 &nbsp;|&nbsp;
 <input name="chk_bids[]" value="<{$entry.bid}>" type="checkbox">
 <{else}>&nbsp;
@@ -220,7 +227,17 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 <{/if}>
 
 <{if $entry && $yd_editperm==1}>
-<{if $yd_param.tag_mode==1}>
+<{if $yd_param.multidel_mode==1}>
+<div class="itemInfo">
+<input type="hidden" name="req_uid" value="<{$yd_uid}>" />
+<input type="hidden" name="q_string" value="<{$yd_param.query_string}>" />
+<{$smarty.const._MD_DIARY_MULTIDEL_INFO}>
+<input type="submit" name="submit1" value="<{$smarty.const._MD_DIARY_MULTIDEL_BTN}>"/>
+
+<{$smarty.const._MD_DIARY_CHKALL}><input title="<{$smarty.const._MD_DIARY_CHKALLDESC}>" onclick="with(document.MainForm){for(i=0;i<length;i++){if(elements[i].type=='checkbox'&amp;&amp;elements[i].name.indexOf('chk_bids')>=0){elements[i].checked=this.checked;}}}" type="checkbox">
+</div><!-- /itemInfo -->
+
+<{elseif $yd_param.tag_mode==1}>
 
 <div class="itemInfo">
 <{$smarty.const._MD_TAG}>&nbsp;:&nbsp;<{$yd_param.req_tag}>&nbsp;
@@ -332,3 +349,12 @@ by&nbsp;<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?req_uid=<{$entr
 	<{$debug.time}>:<{$debug.caller}><br />
  <{/foreach}>
 <{/if}>
+
+<script type="text/javascript">
+
+function delconfirm()
+{
+  return confirm('<{$smarty.const._MD_DIARY_MULTIDEL_CONFM}>');
+}
+
+</script>

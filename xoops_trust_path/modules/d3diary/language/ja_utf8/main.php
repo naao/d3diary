@@ -84,6 +84,12 @@ define("_MD_DIARY_SWAPCAT","記事一括カテゴリー移動");
 define("_MD_DIARY_SWAPTO","移動先:");
 define("_MD_DIARY_CHKALL","全選択／解除");
 define("_MD_DIARY_CHKALLDESC","この縦一列のチェックボックスすべてをON/OFFします");
+define("_MD_DIARY_MULTIDEL","選択削除モード");
+define("_MD_DIARY_MULTIDELTO","選択削除モードへ");
+define("_MD_DIARY_MULTIDELOUT","選択削除モードを解除");
+define("_MD_DIARY_MULTIDEL_INFO","※チェックされた日記を削除します。");
+define("_MD_DIARY_MULTIDEL_BTN","削除する");
+define("_MD_DIARY_MULTIDEL_CONFM","チェックされた投稿を削除します。よろしいですか？");
 
 define("_MD_DIARY_OPTION","オプション");
 define("_MD_DIARY_UPDATE_TIME","投稿日時を更新する");
