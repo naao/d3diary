@@ -8,8 +8,8 @@
 <{foreach from=$block.yd_list item=entry}>
 <li>
 	<{if $entry.other==1}>
-	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
-	<a href="<{$entry.url}>" target="_blank"><{$entry.title}></a>
+		<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
+		<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=other&amp;req_uid=<{$entry.uid}><{if $entry.cid>0}>&amp;cid=<{$entry.cid}><{/if}>"><{$entry.title}></a>
 	<{else}>
 	<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=detail&amp;bid=<{$entry.bid}>&amp;req_uid=<{$block.yd_uid}>"><{$entry.title}></a>
 	<{/if}> 

@@ -17,9 +17,11 @@
 	</td>
 	<td><{if $entry.openarea>0}><img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/open<{$entry.openarea}>.gif" border=0 style="vertical-align:middle; float:right;" /><{/if}>
 	<{if $entry.other>0}>
-	<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
+		<img src="<{$xoops_url}>/modules/<{$block.mydirname}>/images/door_out.gif" border=0 style="vertical-align:middle;" /> 
+		<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=other&amp;req_uid=<{$entry.uid}><{if $entry.cid>0}>&amp;cid=<{$entry.cid}><{/if}>">
+	<{else}>
+		<a href="<{$entry.url}>">
 	<{/if}>
-	<a href="<{$entry.url}>" <{if $entry.other>0}>target="_blank"<{/if}>>
 	<{$entry.title}></a><br />
 	<{if $entry.cname|count_characters>0}><{if $block.yd_uid==0 && $entry.cid>10000}>[<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?page=diarylist&amp;mode=category&amp;cid=<{$entry.cid}>"><{$entry.cname}></a>]
 	<{else}>[<a href="<{$xoops_url}>/modules/<{$block.mydirname}>/index.php?mode=category&amp;cid=<{$entry.cid}>&amp;req_uid=<{$entry.uid}>"><{$entry.cname}></a>]

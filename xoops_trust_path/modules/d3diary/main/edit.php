@@ -309,7 +309,11 @@ switch ( $eparam['mode'] ) {
 		$yd_data['cid'] = $diary->cid;
 		$yd_data['title'] = htmlSpecialChars($diary->title, ENT_QUOTES);
 		$yd_data['diary'] = htmlSpecialChars($diary->diary, ENT_QUOTES);
-		$diary->bid=$diary->insertdb($mydirname);
+
+		if ( ! ($diary->bid=$diary->insertdb($mydirname)) ) {
+			redirect_header( XOOPS_URL.'/modules/'.$mydirname.'/index.php',3,_MD_DB_ERR );
+		}
+
 		$yd_data['bid'] = $diary->bid;
 		$yd_data['openarea']=$diary->openarea;	// naao added
 		$yd_data['dohtml'] = $diary->dohtml;
