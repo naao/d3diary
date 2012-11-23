@@ -84,6 +84,12 @@ define("_MD_DIARY_SWAPCAT","Move category of selected diaries");
 define("_MD_DIARY_SWAPTO","Move to:");
 define("_MD_DIARY_CHKALL","Check/Uncheck all");
 define("_MD_DIARY_CHKALLDESC","Check/Uncheck all checkboxes above");
+define("_MD_DIARY_MULTIDEL","Select Del Mode");
+define("_MD_DIARY_MULTIDELTO","into Select Del Mode");
+define("_MD_DIARY_MULTIDELOUT","going out Select Del Mode");
+define("_MD_DIARY_MULTIDEL_INFO","Delete checked diaries");
+define("_MD_DIARY_MULTIDEL_BTN","Delete");
+define("_MD_DIARY_MULTIDEL_CONFM","You are deleting checked diaries, Is it sure?");
 
 define("_MD_DIARY_OPTION","Option");
 define("_MD_DIARY_UPDATE_TIME","Update the registered date.");

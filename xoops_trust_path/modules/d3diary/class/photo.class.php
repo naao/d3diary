@@ -76,6 +76,7 @@ class D3diaryPhoto
 			$i= (int)$dbdat['bid'];
 			$photo = & $this->photos[$i][$p] ;
 			
+			$photo['bid']	= $i ;
 			$photo['uid']	= (int)$dbdat['uid'] ;
 			$photo['pid']   = $dbdat['pid'] ;
 			$photo['ptype'] = $dbdat['ptype'] ;
@@ -190,7 +191,7 @@ class D3diaryPhoto
 		global $xoopsDB;
 	
 		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_photo')." 
-				 WHERE bid='".$this->bid."' and pid IN (".implode(',',$this->pids).")";
+				 WHERE bid='".$this->bid."' AND pid IN (".implode(',',$this->pids).")";
 		$result = $xoopsDB->query($sql);
 	}
 
@@ -198,7 +199,7 @@ class D3diaryPhoto
 		global $xoopsDB;
 	
 		$sql = "DELETE FROM ".$xoopsDB->prefix($mydirname.'_photo')." 
-				 WHERE bid='".$this->bid."' and pid IN (".implode(',',$this->pids).")";
+				 WHERE bid='".$this->bid."' AND pid IN (".implode(',',$this->pids).")";
 		$result = $xoopsDB->queryF($sql);
 	}
 

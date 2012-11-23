@@ -173,6 +173,7 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 	$this->q_day = (int)$this->func->getpost_param('day') ;
 	$this->q_odr = htmlspecialchars( $this->func->getpost_param('odr'), ENT_QUOTES ) ;
 	$this->q_fr = (int)$this->func->getpost_param('fr') ;
+	$this->q_multidel = (int)$this->func->getpost_param('multidel') ;
 
 	// create url for sort and common links
 	$this->urluppr = XOOPS_URL.'/modules/'.$this->mydirname.'/index.php?' ;
@@ -191,6 +192,9 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 			$this->urlbase = "req_uid=".$this->req_uid ;
 		} else {
 			$this->urlbase = "page=diarylist" ;
+		}
+		if ( $this->q_multidel > 0 ) {
+			$this->urlbase .= "&amp;multidel=1";
 		}
 	}
 		$this->urlbase_exfr = $this->urlbase ;
