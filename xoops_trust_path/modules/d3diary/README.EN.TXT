@@ -100,6 +100,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2012/12/23 ver0.27
+	- Adapted to xoops_dhtmltarea Smarty plugin for XCL 2.2. (thx nao-pon)
+	  In case the text editor module of XCL2.2 is installded, choosed edit area --> xoopsdhtml
+	  and HTML editor button --> no turned on the editor, ckeditor4 is recommended.
+	
 2012/11/21 ver0.26
 	- Enabled deletion of multi selected entries on index page.
 	- Changed jump url on diarylist from external blog directly to the personal other list.
