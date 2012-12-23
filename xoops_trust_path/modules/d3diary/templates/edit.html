@@ -265,24 +265,26 @@
 <input type="button" name="nd_sub" value="<{$smarty.const._MD_YT_ADD}>" onclick="return nd_input();" /><br />
 </div>
 <{if $yd_photo }>
-<hr />
-<span id="pinserter" style="cursor:pointer;font-weight:normal;font-size:100%;border:gray 1px solid;" onclick="pinserter_area()"><{$smarty.const._MD_P_INSOPEN}></span><br />
-<div id="imginserter" style="display:none;">
-	img<input type='radio' name='p_method' value="img" checked="checked" />&nbsp;|&nbsp;
-	siteimg<input type='radio' name='p_method' value="siteimg" />
-	<{if $allow_html}>&nbsp;|&nbsp;html<input type='radio' name='p_method' value="html" /><{/if}>
-	<br />
-	<input type='checkbox' name='withinfo' id='p_withinfo' value='yes' checked="checked" /><{$smarty.const._MD_P_WITHINFO}>
-	<br />
-	<span id="img_1" style="cursor:pointer;" onclick="return photo2body('l');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignleft.gif" alt="<{$smarty.const._MD_P_INSLEFT}>" title="<{$smarty.const._MD_P_INSLEFT}>" /></span>
-	<span id="img_2" style="cursor:pointer;" onclick="return photo2body('c');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/aligncenter.gif" alt="<{$smarty.const._MD_P_INSCENTER}>" title="<{$smarty.const._MD_P_INSCENTER}>" /></span>
-	<span id="img_3" style="cursor:pointer;" onclick="return photo2body('r');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignright.gif" alt="<{$smarty.const._MD_P_INSRIGHT}>" title="<{$smarty.const._MD_P_INSRIGHT}>" /></span>
-	<br />
-	<span id="img_4" style="cursor:pointer;" onclick="return photo2body('lb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigleft.gif" alt="<{$smarty.const._MD_P_INSLEFT}>" title="<{$smarty.const._MD_P_INSLEFT}>" /></span>
-	<span id="img_5" style="cursor:pointer;" onclick="return photo2body('cb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigcenter.gif" alt="<{$smarty.const._MD_P_INSCENTER}>" title="<{$smarty.const._MD_P_INSCENTER}>" /></span>
-	<span id="img_6" style="cursor:pointer;" onclick="return photo2body('rb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigright.gif" alt="<{$smarty.const._MD_P_INSRIGHT}>" title="<{$smarty.const._MD_P_INSRIGHT}>" /></span>
-	<br />
-	<input type="button" name="clear" value="<{$smarty.const._MD_P_CLEARFLOAT}>" onclick="return d3diary_clear();" /><br />
+<div class="diary_textarea_inserter">
+	<hr />
+	<span id="pinserter" style="cursor:pointer;font-weight:normal;font-size:100%;border:gray 1px solid;" onclick="pinserter_area()"><{$smarty.const._MD_P_INSOPEN}></span><br />
+	<div id="imginserter" style="display:none;">
+		img<input type='radio' name='p_method' value="img" checked="checked" />&nbsp;|&nbsp;
+		siteimg<input type='radio' name='p_method' value="siteimg" />
+		<{if $allow_html}>&nbsp;|&nbsp;html<input type='radio' name='p_method' value="html" /><{/if}>
+		<br />
+		<input type='checkbox' name='withinfo' id='p_withinfo' value='yes' checked="checked" /><{$smarty.const._MD_P_WITHINFO}>
+		<br />
+		<span id="img_1" style="cursor:pointer;" onclick="return photo2body('l');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignleft.gif" alt="<{$smarty.const._MD_P_INSLEFT}>" title="<{$smarty.const._MD_P_INSLEFT}>" /></span>
+		<span id="img_2" style="cursor:pointer;" onclick="return photo2body('c');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/aligncenter.gif" alt="<{$smarty.const._MD_P_INSCENTER}>" title="<{$smarty.const._MD_P_INSCENTER}>" /></span>
+		<span id="img_3" style="cursor:pointer;" onclick="return photo2body('r');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignright.gif" alt="<{$smarty.const._MD_P_INSRIGHT}>" title="<{$smarty.const._MD_P_INSRIGHT}>" /></span>
+		<br />
+		<span id="img_4" style="cursor:pointer;" onclick="return photo2body('lb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigleft.gif" alt="<{$smarty.const._MD_P_INSLEFT}>" title="<{$smarty.const._MD_P_INSLEFT}>" /></span>
+		<span id="img_5" style="cursor:pointer;" onclick="return photo2body('cb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigcenter.gif" alt="<{$smarty.const._MD_P_INSCENTER}>" title="<{$smarty.const._MD_P_INSCENTER}>" /></span>
+		<span id="img_6" style="cursor:pointer;" onclick="return photo2body('rb');"><img src="<{$xoops_url}>/modules/<{$mydirname}>/images/alignbigright.gif" alt="<{$smarty.const._MD_P_INSRIGHT}>" title="<{$smarty.const._MD_P_INSRIGHT}>" /></span>
+		<br />
+		<input type="button" name="clear" value="<{$smarty.const._MD_P_CLEARFLOAT}>" onclick="return d3diary_clear();" /><br />
+	</div>
 </div>
 <{/if}>
 </td>
@@ -361,7 +363,7 @@
 	<input type='hidden' name='pid[]' value='<{$photo.pid}>' />
 	<input type='hidden' name='pname[]' value='<{$photo.pname}>' />
 	<p><{$smarty.const._MD_PHOTO_SELECT}><input type='checkbox' name='psel[]' id='psel<{$num}>' value='<{$photo.pid}>::<{$photo.pname}>' /></p>
-	<{if !$photo.prev}><p><{$smarty.const._MD_P_INSSELECT}><input type='radio' name='pins' value='<{$photo.thumbnail}>::<{$photo.pname}>'/></p><{/if}>
+	<{if !$photo.prev}><p class="diary_textarea_inserter"><{$smarty.const._MD_P_INSSELECT}><input type='radio' name='pins' value='<{$photo.thumbnail}>::<{$photo.pname}>'/></p><{/if}>
 	<{if $mod_config.photo_useinfo==1}>
 		<textarea name='pvinfo[]' id='pvinfo<{$num}>' rows="2" cols="50"><{$photo.pinfo}></textarea>
 	<{/if}>
