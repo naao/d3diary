@@ -229,15 +229,33 @@
 </td>
 <td class="even" style="border:1px solid gray;">
 <a name='moresmiley'></a>
+<{assign var=dohtml value=$yd_data.dohtml}>
 <{if $mod_config.body_editor=="xoopsdhtml"}>
-<div><input type="checkbox" id="switch_bbcode" onclick="bbcode_area()" />
-<label for="switch_bbcode"><{$smarty.const._MD_SW_BBCODE}></label></div>
-      <{xoopsdhtmltarea name='diary' id='diary' cols=40 rows=15 value=$yd_data.diary4edit pre_style="display:none;" post_style="display:none;"}>
+	<{if $smarty.const.LEGACY_BASE_VERSION|version_compare:'2.2':'>=' }>
+		<{if $allow_html && ($dohtml || !$yd_data.diary4edit)}>
+			<{assign var=editor value=html}>
+		<{else}>
+			<{assign var=editor value=bbcode}>
+		<{/if}>
+		<{xoops_dhtmltarea class=$editor name=diary id=diary cols=40 rows=15 value=$yd_data.diary4edit|htmlspecialchars_decode:$smarty.const.ENT_QUOTES editor=$editor}>
+		<{if !$entry.contents4edit}>
+			<{if $editor == 'html'}>
+				<{assign var=dohtml value=1}>
+			<{elseif $editor == 'bbcode'}>
+				<{assign var=dohtml value=0}>
+			<{/if}>
+		<{/if}>
+	<{else}>
+	<div><input type="checkbox" id="switch_bbcode" onclick="bbcode_area()" />
+	<label for="switch_bbcode"><{$smarty.const._MD_SW_BBCODE}></label></div>
+	      <{xoopsdhtmltarea name='diary' id='diary' cols=40 rows=15 value=$yd_data.diary4edit pre_style="display:none;" post_style="display:none;"}>
+	<{/if}>
 <{else}>
       <textarea name="diary" id='diary' onselect="xoopsSavePosition('diary');" onclick="xoopsSavePosition('diary');" onkeyup="xoopsSavePosition('diary');" rows="15" cols="40"><{$yd_data.diary4edit}></textarea>
       <br /><{$smilylist}>
 <{/if}>
 <br />
+<div class="diary_textarea_inserter">
 <input id="entry_pagebreak" value="<{$smarty.const._MD_PAGEBREAK}>" onclick='xoopsCodeSmilie("diary", "\n[pagebreak]\n");' type="button"><br />
 <{$smarty.const._MD_YT_URL}>
 <input type="text" name="yt" id="yt" value="" />
@@ -245,7 +263,7 @@
 <{$smarty.const._MD_ND_URL}>
 <input type="text" name="nd" id="nd" value="" />
 <input type="button" name="nd_sub" value="<{$smarty.const._MD_YT_ADD}>" onclick="return nd_input();" /><br />
-
+</div>
 <{if $yd_photo }>
 <hr />
 <span id="pinserter" style="cursor:pointer;font-weight:normal;font-size:100%;border:gray 1px solid;" onclick="pinserter_area()"><{$smarty.const._MD_P_INSOPEN}></span><br />
@@ -274,7 +292,7 @@
 <{$smarty.const._MD_DIARY_OPTION}></td>
 <td class="even" style="border:1px solid gray;">
 <{if $allow_html}>
-<input type="checkbox" name="dohtml" id="dohtml" value="1" <{if $yd_data.dohtml==1}>checked<{/if}> />
+<input type="checkbox" name="dohtml" id="dohtml" value="1" <{if $dohtml==1}>checked<{/if}> />
 <{$smarty.const._MD_DO_HTML}><br />
 <{else}>
         <input type="hidden" name="dohtml" id="dohtml" value="0" />
