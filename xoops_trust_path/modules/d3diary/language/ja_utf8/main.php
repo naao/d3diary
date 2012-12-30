@@ -119,7 +119,11 @@ define("_MD_PHOTO_MAXSIZE","※写真の登録可能サイズ：合計");
 define("_MD_TODIARY","日記ページへ移動します");
 define("_MD_SUBMIT","送信する");
 define("_MD_PREVIEW","プレビュー");
-define("_MD_DO_HTML","HTML有効 (BBcode無効)");
+define("_MD_DO_HTML","HTML有効 (BBcode無効)");	// Use until version <= 0.27
+define("_MD_DO_HTML0","BBcodeと改行有効");
+define("_MD_DO_HTML1","HTMLのみ有効 (BBcode無効)");
+define("_MD_DO_HTML2","HTMLとBBcode有効");
+define("_MD_DO_HTML3","HTMLとBBcode、改行有効");
 define("_MD_PAGEBREAK","[pagebreak]タグ（本文区切）を挿入");
 define("_MD_SW_BBCODE","BBコード入力補助を表示／非表示");
 define("_MD_ROTATE","回転");

@@ -526,7 +526,9 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		$entry[$i]['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$entry[$i]['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 
-		$entry[$i]['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
+		//$entry[$i]['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
+
+		$entry[$i]['diary'] = $func->substrTarea($dbdat['diary'], $entry[$i]['dohtml'], $charmax);
 
 		// openarea overrides
 		$_tmp_openarea = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;
