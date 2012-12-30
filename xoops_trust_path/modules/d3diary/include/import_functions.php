@@ -120,16 +120,18 @@ if ( ! function_exists('d3diary_import_from_d3blog') ) {
 		$slct_groups_sub = "TRIM(LEADING '|".$gANO."' FROM TRIM(LEADING '|".$gUSR."' 
 					FROM TRIM(LEADING '|".$gADM."' FROM TRIM(LEADING '|".$gALL."' FROM groups))))";
 		$slct_groups = "IF(".$slct_openarea." LIKE '10',".$slct_groups_sub.",'')";
+		
+			// enable html and bbcode : ver 0.28
+		$slct_dohtml = "IF(`dohtml`='1', IF(`doxcode`='1', IF(`dobr`='1','3','2'), '1'), '0')" ;
 
 		$from_table = $db->prefix( $from_dirname.'_entry' ) ;
 		$to_table = $db->prefix( $mydirname.'_diary' ) ;
 		$db->query( "DELETE FROM `$to_table`" ) ;
 		$irs = $db->query( "INSERT INTO `$to_table` (bid,cid,uid,title,diary,update_time,create_time,dohtml,openarea,vgids,view) 
 			SELECT bid,cid+10000,uid,title,TRIM(TRAILING '[pagebreak]\n' FROM concat(excerpt,'[pagebreak]\n',body)),
-				FROM_UNIXTIME(modified),FROM_UNIXTIME(created),dohtml,".$slct_openarea.",".$slct_groups.",counter 
+				FROM_UNIXTIME(modified),FROM_UNIXTIME(created),".$slct_dohtml.",".$slct_openarea.",".$slct_groups.",counter 
 				FROM `$from_table`" ) ;
 		if( ! $irs ) redirect_header( XOOPS_URL."/modules/$mydirname/admin/index.php?page=import" , 3 , $from_table._MD_IMPORTERROR ) ;
-
 		// category 
 			// process subcat
 		$slct_subcat = "IF(`pid`>0,'1','0')";
