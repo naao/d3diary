@@ -1541,6 +1541,35 @@ function manage_photos ( & $photoObj, & $diaryObj, & $psels, & $psel_names, $act
 
 }
 
+function explodeHtml( $html )
+{
+	switch ($html){
+		case 1:
+			$dohtml = 1;
+			$bbcode = 0;
+			$dobr = 0;
+			break;
+		case 2:
+			$dohtml = 1;
+			$bbcode = 1;
+			$dobr = 0;
+			break;
+		case 3:
+			$dohtml = 1;
+			$bbcode = 1;
+			$dobr = 1;
+			break;
+		case 0:
+		default:
+			$dohtml = 0;
+			$bbcode = 1;
+			$dobr = 1;
+	}
+	
+	return array( $dohtml, $bbcode, $dobr );
+	
+}
+
 // for index page , diarylist page and  b_diarylst block
 // $myts, $d3dConf ,$f_strip_tag arguments are used from block only
 function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
@@ -1555,9 +1584,7 @@ function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
  	$replacement = array('','');
  	$tex = preg_replace($pattern,$replacement,$tex);
 	
-	$dohtml = (1 <= $html) ? 1 : 0 ;
-	$bbcode = (2 <= $html) ? 1 : 0 ;
-	$dobr   = (3 <= $html) ? 1 : (0 == $html) ? 1 : 0 ;
+	list( $dohtml, $bbcode, $dobr ) = $this->explodeHtml( $html );
 
     if ($max > 0) {
 	if( $_pos !== false ) {
@@ -1583,9 +1610,7 @@ function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
 // $myts, $d3dConf arguments are used from block only
 function stripPb_Tarea($tex, $html = 0)
 {
-	$dohtml = (1 <= $html) ? 1 : 0 ;
-	$bbcode = (2 <= $html) ? 1 : 0 ;
-	$dobr   = (3 <= $html) ? 1 : (0 == $html) ? 1 : 0 ;
+	list( $dohtml, $bbcode, $dobr ) = $this->explodeHtml( $html );
 
 	$t_conv = $this->myts->displayTarea($tex,$dohtml,1,$bbcode,$bbcode,$dobr);
 
