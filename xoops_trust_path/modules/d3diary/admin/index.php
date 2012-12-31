@@ -32,6 +32,28 @@ foreach($check_dir as $dir){
 
 $dir_res = '<ul><li>'.join('</li><li>', $dir_res).'</li></ul>';
 
+$check_funcs = array(
+	'imagecreatefromgif',
+	'imagecreatefromjpeg',
+	'imagecreatefrompng',
+	'imagecreatetruecolor',
+	'imagecopyresampled'
+	);
+	
+$func_res = array();
+
+foreach($check_funcs as $_func){
+		$_rslt = $_func;
+	if (function_exists($_func)){
+		$_rslt .= ' (<span style="color:green;font-weight:bold;">OK</span>)';
+	} else {
+		$_rslt .= ' (<span style="color:red;font-weight:bold;">NG</span>)';
+	}
+	$func_res[] = $_rslt;
+}
+
+$func_res = '<ul><li>'.join('</li><li>', $func_res).'</li></ul>';
+
 // output
 xoops_cp_header() ;
 
@@ -41,6 +63,9 @@ echo <<<EOD
 
 <h3>Writable check results</h3>
 $dir_res
+
+<h3>Function check results</h3>
+$func_res
 
 EOD;
 

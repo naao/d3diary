@@ -1541,6 +1541,35 @@ function manage_photos ( & $photoObj, & $diaryObj, & $psels, & $psel_names, $act
 
 }
 
+function explodeHtml( $html )
+{
+	switch ($html){
+		case 1:
+			$dohtml = 1;
+			$bbcode = 0;
+			$dobr = 0;
+			break;
+		case 2:
+			$dohtml = 1;
+			$bbcode = 1;
+			$dobr = 0;
+			break;
+		case 3:
+			$dohtml = 1;
+			$bbcode = 1;
+			$dobr = 1;
+			break;
+		case 0:
+		default:
+			$dohtml = 0;
+			$bbcode = 1;
+			$dobr = 1;
+	}
+	
+	return array( $dohtml, $bbcode, $dobr );
+	
+}
+
 // for index page , diarylist page and  b_diarylst block
 // $myts, $d3dConf ,$f_strip_tag arguments are used from block only
 function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
@@ -1555,37 +1584,19 @@ function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
  	$replacement = array('','');
  	$tex = preg_replace($pattern,$replacement,$tex);
 	
+	list( $dohtml, $bbcode, $dobr ) = $this->explodeHtml( $html );
+
     if ($max > 0) {
-	if ($html == 1) {
-		if( $_pos !== false ) {
-			$_temptex = mb_substr($tex,0,$_pos,$_enc)."...";
-			//$_temptex = mb_substr($tex,0,$_pos)."...";
-			$t_conv = $this->myts->displayTarea($_temptex,1,1,0,0,0);
-			if($f_strip_tag==true) {$t_conv = mb_substr(strip_tags($t_conv),0,$max,$_enc) ;}
-			//if($f_strip_tag==true) {$t_conv = mb_substr(strip_tags($t_conv),0,$max) ;}
-		} else {
-			$t_conv = mb_substr(strip_tags($tex),0,$max,$_enc)."...";
-			//$t_conv = mb_substr(strip_tags($tex),0,$max)."...";
-		}
+	if( $_pos !== false ) {
+		$_temptex = mb_substr($tex,0,$_pos,$_enc)."...";
+		$t_conv = $this->myts->displayTarea($_temptex,$dohtml,1,$bbcode,$bbcode,$dobr);
+		if($f_strip_tag==true) {$t_conv = mb_substr(strip_tags($t_conv),0,$max,$_enc) ;}
 	} else {
-		if( $_pos !== false ) {
-			$_temptex = mb_substr($tex,0,$_pos,$_enc)."...";
-			//$_temptex = mb_substr($tex,0,$_pos)."...";
-			$t_conv = $this->myts->displayTarea($_temptex,0,1,1,1,1);
-			if($f_strip_tag==true) {$t_conv = mb_substr(strip_tags($t_conv),0,$max,$_enc) ;}
-			//if($f_strip_tag==true) {$t_conv = mb_substr(strip_tags($t_conv),0,$max) ;}
-		} else {
-			$t_conv = mb_substr( strip_tags($this->myts->displayTarea($tex,0,1,1,1,1)),0,$max,$_enc)."...";
-			//$t_conv = mb_substr( strip_tags($this->myts->previewTarea($tex,0,1,1,1,1)),0,$max)."...";
-		}
+		$t_conv = mb_substr( strip_tags($this->myts->displayTarea($tex,$dohtml,1,$bbcode,$bbcode,$dobr)),0,$max,$_enc)."...";
 	}
     } else {
 		$_temptex = str_replace($pbreak,"",$tex);
-	if ($html == 1) {
-		$t_conv = $this->myts->displayTarea($_temptex,1,1,0,0,0);
-	} else {
-		$t_conv = $this->myts->displayTarea($_temptex,0,1,1,1,1);
-	}
+		$t_conv = $this->myts->displayTarea($_temptex,$dohtml,1,$bbcode,$bbcode,$dobr);
     }
 
 	$pattern = array('/\[clearfloat\]/i');
@@ -1599,11 +1610,9 @@ function substrTarea( $tex, $html = 0, $max = 30, $f_strip_tag=false, $enc="" )
 // $myts, $d3dConf arguments are used from block only
 function stripPb_Tarea($tex, $html = 0)
 {
-	if ($html == 1) {
-		$t_conv = $this->myts->displayTarea($tex,1,1,0,0,0);
-	} else {
-		$t_conv = $this->myts->displayTarea($tex,0,1,1,1,1);
-	}
+	list( $dohtml, $bbcode, $dobr ) = $this->explodeHtml( $html );
+
+	$t_conv = $this->myts->displayTarea($tex,$dohtml,1,$bbcode,$bbcode,$dobr);
 
 	$pattern = array('/\[\[YT:([0-9a-z_-]+)\]\]/i','/\[\[ND:([0-9a-z_-]+)\]\]/i','/\[clearfloat\]/i');
 	$replacement1 = '<br /><object width="425" height="344">'.

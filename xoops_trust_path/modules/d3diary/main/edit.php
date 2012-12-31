@@ -274,7 +274,7 @@ switch ( $eparam['mode'] ) {
 
 	$diary->title=$func->getpost_param('title');
 	$diary->dohtml=intval($func->getpost_param('dohtml'));
-	if ($diary->dohtml == 1) {
+	if ($diary->dohtml >= 1) {
 		$diary->diary = $func->htmlPurifier($func->getpost_param('diary'));
 	} else {
 		$diary->diary = $func->getpost_param('diary');
@@ -396,7 +396,7 @@ switch ( $eparam['mode'] ) {
 	}
 	$diary->title=$func->getpost_param('title');
 	$diary->dohtml=intval($func->getpost_param('dohtml'));
-	if ($diary->dohtml == 1) {
+	if ($diary->dohtml >= 1) {
 		$diary->diary = $func->htmlPurifier($func->getpost_param('diary'));
 	} else {
 		$diary->diary = $func->getpost_param('diary');

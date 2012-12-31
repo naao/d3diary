@@ -294,11 +294,18 @@
 <{$smarty.const._MD_DIARY_OPTION}></td>
 <td class="even" style="border:1px solid gray;">
 <{if $allow_html}>
-<input type="checkbox" name="dohtml" id="dohtml" value="1" <{if $dohtml==1}>checked<{/if}> />
-<{$smarty.const._MD_DO_HTML}><br />
+<div>
+<select name="dohtml" id="dohtml">
+<option value=0 <{if $yd_data.dohtml==0}>selected<{/if}>><{$smarty.const._MD_DO_HTML0}></option>
+<option value=1 <{if $yd_data.dohtml==1}>selected<{/if}>><{$smarty.const._MD_DO_HTML1}></option>
+<option value=2 <{if $yd_data.dohtml==2}>selected<{/if}>><{$smarty.const._MD_DO_HTML2}></option>
+<option value=3 <{if $yd_data.dohtml==3}>selected<{/if}>><{$smarty.const._MD_DO_HTML3}></option>
+</select>
+</div>
 <{else}>
         <input type="hidden" name="dohtml" id="dohtml" value="0" />
 <{/if}>
+
 <{if $allow_regdate}>
 <input type="checkbox" name="reg_time" id="reg_time" value="1" <{if $yd_data.reg_time==1}>checked<{/if}>/>
 <{$smarty.const._MD_DIARY_REG_TIME}>
@@ -496,10 +503,10 @@ function chgcname() {
 		dohtml[<{$catopt[num].cid}>]=0;
 	<{/if}>
 	<{/section}>
-	if(dohtml[cid]==1){
-		document.getElementById("dohtml").checked=true;
+	if(dohtml[cid]>=1){
+		document.getElementById("dohtml").options[1].selected = true;
 	}else{
-		document.getElementById("dohtml").checked=false;
+		document.getElementById("dohtml").options[0].selected = true;
 	}
 }
 

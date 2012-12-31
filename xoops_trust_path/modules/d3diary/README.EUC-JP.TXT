@@ -96,6 +96,10 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2012/12/30 ver0.28
+	- HTML投稿とBBcodeの両方を有効にできるようにした（つもり・・） (thx otanuki)
+	- 管理画面でGD関連の関数定義チェックを追加した。 (thx nouphet)
+	
 2012/12/23 ver0.27
 	- XCL 2.2 以降の xoops_dhtmltarea Smarty プラグインに対応。(thx nao-pon)
 	  XCL 2.2 対応のエディタモジュールがインストールされた環境下で、本文編集エリア: xoopsdhtml, 本文HTML
