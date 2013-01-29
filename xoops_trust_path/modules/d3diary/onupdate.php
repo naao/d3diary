@@ -151,6 +151,32 @@ function d3diary_onupdate_base( $module , $mydirname )
 		$result = $db->queryF( $sql ) ;
 	}
 	
+	// 0.28 -> 0.29
+	// add indexes for tables
+	$check_sql = "SHOW INDEX FROM ".$db->prefix($mydirname."_category")." WHERE Column_name='idx_uid'" ;
+	$result = $db->query( $check_sql );
+	$dbdat = $db->fetchArray($result);
+	if( ! $dbdat ) {
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_category")." 
+			ADD KEY idx_uid (`uid`,`cid`,`blogtype`,`openarea`)" ) ;
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_config")." 
+			ADD KEY idx_uid (`uid`,`blogtype`,`openarea`)" ) ;
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_diary")." 
+			ADD KEY idx_uid (`uid`,`cid`,`openarea`,`create_time`)" ) ;
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_newentry")." 
+			ADD KEY idx_uid (`uid`,`cid`,`blogtype`,`create_time`)" ) ;
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_photo")." 
+			ADD KEY idx_uid (`uid`)" ) ;
+	}
+
+	$check_sql = "SHOW INDEX FROM ".$db->prefix($mydirname."_cnt_ip")." WHERE Column_name='acctime'" ;
+	$result = $db->query( $check_sql );
+	$dbdat = $db->fetchArray($result);
+	if( ! $dbdat ) {
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_cnt_ip")." 
+			ADD KEY `acctime` (`acctime`)" ) ;
+	}
+
 	// TEMPLATES (all templates have been already removed by modulesadmin)
 	$tplfile_handler =& xoops_gethandler( 'tplfile' ) ;
 	$tpl_path = dirname(__FILE__).'/templates' ;

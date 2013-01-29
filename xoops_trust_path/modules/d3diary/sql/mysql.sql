@@ -12,7 +12,8 @@ CREATE TABLE category (
   `dohtml` tinyint(1) unsigned NOT NULL,
   `vgids` varchar(255) default NULL,
   `vpids` varchar(255) default NULL,
-  PRIMARY KEY  (`uid`,`cid`)
+  PRIMARY KEY  (`uid`,`cid`),
+  KEY `idx_uid` (`uid`,`cid`,`blogtype`,`openarea`)
 ) ENGINE=MyISAM;
 
 
@@ -28,7 +29,8 @@ CREATE TABLE cnt_ip (
   `uid` int(10) unsigned NOT NULL,
   `accip` varchar(255) NOT NULL,
   `acctime` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`uid`,`accip`)
+  PRIMARY KEY  (`uid`,`accip`),
+  KEY `acctime` (`acctime`)
 ) ENGINE=MyISAM;
 
 
@@ -43,7 +45,8 @@ CREATE TABLE config (
   `keep` tinyint(1) unsigned NOT NULL,
   `uptime` int(10) unsigned NOT NULL default '0',
   `updated` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`uid`)
+  PRIMARY KEY  (`uid`),
+  KEY `idx_uid` (`uid`,`blogtype`,`openarea`)
 ) ENGINE=MyISAM;
 
 
@@ -60,7 +63,8 @@ CREATE TABLE diary (
   `vgids` varchar(255) default NULL,
   `vpids` varchar(255) default NULL,
   `view` int(10) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`bid`)
+  PRIMARY KEY  (`bid`),
+  KEY `idx_uid` (`uid`,`cid`,`openarea`,`create_time`)
 ) ENGINE=MyISAM;
 
 
@@ -72,7 +76,8 @@ CREATE TABLE newentry (
   `create_time` datetime NOT NULL,
   `blogtype` tinyint(1) unsigned NOT NULL,
   `diary` text NOT NULL,
-  PRIMARY KEY  (`uid`,`cid`)
+  PRIMARY KEY  (`uid`,`cid`),
+  KEY `idx_uid` (`uid`,`cid`,`blogtype`,`create_time`)
 ) ENGINE=MyISAM;
 
 
@@ -83,7 +88,8 @@ CREATE TABLE photo (
   `ptype` tinytext NOT NULL,
   `tstamp` datetime NOT NULL,
   `info` text,
-  PRIMARY KEY  (`bid`,`pid`)
+  PRIMARY KEY  (`bid`,`pid`),
+  KEY `idx_uid` (`uid`)
 ) ENGINE=MyISAM;
 
 CREATE TABLE tag (

@@ -96,6 +96,9 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2013/1/29 ver0.29
+	- 各テーブルに複合indexをつけてみた。効果はあまり無いかも。
+	
 2012/12/30 ver0.28
 	- HTML投稿とBBcodeの両方を有効にできるようにした（つもり・・） (thx otanuki)
 	- 管理画面でGD関連の関数定義チェックを追加した。 (thx nouphet)

@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2013/1/29 ver0.29
+	- Added multiple indexes for tables.
+
 2012/12/30 ver0.28
 	- Enable both HTML and BBcode. (thx otanuki)
 	- Added GD functions check in preference screen.  (thx nouphet)
