@@ -100,6 +100,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2013/1/31 ver0.29.1
+	- Optimize SQL query index page and diarylist page.
+	- Brushup the url link of page navigation on the month list and blogger list blocks
+	  to keep page position.
+
 2013/1/29 ver0.29
 	- Added multiple indexes for tables.
 
