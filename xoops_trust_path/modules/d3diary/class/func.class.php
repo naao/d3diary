@@ -272,7 +272,7 @@ function get_categories($req_uid, $uid, $block=false){
 		//var_dump($whr_openarea);
 	}
 
-	$sql = "SELECT * 
+	$sql = "SELECT cid, cname, subcat, blogtype 
 			FROM ".$db->prefix($this->mydirname.'_category')." c 
 	          	WHERE ".$whr_uid2." AND ".$whr_openarea." ORDER BY c.corder ASC";
 
@@ -448,7 +448,8 @@ function get_friends($my_friends){
 	$db = & $this->d3dConf->db;
 
 	$max_size = 10;
-	$offset = isset($this->getpost_param['offset'])? intval($this->getpost_param['offset']) : 0;
+	$_offst = $this->getpost_param('offset');
+	$offset = isset($_offst) ? (int)$_offst : 0;
 	
 	$arr_friends = array();
 
@@ -500,8 +501,8 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 
 	$db = & $this->d3dConf->db;
 
-	$_offset_ = $this->getpost_param('mofst');
-	$offset = isset($_offset_) ?(int)$_offset_ : 0;
+	$_offst = $this->getpost_param('mofst');
+	$offset = isset($_offst) ? (int)$_offst : 0;
 	
 	$_mode = $this->getpost_param('mode');
 	if ( $_mode == "moth" || $_mode == "date" ) {
@@ -536,8 +537,9 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 		//var_dump($whr_openarea);
 	}
 
-	$sql = "SELECT LEFT(d.create_time, 7) as thismonth, count(*) as entries, 
-			d.uid, d.cid, d.openarea, c.uid, c.cid, c.openarea 
+	$sql = "SELECT SQL_CALC_FOUND_ROWS LEFT(d.create_time, 7) as thismonth, count(*) as entries, ";	// for MySQL Only
+	//$sql = "SELECT LEFT(d.create_time, 7) as thismonth, count(*) as entries, ";	 		// for All SQL
+	$sql  .= "	d.uid, d.cid, d.openarea, c.uid, c.cid, c.openarea 
 			FROM ".$db->prefix($this->mydirname.'_diary')." d 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c 
 			ON ((d.uid=c.uid  OR c.uid='0') AND d.cid=c.cid) 
@@ -545,7 +547,6 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 			WHERE ".$whr_uid." AND ".$whr_openarea.$whr_nofuture." 
 			GROUP BY thismonth ORDER BY thismonth DESC";
 
-        $count = $db->getRowsNum( $db->query($sql) );
         $result = $db->query($sql, $max_size, $offset);
 
 	$str_montharray = array(); $yd_monlist = array();
@@ -562,6 +563,21 @@ function get_monlist( $req_uid, $uid, $max_size =12 ){
 			$maxmonth = max($str_montharray);
 			$minmonth = min($str_montharray);
 		}
+
+	//* MySQL Only
+	// get count of bids
+	$sql = "SELECT FOUND_ROWS();";
+	$result = $db->query($sql);
+	$dbdat = $db->fetchArray($result);
+	$count = $dbdat['FOUND_ROWS()'];
+	//*/	
+
+	/*// for All SQL
+	$sql = "SELECT count(d.bid) as rows ".$sql_tmp_base ;
+	$result = $db->query($sql);
+	$dbdat = $db->fetchArray($result);
+	$count = $dbdat['rows'];
+	*/
 
 	if($count>$max_size){
             if( !empty($_SERVER['QUERY_STRING'])) {
@@ -653,64 +669,79 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		}
 	}
 
-	// entries
-	$sql = "SELECT d.uid AS uid, d.bid AS bid, d.title, d.cid, d.diary, d.create_time, d.openarea AS openarea_entry, d.dohtml, d.view, 
-			u.uname, u.name, u.user_avatar, c.openarea AS openarea_cat, c.cname, cfg.openarea 
-			FROM ".$db->prefix($this->mydirname.'_diary')." d 
+	// *********** SQL temporary base for get bids
+	$sql = "SELECT d.bid FROM ".$db->prefix($this->mydirname.'_diary')." d 
 			INNER JOIN ".$db->prefix('users')." u USING(uid) 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c ".$on_uid." 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_config')." cfg ON d.uid=cfg.uid 
 			".$table_tag."
 			WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_timerange.$whr_cat.$whr_tag." 
 			ORDER BY create_time DESC LIMIT 0,".$maxnum;
+
+	$result = $db->query($sql);
+	$got_arr_bids = array();
+	while ( $dbdat = $db->fetchArray($result) ) {
+		$got_arr_bids[] = (int)$dbdat['bid'];
+	}
+	$where_ser_bids = "WHERE d.bid IN (".implode( ',', $got_arr_bids ).")" ;
+
+	// entries
+	$sql = "SELECT d.uid AS uid, d.bid AS bid, d.title, d.cid, d.diary, d.create_time, d.openarea AS openarea_entry, d.dohtml, d.view, 
+			u.uname, u.name, u.user_avatar, c.openarea AS openarea_cat, c.cname, cfg.openarea 
+			FROM ".$db->prefix($this->mydirname.'_diary')." d 
+			INNER JOIN ".$db->prefix('users')." u USING(uid) 
+			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c ".$on_uid." 
+			LEFT JOIN ".$db->prefix($this->mydirname.'_config')." cfg ON d.uid=cfg.uid "
+			.$table_tag
+			.$where_ser_bids. " 
+			ORDER BY create_time DESC";
 	          	
 		//var_dump($sql);
 
 	$result = $db->query($sql);
 
-	$yd_d_list = array(); $yd_list = array(); $new_bids = array();
+	$entry = array(); $_entry = array(); $new_bids = array();
 
 	while ( $dbdat = $db->fetchArray($result) ) {
 	    $i = (int)$dbdat['bid'];
-	    $new_bids[] = $i;
-		$yd_list['bid']   = $i;
-		$yd_list['cid']   = intval($dbdat['cid']);
-		$yd_list['uid']   = intval($dbdat['uid']);
-		$yd_list['title'] = $this->myts->makeTboxData4Show($dbdat['title']);
-		$yd_list['uname'] = $dbdat['uname'];
-		$yd_list['name']  = !empty($dbdat['name']) ? $dbdat['name'] : $dbdat['uname'];
-		$yd_list['create_time']   = $dbdat['create_time'];
-		$yd_list['diary'] = $dbdat['diary'];
-		$yd_list['cname']   = !empty($dbdat['cname']) ? $this->myts->makeTboxData4Show($dbdat['cname']) : "" ;
-		$yd_list['openarea'] = 0;
-		$yd_list['dohtml'] = intval($dbdat['dohtml']);
-		$yd_list['view'] = !empty($dbdat['view']) ? intval($dbdat['view']) : 0 ;
-		$yd_list['url']   = XOOPS_URL.'/modules/'.$this->mydirname.'/index.php?page=detail&bid='.$i;
+		$_entry['bid']   = $i;
+		$_entry['cid']   = intval($dbdat['cid']);
+		$_entry['uid']   = intval($dbdat['uid']);
+		$_entry['title'] = $this->myts->makeTboxData4Show($dbdat['title']);
+		$_entry['uname'] = $dbdat['uname'];
+		$_entry['name']  = !empty($dbdat['name']) ? $dbdat['name'] : $dbdat['uname'];
+		$_entry['create_time']   = $dbdat['create_time'];
+		$_entry['diary'] = $dbdat['diary'];
+		$_entry['cname']   = !empty($dbdat['cname']) ? $this->myts->makeTboxData4Show($dbdat['cname']) : "" ;
+		$_entry['openarea'] = 0;
+		$_entry['dohtml'] = intval($dbdat['dohtml']);
+		$_entry['view'] = !empty($dbdat['view']) ? intval($dbdat['view']) : 0 ;
+		$_entry['url']   = XOOPS_URL.'/modules/'.$this->mydirname.'/index.php?page=detail&bid='.$i;
 		
-		$yd_list['openarea'] = intval($dbdat['openarea']);
-		if (intval($dbdat['openarea_entry'])>0) { $yd_list['openarea'] = $dbdat['openarea_entry'];}
+		$_entry['openarea'] = intval($dbdat['openarea']);
+		if (intval($dbdat['openarea_entry'])>0) { $_entry['openarea'] = $dbdat['openarea_entry'];}
 		elseif (intval($dbdat['openarea_cat'])>0) {
-			$yd_list['openarea'] = intval($dbdat['openarea_cat']);
+			$_entry['openarea'] = intval($dbdat['openarea_cat']);
 		}
 
 		$ctime = preg_split("/[-: ]/", $dbdat['create_time']);
 		$tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
-		$yd_list['tstamp']   = $tstamp;
-		$yd_list['year']   = $this->myformatTimestamp($tstamp, "Y");
-		$yd_list['month']   = $this->myformatTimestamp($tstamp, "m");
-		$yd_list['day']   = $this->myformatTimestamp($tstamp, "d");
-		$yd_list['time']   = $this->myformatTimestamp($tstamp, "H:i");
-		$yd_list['other']  = 0;
+		$_entry['tstamp']   = $tstamp;
+		$_entry['year']   = $this->myformatTimestamp($tstamp, "Y");
+		$_entry['month']   = $this->myformatTimestamp($tstamp, "m");
+		$_entry['day']   = $this->myformatTimestamp($tstamp, "d");
+		$_entry['time']   = $this->myformatTimestamp($tstamp, "H:i");
+		$_entry['other']  = 0;
 			$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
-				$yd_list['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
+				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
-				$yd_list['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
+				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
-		$yd_d_list[$i] = $yd_list;
+		$entry[$i] = $_entry;
 		$mytstamp[$i] = $tstamp;
 
-		$first_date =  $yd_list['create_time'];
+		$first_date =  $_entry['create_time'];
 	}
 	
     if (empty($params['tags'])) {
@@ -742,54 +773,52 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		//var_dump($sql);
 	$result = $db->query($sql);
 	
-	$i = -1000; $yd_list = array();
+	$i = -1000; $_entry = array();
 	while ( $dbdat = $db->fetchArray($result) ) {
-		$yd_list['bid']   = $i ;
-		$yd_list['cid']   = intval($dbdat['cid']);
-		$yd_list['uid']   = intval($dbdat['uid']);
-		$yd_list['title']   = $this->myts->makeTboxData4Show($dbdat['title']);
-		$yd_list['uname'] = $dbdat['uname'];
-		$yd_list['name']  = (!empty($dbdat['name'])) ? $dbdat['name'] : $dbdat['uname'];
-		$yd_list['create_time']   = $dbdat['create_time'];
-		$yd_list['diary'] = strip_tags($dbdat['diary']);
-		$yd_list['cname']   = !empty($dbdat['cname']) ? $this->myts->makeTboxData4Show($dbdat['cname']) : "" ;
-		$yd_list['openarea'] = $dbdat['openarea'] ? (int)$dbdat['openarea'] : 0 ;
-		$yd_list['dohtml'] = 0 ;
-		$yd_list['view'] = 0 ;
-		$yd_list['url']   = $dbdat['url'];
+		$_entry['bid']   = $i ;
+		$_entry['cid']   = intval($dbdat['cid']);
+		$_entry['uid']   = intval($dbdat['uid']);
+		$_entry['title']   = $this->myts->makeTboxData4Show($dbdat['title']);
+		$_entry['uname'] = $dbdat['uname'];
+		$_entry['name']  = (!empty($dbdat['name'])) ? $dbdat['name'] : $dbdat['uname'];
+		$_entry['create_time']   = $dbdat['create_time'];
+		$_entry['diary'] = strip_tags($dbdat['diary']);
+		$_entry['cname']   = !empty($dbdat['cname']) ? $this->myts->makeTboxData4Show($dbdat['cname']) : "" ;
+		$_entry['openarea'] = $dbdat['openarea'] ? (int)$dbdat['openarea'] : 0 ;
+		$_entry['dohtml'] = 0 ;
+		$_entry['view'] = 0 ;
+		$_entry['url']   = $dbdat['url'];
 		
-		if (intval($dbdat['openarea_cat'])>0) { $yd_list['openarea'] = $dbdat['openarea_cat'];}
+		if (intval($dbdat['openarea_cat'])>0) { $_entry['openarea'] = $dbdat['openarea_cat'];}
 
 		$ctime = preg_split("/[-: ]/", $dbdat['create_time']);
 		$tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
-		$yd_list['tstamp']   = $tstamp;
-		$yd_list['year']   = $this->myformatTimestamp($tstamp, "Y");
-		$yd_list['month']   = $this->myformatTimestamp($tstamp, "m");
-		$yd_list['day']   = $this->myformatTimestamp($tstamp, "d");
-		$yd_list['time']   = $this->myformatTimestamp($tstamp, "H:i");
-		$yd_list['other']  = 1;
+		$_entry['tstamp']   = $tstamp;
+		$_entry['year']   = $this->myformatTimestamp($tstamp, "Y");
+		$_entry['month']   = $this->myformatTimestamp($tstamp, "m");
+		$_entry['day']   = $this->myformatTimestamp($tstamp, "d");
+		$_entry['time']   = $this->myformatTimestamp($tstamp, "H:i");
+		$_entry['other']  = 1;
 			$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
-				$yd_list['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
+				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
-				$yd_list['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
+				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
-		$yd_d_list[$i] = $yd_list;
+		$entry[$i] = $_entry;
 		$mytstamp[$i] = $tstamp;
-	//echo"<br />"; var_dump(strval($i)); var_dump($yd_d_list[strval($i)]); echo"<br />"; echo"<br />"; 
+	//echo"<br />"; var_dump(strval($i)); var_dump($entry[strval($i)]); echo"<br />"; echo"<br />"; 
 	    $i++;
 	}
     } //end if (empty($params['tags']))
 	//var_dump($mytstamp);
-	if ($dosort===true && !empty($mytstamp) && !empty($yd_d_list)) {
-		array_multisort($mytstamp, SORT_DESC, $yd_d_list );
+	if ($dosort===true && !empty($mytstamp) && !empty($entry)) {
+		array_multisort($mytstamp, SORT_DESC, $entry );
 	}
 	
-	$this->d3dConf->set_new_bids ( $new_bids );
-	//return array( $yd_d_list, $new_bids );
-	//echo"<br />";	var_dump($new_bids); echo"<br />";echo"<br />";
-	//var_dump($yd_d_list);
-	return $yd_d_list;
+	$this->d3dConf->set_new_bids ( $got_arr_bids );
+
+	return $entry;
 }
 
 function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=true){
@@ -802,8 +831,9 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 	if ( isset( $new_bids ) ) {
 		$bids = $new_bids ;
 	} else {
-		$yd_list =  $this->get_blist ($req_uid,$uid,$maxnum);
+		$_entry =  $this->get_blist ($req_uid,$uid,$maxnum);
 		$this->d3dConf->get_new_bids ( $new_bids );
+		$bids = $new_bids ;
 	}
 	//echo"<br />";	var_dump($new_bids); echo"<br />";echo"<br />";
 
@@ -849,7 +879,7 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 			$whr_bid=" or t.topic_external_link_id IN (0)";
 		}
 		$q_order = 'p.post_time DESC';
-		
+
 		if($only_count) 
 		{
 			$sql = "SELECT count(p.post_id) AS count, MAX(p.post_id) AS com_id, 
@@ -869,18 +899,20 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 				$_com_count[$dbdat['topic_external_link_id']]  =  $dbdat['count'];
 			}
 			if(isset($_com_id)){
-				$whr_num = "p.post_id IN (" .implode( "," , $_com_id ). ") ";
+				$whr_num = "WHERE p.post_id IN (" .implode( "," , $_com_id ). ") ";
 			} else { $whr_num = ""; }
 
 		    $sql = "SELECT p.post_id, p.subject, p.votes_sum, p.votes_count, p.post_time, 
 			p.post_text, p.uid, p.guest_name, p.unique_path, u.uname, u.name,
 			f.forum_id, f.forum_title, t.topic_external_link_id 
 			FROM ".$db->prefix($com_dirname."_posts")." p 
-			INNER JOIN ".$db->prefix($com_dirname."_topics")." t USING(topic_id) 
+			INNER JOIN ".$db->prefix($com_dirname."_topics")." t 
+				ON (t.topic_id=p.topic_id AND ! t.topic_invisible AND ".$whr_bid." ) 
 			INNER JOIN ".$db->prefix($com_dirname."_forums")." f 
 				ON (f.forum_id=t.forum_id AND ".$whr_forum.") 
 			LEFT JOIN ".$db->prefix('users')." u ON p.uid=u.uid 
-			WHERE ".$whr_num." ORDER BY post_time DESC";
+			".$whr_num." ORDER BY p.post_time DESC";
+			//INNER JOIN ".$db->prefix($com_dirname."_topics")." t USING(topic_id) 
 
 		} else {
 			
@@ -890,7 +922,7 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 			d.bid, d.cid, c.cname, c.openarea as openareacat 
 			FROM ".$db->prefix($com_dirname."_posts")." p 
 			INNER JOIN ".$db->prefix($com_dirname."_topics")." t 
-				ON (t.topic_id=p.topic_id AND ! t.topic_invisible ) 
+				ON (t.topic_id=p.topic_id AND ! t.topic_invisible AND ".$whr_bid." ) 
 			INNER JOIN ".$db->prefix($com_dirname."_forums")." f 
 				ON (f.forum_id=t.forum_id AND ".$whr_forum.") 
 			INNER JOIN ".$db->prefix($this->mydirname.'_diary')." d 
@@ -909,6 +941,7 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 		$result = $db->query($sql);
 		while ( $dbdat = $db->fetchArray($result) ) {
 			$yd_comment['com_id']  =  $dbdat['post_id'];
+			$yd_comment['com_num'] = null;
 			if(isset($_com_id[$dbdat['topic_external_link_id']])) {
 				$yd_comment['com_num']  =  $_com_count[$dbdat['topic_external_link_id']];
 			}
@@ -990,10 +1023,11 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 		$result = $db->query($sql);
 		while ( $dbdat = $db->fetchArray($result) ) {
 			$yd_comment['com_id']  =  $dbdat['com_id'];
+			$yd_comment['com_num'] = null;
 			if(isset($_com_id[$dbdat['com_itemid']])) {
 				$yd_comment['com_num']  =  $_com_count[$dbdat['com_itemid']];
-		//var_dump($dbdat['com_itemid']); var_dump($yd_comment['com_num']); 
-			}
+ 			}
+				//var_dump($dbdat['com_itemid']); var_dump($yd_comment['com_num']); 
 			$yd_comment['unique_path']  =  $dbdat['com_id'];
 			$yd_comment['title'] = $this->myts->makeTboxData4Show(mb_substr($dbdat['com_title'],0,20));
 			$yd_comment['datetime']  = intval($dbdat['com_created']);
@@ -1315,20 +1349,45 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 		$f_truncate = !empty($params['f_truncate']) ? $params['f_truncate'] : false ;
 	}
 
-	$sql_base = "FROM ".$db->prefix($this->mydirname.'_photo')." p 
+	$sql_tmp_base = "FROM ".$db->prefix($this->mydirname.'_photo')." p 
 			INNER JOIN ".$db->prefix($this->mydirname.'_diary')." d USING(bid) 
 			INNER JOIN ".$db->prefix('users')." u ON d.uid=u.uid 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c ".$on_uid." 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_config')." cfg ON d.uid=cfg.uid 
-			".$table_tag."
-			WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_pid.$whr_cid.$whr_cat.$whr_tag.$whr_time.$odr ;
+			".$table_tag;
+
+	$tmp_where = " WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_pid.$whr_cid.$whr_cat.$whr_tag.$whr_time.$odr ;
 
 	// get total photos count
 	$got_navi = array();
 	if ($max_entry) {
-		$sql = "SELECT count(p.pid) as count ".$sql_base ;
+
+		// *********** SQL temporary for get bids
+		// get entries on selected offset
+		$sql = "SELECT SQL_CALC_FOUND_ROWS p.pid ".$sql_tmp_base.$tmp_where ;	// for MySQL Only
+		//$sql = "SELECT d.bid ".$sql_tmp_base.$tmp_where ;			// for All SQL
+		$result = $db->query($sql, $max_entry, $offset);
+		$got_arr_pids = array();
+		while ( $dbdat = $db->fetchArray($result) ) {
+			$got_arr_pids[] = "'".$dbdat['pid']."'";
+		}
+		$where_ser_pids = " WHERE p.pid IN (".implode( ',', $got_arr_pids ).")" ;
+
+		//* MySQL Only
+		// get count of bids
+		$sql = "SELECT FOUND_ROWS();";
 		$result = $db->query($sql);
-		list ($count) = $db->fetchRow($result);
+		$dbdat = $db->fetchArray($result);
+		$count = $dbdat['FOUND_ROWS()'];
+		//*/
+
+		/*// for All SQL
+		$sql = "SELECT count(p.pid) as count ".$sql_tmp_base ;
+		$result = $db->query($sql);
+		$dbdat = $db->fetchArray($result);
+		$count = $dbdat['rows'];
+		*/
+
 		if($count>$max_entry){
 			if( !empty($_SERVER['QUERY_STRING'])) {
 				if( preg_match("/^".$ofst_key."=[0-9]+/", $_SERVER['QUERY_STRING']) ) {
@@ -1352,8 +1411,9 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 	
 	$sql = "SELECT p.pid as pid, p.ptype as ptype, p.tstamp as tstamp, p.info as info, p.bid as bid, p.uid as uid, 
 			title, uname, name, d.cid, GREATEST(d.openarea, COALESCE(cfg.openarea, 0), COALESCE(c.openarea, 0)) as openarea "
-			.$sql_base ;
-        $result = $db->query($sql, $max_entry, $offset);
+			.$sql_tmp_base. $where_ser_pids  ;
+
+        $result = $db->query($sql);
 	$rtn_ = array();
 	while ( $dbdat = $db->fetchArray($result) ) {
 		$photo['bid'] = (int)$dbdat['bid'];

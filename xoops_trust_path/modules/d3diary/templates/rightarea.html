@@ -161,7 +161,7 @@
 <ul class="yd_rightarea">
 <{section name=num loop=$yd_monlist}>
 	<li>
-	<a href="<{$url4ex_date}>&amp;year=<{$yd_monlist[num].year}>&amp;month=<{$yd_monlist[num].month}>">
+	<a href="<{$url4ex_date}>&amp;year=<{$yd_monlist[num].year}>&amp;month=<{$yd_monlist[num].month}><{if $smarty.get.mofst}>&amp;mofst=<{$smarty.get.mofst}><{/if}>">
 	<{$yd_monlist[num].year}><{$smarty.const._MD_DATE_YEAR}><{$yd_monlist[num].month}><{$smarty.const._MD_DATE_MONTH}>
 	</a>(<{$yd_monlist[num].count}>)
 </li>

@@ -110,7 +110,8 @@ if($mod_config['menu_layout']==1){
 		$url_tag.="&amp;cid=".$req_cid;
 	}
 		$yd_param['cname'] = !empty($category->cname) ? $myts->makeTboxData4Show($category->cname) : constant('_MD_NOCNAME') ;
-
+		$yd_param['cid'] = $req_cid;
+	
 	$whr_time = ""; $whr_cat = ""; $whr_uids = "";
 
 	if(!empty($yd_param['year'])) {
@@ -184,24 +185,55 @@ if($mod_config['menu_layout']==1){
 	// arrays for BoxDate
 	list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr();
 
-	// *********** SQL base
-	$sql_base = "FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
+	// init variables
+    	$num_rows = 0; $max_entry = 0; $startnum = 0; $endnum = 0; $offset = 0; $yd_pagenavi = array();
+    	$first_date = $last_date = $now;
+	$entry=array();	$got_bids=array(); 
+
+	// *********** SQL temporary base for get bids
+	$sql_tmp_base = "FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
 			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_config')." cfg ON d.uid=cfg.uid ".$sql_tag." 
 			WHERE ".$whr_openarea.$whr_cat.$whr_time.$whr_uids.$whr_tag.$whr_nofuture." AND 
 			(cfg.blogtype='0' OR cfg.blogtype IS NULL) ORDER BY ".$odr ;
-
-	// *********** SQL for
-	// get count of total entries or
-	$sql = "SELECT count(d.bid) as count ".$sql_base ;
-	$result = $xoopsDB->query($sql);
-	list ($num_rows) = $xoopsDB->fetchRow($result);
-
-	// page control
+	
+	// query limit
 	$max_entry = intval($mod_config['block_diarynum']);
 	$offset = $func->getpost_param('pofst');
 	$offset = (isset($offset) && ($offset>0)) ? intval($offset) : 0;
+	$whr_offset = " LIMIT ".$offset.",".$max_entry ;
+
+	// *********** SQL for
+	// get entries on selected offset
+	$sql = "SELECT SQL_CALC_FOUND_ROWS d.bid ".$sql_tmp_base.$whr_offset ;	// for MySQL Only
+	//$sql = "SELECT d.bid ".$sql_tmp_base.$whr_offset ;			// for All SQL
+
+	$result = $xoopsDB->query($sql);
+	$got_arr_bids = array();
+	while ( $dbdat = $xoopsDB->fetchArray($result) ) {
+		$got_arr_bids[] = (int)$dbdat['bid'];
+	}
+	$where_ser_bids = "WHERE d.bid IN (".implode( ',', $got_arr_bids ).")" ;
+
+	//* MySQL Only
+	// get count of bids
+	$sql = "SELECT FOUND_ROWS();";
+	$result = $xoopsDB->query($sql);
+	$dbdat = $xoopsDB->fetchArray($result);
+	$num_rows = $dbdat['FOUND_ROWS()'];
+	//*/	
+
+ 	/*// for All SQL
+	$sql = "SELECT count(d.bid) as rows ".$sql_tmp_base ;
+	$result = $xoopsDB->query($sql);
+	$dbdat = $xoopsDB->fetchArray($result);
+	$num_rows = $dbdat['rows'];
+	*/
+
+    if ( 0 < $num_rows ) {
+
+	// page control
 	if ( $offset <= 0 ) {
 		$offset2 = 0 ;
 		$max_entry2 = $max_entry ;
@@ -214,7 +246,6 @@ if($mod_config['menu_layout']==1){
 		$endnum = $offset + $max_entry ;
 	}
 
-	if(empty($num_rows)){$startnum = 0;	$endnum = 0;}
 	if ($endnum > $num_rows) { $endnum = $num_rows;	}
 	
 	// query limit
@@ -238,12 +269,17 @@ if($mod_config['menu_layout']==1){
             $yd_pagenavi = "";
         }
 
-	// *********** SQL for
+	// *********** SQL for actual entry
 	// get entries on selected offset
+
 	$sql = "SELECT d.diary, d.create_time, d.cid, d.title, d.bid, d.openarea AS openarea, d.dohtml, 
 			d.view, d.vgids AS vgids, d.vpids AS vpids, u.uid, u.uname, u.name, u.user_avatar, 
-			c.cid, c.cname, c.openarea AS openarea_cat, c.vgids AS vgids_cat, c.vpids AS vpids_cat "
-		.$sql_base.$whr_offset ;
+			c.cid, c.cname, c.openarea AS openarea_cat, c.vgids AS vgids_cat, c.vpids AS vpids_cat 
+			FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
+			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
+			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) 
+			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_config')." cfg ON d.uid=cfg.uid ".$sql_tag
+			. $where_ser_bids. " ORDER BY ".$odr  ;
 	$result = $xoopsDB->query($sql);
 
 	// flag for using d3comment
@@ -260,40 +296,41 @@ if($mod_config['menu_layout']==1){
 	    if($offset>0 and $is1st==1){
 	    	$last_date = $dbdat['create_time'];
 	    } else {
+	    	$_entry = array();
 		$i = intval($dbdat['bid']);
-		$entry[$i]['bid']=$dbdat['bid'];
+		$_entry['bid']=$dbdat['bid'];
 
 		$ctime=preg_split('/[-: ]/',$dbdat['create_time']);
-		$entry[$i]['tstamp'] = $tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
+		$_entry['tstamp'] = $tstamp = mktime($ctime[3],$ctime[4],$ctime[5],$ctime[1],$ctime[2],$ctime[0]);
 		$week = intval($func->myformatTimestamp($tstamp, "w"));
 
-		$entry[$i]['create_time']=$dbdat['create_time'];
-		$entry[$i]['year']   = intval($func->myformatTimestamp($tstamp, "Y"));
-		$entry[$i]['month']   = intval($func->myformatTimestamp($tstamp, "m"));
-		$entry[$i]['day']   = intval($func->myformatTimestamp($tstamp, "d"));
-		$entry[$i]['time']   = $func->myformatTimestamp($tstamp, "H:i");
-		$entry[$i]['week'] = $arr_weeks [$week];
-		$entry[$i]['b_month'] = $arr_monthes [$entry[$i]['month'] -1];
-		$entry[$i]['dclass'] = $arr_dclass [$week];
-		$entry[$i]['wclass'] = $arr_wclass [$week];
+		$_entry['create_time']=$dbdat['create_time'];
+		$_entry['year']   = intval($func->myformatTimestamp($tstamp, "Y"));
+		$_entry['month']   = intval($func->myformatTimestamp($tstamp, "m"));
+		$_entry['day']   = intval($func->myformatTimestamp($tstamp, "d"));
+		$_entry['time']   = $func->myformatTimestamp($tstamp, "H:i");
+		$_entry['week'] = $arr_weeks [$week];
+		$_entry['b_month'] = $arr_monthes [$_entry['month'] -1];
+		$_entry['dclass'] = $arr_dclass [$week];
+		$_entry['wclass'] = $arr_wclass [$week];
 
-		$entry[$i]['title'] =empty( $dbdat['title'] ) ? constant('_MD_DIARY_NOTITLE') 
+		$_entry['title'] =empty( $dbdat['title'] ) ? constant('_MD_DIARY_NOTITLE') 
 				: $myts->makeTboxData4Show($dbdat['title']);
-		$entry[$i]['url']=XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$dbdat['bid'];
-		$entry[$i]['uid']=$dbdat['uid'];
+		$_entry['url']=XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$dbdat['bid'];
+		$_entry['uid']=$dbdat['uid'];
 		$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
-				$entry[$i]['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
+				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
-				$entry[$i]['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
+				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
 		
-		$entry[$i]['uname']=$myts->htmlSpecialChars($dbdat['uname']);
-		$entry[$i]['name']= !empty($dbdat['name']) ? 
-				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $entry[$i]['uname'];
-		$entry[$i]['view'] = $dbdat['view'];
-		$entry[$i]['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
-		$entry[$i]['cname'] = isset($dbdat['cname']) ? htmlSpecialChars($dbdat['cname'], ENT_QUOTES) : constant('_MD_NOCNAME') ;
+		$_entry['uname']=$myts->htmlSpecialChars($dbdat['uname']);
+		$_entry['name']= !empty($dbdat['name']) ? 
+				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $_entry['uname'];
+		$_entry['view'] = $dbdat['view'];
+		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
+		$_entry['cname'] = isset($dbdat['cname']) ? htmlSpecialChars($dbdat['cname'], ENT_QUOTES) : constant('_MD_NOCNAME') ;
 
 		// openarea overrides
 		$_tmp_op = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;
@@ -302,26 +339,29 @@ if($mod_config['menu_layout']==1){
 		list( $_got_op , $_slctd_op , $_tmp_gperms, $_tmp_pperms ) 
 			= $mPerm->override_openarea( $_tmp_op, intval($dbdat['openarea']), $openarea_cat, 
 				$dbdat['vgids'], $dbdat['vpids'], $dbdat['vgids_cat'], $dbdat['vpids_cat'] );
-		$entry[$i]['openarea'] = $_got_op;
+		$_entry['openarea'] = $_got_op;
 			// var_dump($_tmp_gperms); var_dump($_tmp_pperms);
 
-		$entry[$i]['can_disp'] = true;
+		$_entry['can_disp'] = true;
 		// timestamp for sort
 		$mytstamp[$i] = $tstamp;
 
-		$got_bids[] = $i;
 		if(!isset($last_date)){ $last_date = $dbdat['create_time']; }
 		$first_date =  $dbdat['create_time'];
 
-		$entry[$i]['dohtml'] = intval($dbdat['dohtml']);
-		$entry[$i]['diary'] = $func->substrTarea($dbdat['diary'], $entry[$i]['dohtml'], 
+		$_entry['dohtml'] = intval($dbdat['dohtml']);
+		$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], 
 			intval($mod_config['preview_charmax']));
-		$entry[$i]['other']=0;
+		$_entry['other']=0;
+		$entry[$i] = $_entry;	unset($_entry);
+
+		$got_bids[] = $i;
 	    } //end (is1st)
 	    $is1st=0;
 	}
-	if($num_rows < $max_entry or $startnum <= 1) { $last_date = $now; }
-	if($startnum + $max_entry > $num_rows) { 
+    }
+
+	if( $num_rows==0 || ($startnum + $max_entry > $num_rows) ) { 
 		$whr_date = " and d.create_time<'".$last_date."' "; 
 	} else {
 		$whr_date = "and d.create_time>'".$first_date."' and d.create_time<'".$last_date."' ";
@@ -329,65 +369,89 @@ if($mod_config['menu_layout']==1){
 	
 	// *********** SQL for
 	// other enrties
-	
+
+	$where_other = "";
+
 	if ( $dosort == true && (empty($b_tag) || $mod_config['use_tag']==0) ) {
-		$sql = "SELECT  d.diary, d.create_time, d.title, d.url, u.uname, u.name, u.uid, u.user_avatar, 
-			c.cid, c.cname, c.openarea AS openarea_cat 
+		$sql_tmp = "SELECT  d.uid, d.cid 
 			FROM ".$xoopsDB->prefix($mydirname.'_newentry')." d 
 			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
 			ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) 
 			WHERE d.blogtype>'0' ".$whr_cat.$whr_time.$whr_uids.$whr_date." 
 			ORDER BY ".$odr;
+
+		$result = $xoopsDB->query($sql_tmp);
+		while ( $dbdat = $xoopsDB->fetchArray($result) ) {
+			$where_other .= "(d.uid=".(int)$dbdat['uid']." AND";
+			$where_other .= " d.cid=".(int)$dbdat['cid'].") OR ";
+		}
+	}
+		
+	if ( 0 < strlen($where_other) ){
+			$where_other = "WHERE ". $where_other;
+			$where_other = rtrim( $where_other, 'OR ' );
+
+		$sql = "SELECT  d.diary, d.create_time, d.title, d.url, u.uname, u.name, u.uid, u.user_avatar, 
+			c.cid, c.cname, c.openarea AS openarea_cat 
+			FROM ".$xoopsDB->prefix($mydirname.'_newentry')." d 
+			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
+			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
+			ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) "
+			.$where_other."	ORDER BY ".$odr;
+
 		$result = $xoopsDB->query($sql);
 
 	    $i=-1000;
 	    while($dbdat = $xoopsDB->fetchArray($result)){
 		$tmp = preg_split("/[-: ]/",$dbdat['create_time']);
 		
-		$entry[$i]['tstamp'] = $tstamp = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
+	    	$_entry = array();
+		$_entry['tstamp'] = $tstamp = mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]);
 		$week = intval($func->myformatTimestamp($tstamp, "w"));
 
-		$entry[$i]['create_time']=$dbdat['create_time'];
-		$entry[$i]['year']   = intval($func->myformatTimestamp($tstamp, "Y"));
-		$entry[$i]['month']   = intval($func->myformatTimestamp($tstamp, "m"));
-		$entry[$i]['day']   = intval($func->myformatTimestamp($tstamp, "d"));
-		$entry[$i]['time']   = $func->myformatTimestamp($tstamp, "H:i");
-		$entry[$i]['week'] = $arr_weeks [$week];
-		$entry[$i]['b_month'] = $arr_monthes [$entry[$i]['month'] -1];
-		$entry[$i]['dclass'] = $arr_dclass [$week];
-		$entry[$i]['wclass'] = $arr_wclass [$week];
+		$_entry['create_time']=$dbdat['create_time'];
+		$_entry['year']   = intval($func->myformatTimestamp($tstamp, "Y"));
+		$_entry['month']   = intval($func->myformatTimestamp($tstamp, "m"));
+		$_entry['day']   = intval($func->myformatTimestamp($tstamp, "d"));
+		$_entry['time']   = $func->myformatTimestamp($tstamp, "H:i");
+		$_entry['week'] = $arr_weeks [$week];
+		$_entry['b_month'] = $arr_monthes [$_entry['month'] -1];
+		$_entry['dclass'] = $arr_dclass [$week];
+		$_entry['wclass'] = $arr_wclass [$week];
 		
-		$entry[$i]['title']=empty( $dbdat['title'] ) ? constant($constpref.'_NOTITLE') 
+		$_entry['title']=empty( $dbdat['title'] ) ? constant($constpref.'_NOTITLE') 
 			: $myts->makeTboxData4Show($dbdat['title']);
-		$entry[$i]['url']=$dbdat['url'];
-		$entry[$i]['uid']=intval($dbdat['uid']);
+		$_entry['url']=$dbdat['url'];
+		$_entry['uid']=intval($dbdat['uid']);
 		$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
-				$entry[$i]['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
+				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
-				$entry[$i]['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
+				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
-		$entry[$i]['uname']= htmlSpecialChars($dbdat['uname'], ENT_QUOTES);
-		$entry[$i]['name']= !empty($dbdat['name']) ? 
-				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $entry[$i]['uname'];
-		$entry[$i]['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
-		$entry[$i]['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
+		$_entry['uname']= htmlSpecialChars($dbdat['uname'], ENT_QUOTES);
+		$_entry['name']= !empty($dbdat['name']) ? 
+				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $_entry['uname'];
+		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
+		$_entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 
-//		$entry[$i]['diary'] = $func->substrTarea($dbdat['diary'], 0, 
+//		$_entry['diary'] = $func->substrTarea($dbdat['diary'], 0, 
 //					intval($mod_config['preview_charmax']));
-		$entry[$i]['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
+		$_entry['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
 					
 		// openarea overrides
 		$_tmp_op = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;
-		$entry[$i]['openarea']=$_tmp_op;
+		$_entry['openarea']=$_tmp_op;
 		$openarea_cat = intval($dbdat['openarea_cat']);
-		if ($openarea_cat>0) { $entry[$i]['openarea'] = $openarea_cat; }
+		if ($openarea_cat>0) { $_entry['openarea'] = $openarea_cat; }
 
-		$entry[$i]['can_disp'] = true;
+		$_entry['can_disp'] = true;
 		
-		$entry[$i]['other']=1;
-		$entry[$i]['dohtml']=0;
+		$_entry['other']=1;
+		$_entry['dohtml']=0;
+
+		$entry[$i] = $_entry;	unset($_entry);
 		$mytstamp[$i] = $tstamp;
 		$i++;
 	    }
@@ -432,7 +496,7 @@ if($mod_config['menu_layout']==1){
 	}
 
 	// sort by timestamp
-	if ( $dosort == true && !empty($mytstamp) && !empty($entry)) {
+	if ( $dosort == true && !empty($mytstamp) && 0<count($entry)) {
 		array_multisort($mytstamp, SORT_DESC, $entry );
 	}
 

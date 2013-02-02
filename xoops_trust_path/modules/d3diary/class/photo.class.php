@@ -37,7 +37,8 @@ class D3diaryPhoto
 	function readdb($mydirname){
 		global $xoopsDB;
 	
-		$sql = "SELECT * FROM ".$xoopsDB->prefix($mydirname.'_photo')." 
+		$sql = "SELECT uid, ptype, info, tstamp 
+				FROM ".$xoopsDB->prefix($mydirname.'_photo')." 
 				WHERE bid='".$this->bid."' and pid='".$this->pid."'";
 
 		$result = $xoopsDB->query($sql);
@@ -122,9 +123,9 @@ class D3diaryPhoto
 
 		$this->pid = ""; $this->ptype = "";
 		
-		$sql = "SELECT *
-				  FROM ".$xoopsDB->prefix($mydirname.'_photo')."
-		          WHERE bid='".intval($this->bid)."' ORDER BY rand() LIMIT 0,1";
+		$sql = "SELECT pid, ptype 
+				FROM ".$xoopsDB->prefix($mydirname.'_photo')."
+				WHERE bid='".intval($this->bid)."' ORDER BY rand() LIMIT 0,1";
 
 		$result = $xoopsDB->query($sql);
 		$num_rows = $xoopsDB->getRowsNum($result);
@@ -141,7 +142,7 @@ class D3diaryPhoto
 		$this->photos = array();
 		$photos = array();
 		$whr_bids = " WHERE bid IN (".implode(',',$this->bids).")";
-		$sql = "SELECT *
+		$sql = "SELECT bid, pid, ptype 
 				  FROM ".$xoopsDB->prefix($mydirname.'_photo').$whr_bids." 
 				  order by bid";
 
