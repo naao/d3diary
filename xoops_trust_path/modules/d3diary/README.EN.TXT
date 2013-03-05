@@ -100,6 +100,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2013/3/5  ver0.29.2
+	- fixed two bugs in photolist page as below.
+	-- Picked up images queried was not displayed in suitable order.
+	-- Picked up images queried with a tag was multipled.
+
 2013/1/31 ver0.29.1
 	- Optimize SQL query index page and diarylist page.
 	- Brushup the url link of page navigation on the month list and blogger list blocks

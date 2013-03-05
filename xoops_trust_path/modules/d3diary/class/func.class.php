@@ -1409,9 +1409,9 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 		}
 	}
 	
-	$sql = "SELECT p.pid as pid, p.ptype as ptype, p.tstamp as tstamp, p.info as info, p.bid as bid, p.uid as uid, 
+	$sql = "SELECT DISTINCT p.pid as pid, p.ptype as ptype, p.tstamp as tstamp, p.info as info, p.bid as bid, p.uid as uid, 
 			title, uname, name, d.cid, GREATEST(d.openarea, COALESCE(cfg.openarea, 0), COALESCE(c.openarea, 0)) as openarea "
-			.$sql_tmp_base. $where_ser_pids  ;
+			.$sql_tmp_base. $where_ser_pids. $odr ;
 
         $result = $db->query($sql);
 	$rtn_ = array();
@@ -2054,7 +2054,7 @@ function update_other(){
 						)";
 			$result2 = $db->queryF($query);
 	
-			# 鐃初�鐃緒申肇蝪�
+			# 鐃初?鐃緒申肇蝪?
 			break;
 		}
 	}
@@ -2148,7 +2148,7 @@ function update_other_cat($uid){
 						)";
 			$result2 = $db->queryF($query);
 	
-			# 鐃初�鐃緒申肇蝪�
+			# 鐃初?鐃緒申肇蝪?
 			break;
 		}
 	}
