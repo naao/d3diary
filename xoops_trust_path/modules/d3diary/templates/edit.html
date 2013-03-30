@@ -538,7 +538,7 @@ function yt_input(){
 	var inputURL = document.getElementById("yt").value;
 	if (!inputURL || inputURL == '') return false;
   
-	var urlRegex = new RegExp('^http\\://(?:[a-zA-Z]+\\.)?youtube\\.com/watch\\?(.+)$');
+	var urlRegex = new RegExp('^https?\\://(?:[a-zA-Z]+\\.)?youtube\\.com/watch\\?(.+)$');
 	
 	if (inputURL.match(urlRegex)) {
 		var queryString = RegExp.$1;
