@@ -431,9 +431,11 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 
 	$is1st=1;
 	while ( $dbdat = $xoopsDB->fetchArray($result) ) {
-	    if($offset>0 and $is1st==1){	// for first record, fields are to galvage
-	    	$last_date = $dbdat['create_time'];
-	    } else {
+		if($offset>0 and $is1st==1){	// for first record
+	    		$last_date = $dbdat['create_time'];
+			$is1st=0;
+		}
+
 	    	$_entry = array();
 		$i = intval($dbdat['bid']);
 		$_entry['bid']=$dbdat['bid'];
@@ -490,9 +492,6 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		
 		$entry[$i] = $_entry;	unset($_entry);
 		$got_bids[] = $i;
-		
-	    } //end (is1st)
-	    $is1st=0;
 	}
     }
 

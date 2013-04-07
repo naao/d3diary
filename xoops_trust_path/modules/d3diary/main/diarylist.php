@@ -292,10 +292,10 @@ if($mod_config['menu_layout']==1){
 
 	$entry = array(); $got_bids = array(); $mytstamp=array(); $is1st=1;
 	while($dbdat = $xoopsDB->fetchArray($result)){
-	//var_dump($dbdat);
-	    if($offset>0 and $is1st==1){
-	    	$last_date = $dbdat['create_time'];
-	    } else {
+		if($offset>0 and $is1st==1){	// for first record
+	    		$last_date = $dbdat['create_time'];
+			$is1st=0;
+		}
 	    	$_entry = array();
 		$i = intval($dbdat['bid']);
 		$_entry['bid']=$dbdat['bid'];
@@ -356,8 +356,6 @@ if($mod_config['menu_layout']==1){
 		$entry[$i] = $_entry;	unset($_entry);
 
 		$got_bids[] = $i;
-	    } //end (is1st)
-	    $is1st=0;
 	}
     }
 
