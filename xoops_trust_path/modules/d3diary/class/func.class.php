@@ -828,10 +828,11 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 	
 	$this->d3dConf->get_new_bids ( $new_bids );
 
-	if ( isset( $new_bids ) ) {
+	if ( !empty( $new_bids ) ) {
 		$bids = $new_bids ;
 	} else {
-		$_entry =  $this->get_blist ($req_uid,$uid,$maxnum);
+		$maxnum_entry = $maxnum + 30;
+		$_entry =  $this->get_blist ($req_uid,$uid,$maxnum_entry);
 		$this->d3dConf->get_new_bids ( $new_bids );
 		$bids = $new_bids ;
 	}

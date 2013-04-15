@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2013/4/15  ver0.29.4
+	- Fixed side comment block doesn't show comments list when not showing side entry block.
+
 2013/4/7  ver0.29.3
 	- fixed invalid page navigation which missed not shown entry on diarylist page and index page.
 	  (thx mitsuhiro)
