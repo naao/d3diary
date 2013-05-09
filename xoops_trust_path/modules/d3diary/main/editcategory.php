@@ -171,7 +171,7 @@ $xoopsTpl->assign(array(
 		));
 
 function d3diary_assign_category_foredit2($mydirname){
-	global $uid, $myts, $xoopsDB, $xoopsTpl, $d3dConf;
+	global $uid, $myts, $xoopsDB, $xoopsTpl, $d3dConf, $mPerm;
 	
 	$yd_category = array();
 	$yd_common_cat = array();

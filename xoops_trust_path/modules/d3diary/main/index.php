@@ -91,6 +91,14 @@ if(isset($_tempGperm['allow_edit'])){
 	}	//unset($_tempGperm);
 }
 
+// check mailpost permission for access user's group
+$allow_mailpost = 0;
+if(!empty($_tempGperm['allow_mailpost'])){
+	if(isset($_tempGperm['allow_mailpost'][$uid])) {
+		$allow_mailpost = 1;
+	}
+}
+
 // access check
 if(!$mPerm->check_permission($req_uid, $dcfg->openarea)){
     redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
@@ -766,6 +774,7 @@ if($mod_config['menu_layout']<=1){
 			"yd_comment"  => $yd_comment,
 			"yd_com_key" => $yd_com_key,
 			"yd_pagenavi" => $yd_pagenavi,
+			"yd_mailpost"	=> $allow_mailpost,
 			"catopt" => $func->get_categories($req_uid,$uid),
 			"tagCloud" => $tagCloud,
 			"lang_datanum" => constant('_MD_DATANUM1').$num_rows. constant('_MD_DATANUM2').

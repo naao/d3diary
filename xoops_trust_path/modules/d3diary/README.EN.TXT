@@ -100,6 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2013/5/09  ver0.30.0
+	- Fix the category cannot be shown nor edit when the category is set to group permission.Åithx 7cafeÅj
+	- Hyde the [mail post] word in case the e-mail post is not allowed on index page. (thx Utchan)
+
 2013/4/15  ver0.29.4
 	- Fixed side comment block doesn't show comments list when not showing side entry block.
 
