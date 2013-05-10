@@ -21,7 +21,7 @@ $d3dConf =& D3diaryConf::getInstance($mydirname, $req_uid, "edit");
 $func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
 $mPerm =& $d3dConf->mPerm ;
-//$gPerm =& $d3dConf->gPerm ;
+$gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
 $func->update_other();
@@ -46,6 +46,15 @@ if(!$mPerm->check_permission( $d3dConf->dcfg->uid, $d3dConf->dcfg->openarea )){
     redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
 	exit();
 }
+
+$_tempGperm = $gPerm->getUidsByName( array('allow_mailpost') );
+// check mailpost permission for access user's group
+if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
+	$allow_mailpost = 0;
+	if(isset($_tempGperm['allow_mailpost'][$uid]) && $owner=1) {
+		$allow_mailpost = 1;
+	}
+}	unset($_tempGperm);
 
 // menu
 if($mod_config['menu_layout']==1){
@@ -287,6 +296,7 @@ if ($d3dConf->dcfg->uid>0){
 			"yd_list" => $yd_list,
 			"yd_comment"  => $yd_comment,
 			"yd_com_key" => $yd_com_key,
+			"yd_mailpost"	=> $allow_mailpost
 			));
 }
 

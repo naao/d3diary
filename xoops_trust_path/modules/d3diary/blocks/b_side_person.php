@@ -14,6 +14,7 @@ function b_d3dside_person_show( $options ){
 	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_person");
 	$func =& $d3dConf->func ;
 	$mPerm =& $d3dConf->mPerm ;
+	$gPerm =& $d3dConf->gPerm ;
 	$mod_config =& $d3dConf->mod_config ;
 
 	$uid = $d3dConf->uid;
@@ -22,11 +23,19 @@ function b_d3dside_person_show( $options ){
 	if( $req_uid > 0 ) {
 		$yd_avaterurl = $func->get_user_avatar( array( $req_uid ) ) ;
 	
-		if ($req_uid > 0) {
-			$ret = $func->get_xoopsuname($req_uid) ;
-			$yd_uname = $ret['uname'];
-			$yd_name = $ret['name'];
-		}
+		$ret = $func->get_xoopsuname($req_uid) ;
+		$yd_uname = $ret['uname'];
+		$yd_name = $ret['name'];
+
+		// check mailpost permission for access user's group
+		$_tempGperm = $gPerm->getUidsByName( array('allow_mailpost') );
+		$allow_mailpost = 0;
+		if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
+			if(isset($_tempGperm['allow_mailpost'][$uid]) && $req_uid==$uid) {
+				$allow_mailpost = 1;
+			}
+		}	unset($_tempGperm);
+
 		$lang = array();
 		$lang['person'] = constant('_MD_DIARY_PERSON');
 		$lang['avatar'] = constant('_MD_AVATAR');
@@ -46,6 +55,7 @@ function b_d3dside_person_show( $options ){
 		$block['yd_counter'] = $func->get_count_diary($req_uid);
 		$block['yd_editperm'] = $mPerm->isauthor ? 1 : 0 ;
 		$block['yd_owner'] = $mPerm->isauthor ? 1 : 0 ;
+		$block['yd_mailpost'] = $allow_mailpost;
 		$block['lang'] = $lang;
 		$block['mydirname'] = $mydirname;
 		$block['mod_config'] = $mod_config ;

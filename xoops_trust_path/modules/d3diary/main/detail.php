@@ -51,11 +51,19 @@ $mPerm->get_allowed_openarea();
 
 $editperm=0;
 $owner=0;
-$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
+$_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 // check edit permission by group
 if(isset($_tempGperm['allow_edit'][$uid])) {
 	if($diary->uid==$uid){$owner=1;$editperm=1;}
 	if($mPerm->isadmin){$editperm=1;}
+}
+
+// check mailpost permission for access user's group
+$allow_mailpost = 0;
+if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
+	if(isset($_tempGperm['allow_mailpost'][$uid]) && $owner=1) {
+		$allow_mailpost = 1;
+	}
 }	unset($_tempGperm);
 
 // assign module header for css
@@ -294,6 +302,7 @@ if($mod_config['menu_layout']<=1){
 			"yd_list" => $yd_list,
 			"yd_comment"  => $yd_comment,
 			"yd_com_key"  => $yd_com_key,			
+			"yd_mailpost"	=> $allow_mailpost,
 			"catopt"  => $func->get_categories($diary->uid,$uid),
 			"base_qstr" => $d3dConf->url4_all,
 			"sort_baseurl" => $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_odr,

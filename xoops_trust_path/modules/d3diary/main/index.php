@@ -91,14 +91,6 @@ if(isset($_tempGperm['allow_edit'])){
 	}	//unset($_tempGperm);
 }
 
-// check mailpost permission for access user's group
-$allow_mailpost = 0;
-if(!empty($_tempGperm['allow_mailpost'])){
-	if(isset($_tempGperm['allow_mailpost'][$uid])) {
-		$allow_mailpost = 1;
-	}
-}
-
 // access check
 if(!$mPerm->check_permission($req_uid, $dcfg->openarea)){
     redirect_header(XOOPS_URL.'/',4,_MD_NOPERM_VIEW);
@@ -106,7 +98,13 @@ if(!$mPerm->check_permission($req_uid, $dcfg->openarea)){
 }
 
 	// call auto mailpost function (ver0.16~)
+	$allow_mailpost = 0;
 	if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
+		// check mailpost permission for access user's group
+		if(isset($_tempGperm['allow_mailpost'][$uid]) && $req_uid == $uid) {
+			$allow_mailpost = 1;
+		}
+
 		if(isset($_tempGperm['allow_mailpost'][$req_uid])) {
 			// overrides dcfg->uid
 			$dcfg->uid = $req_uid;

@@ -57,8 +57,15 @@ if(isset($_tempGperm['allow_edit'])){
 	if(isset($_tempGperm['allow_edit'][$uid])) {
 		if($req_uid==$uid){$owner=1;$editperm=1;}
 		if($mPerm->isadmin){$editperm=1;}
-	}	//unset($_tempGperm);
+	}
 }
+// check mailpost permission for access user's group
+$allow_mailpost = 0;
+if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
+	if(isset($_tempGperm['allow_mailpost'][$uid]) && $owner=1) {
+		$allow_mailpost = 1;
+	}
+}	unset($_tempGperm);
 
 $action = (int)$func->getpost_param('action') ;
 // edit parameters
@@ -284,7 +291,7 @@ if ($req_uid>0){
 		"yd_friendsnavi" => $yd_friendsnavi,
 		"yd_list" => $yd_list,
 		"yd_comment"  => $yd_comment,
-		"yd_counter" => $yd_counter,
+		"yd_counter" => $yd_counter
 		));
 }
 
@@ -301,6 +308,7 @@ if ($req_uid>0){
 		"yd_month" => $yd_month,
 		"yd_day" => $yd_day,
 		"yd_com_key"  => $yd_com_key,			
+		"yd_mailpost"	=> $allow_mailpost,
 		"catopt"  => $func->get_categories($req_uid,$uid),
 		"yd_cid" => $req_cid,
 		"yd_cname" => $yd_param['cname'],

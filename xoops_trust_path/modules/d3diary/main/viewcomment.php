@@ -32,14 +32,22 @@ if($d3dConf->dcfg->blogtype!=0){
 
 $editperm=0;
 $owner=0;
-$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
+$_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 // check edit permission by group
 if(isset($_tempGperm['allow_edit'])){
 	if(isset($_tempGperm['allow_edit'][$uid])) {
 		if($req_uid==$uid){$owner=1;$editperm=1;}
 		if($mPerm->isadmin){$editperm=1;}
-	}	unset($_tempGperm);
+	}
 }
+
+// check mailpost permission for access user's group
+$allow_mailpost = 0;
+if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
+	if(isset($_tempGperm['allow_mailpost'][$uid]) && $owner=1) {
+		$allow_mailpost = 1;
+	}
+}	unset($_tempGperm);
 
 if(!$mPerm->check_exist_user($req_uid)){
 	//if($uid>0){
@@ -406,6 +414,7 @@ if ($req_uid>0){
 			"yd_counter" => $yd_counter,
 			"com_list"  => $com_list,
 			"yd_com_key"  => $yd_com_key,			
+			"yd_mailpost"	=> $allow_mailpost,
 			"catopt"  => $func->get_categories($req_uid,$uid),
 			"mydirname" => $mydirname,
 			"xoops_pagetitle" => $xoops_pagetitle,

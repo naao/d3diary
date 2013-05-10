@@ -32,11 +32,13 @@
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/pencil.gif" border=0 />
 <{$smarty.const._MD_NEWENTRY}>
 </a>
+<{if $yd_mailpost==1}>
 <br />
 <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=mailpost">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 />
 <{$smarty.const._MD_MAIL_OPENMANUAL}>
 </a>
+<{/if}>
 </div><!-- /itemBody -->
 </div><!-- /item -->
 <{/if}>
