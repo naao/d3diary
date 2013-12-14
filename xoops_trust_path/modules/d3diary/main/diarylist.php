@@ -318,19 +318,19 @@ if($mod_config['menu_layout']==1){
 				: $myts->makeTboxData4Show($dbdat['title']);
 		$_entry['url']=XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$dbdat['bid'];
 		$_entry['uid']=$dbdat['uid'];
-		$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
+		$_user_avatar = $func->htmlspecialchars($dbdat['user_avatar']);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
 				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
 				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
 		
-		$_entry['uname']=$myts->htmlSpecialChars($dbdat['uname']);
+		$_entry['uname']=$func->htmlSpecialChars($dbdat['uname']);
 		$_entry['name']= !empty($dbdat['name']) ? 
-				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $_entry['uname'];
+				$func->htmlSpecialChars($dbdat['name']) : $_entry['uname'];
 		$_entry['view'] = $dbdat['view'];
 		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
-		$_entry['cname'] = isset($dbdat['cname']) ? htmlSpecialChars($dbdat['cname'], ENT_QUOTES) : constant('_MD_NOCNAME') ;
+		$_entry['cname'] = isset($dbdat['cname']) ? $func->htmlSpecialChars($dbdat['cname']) : constant('_MD_NOCNAME') ;
 
 		// openarea overrides
 		$_tmp_op = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;
@@ -422,15 +422,15 @@ if($mod_config['menu_layout']==1){
 			: $myts->makeTboxData4Show($dbdat['title']);
 		$_entry['url']=$dbdat['url'];
 		$_entry['uid']=intval($dbdat['uid']);
-		$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
+		$_user_avatar = $func->htmlspecialchars($dbdat['user_avatar']);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
 				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
 				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
-		$_entry['uname']= htmlSpecialChars($dbdat['uname'], ENT_QUOTES);
+		$_entry['uname']= $func->htmlSpecialChars($dbdat['uname']);
 		$_entry['name']= !empty($dbdat['name']) ? 
-				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $_entry['uname'];
+				$func->htmlSpecialChars($dbdat['name']) : $_entry['uname'];
 		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$_entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 
@@ -569,7 +569,7 @@ if($mod_config['menu_layout']==1){
 	if($mPerm->isadmin==true && $d3dConf->debug_mode==1){$xoopsTpl->assign("debug_time", $d3dConf->debug_gettime());}
 
 function d3diary_assign_common_category ($mydirname) {
-	global $xoopsDB, $mPerm ;
+	global $xoopsDB, $mPerm, $func ;
 	// naao changed for common category (uid=0)
 	$sql = "SELECT * FROM ".$xoopsDB->prefix($mydirname.'_category')."
 	          WHERE uid='0' ORDER BY corder";
@@ -581,7 +581,7 @@ function d3diary_assign_common_category ($mydirname) {
 		$op = (int)$dbdat['openarea'];
 		if($dbdat['blogtype'] != 100){
 			$catopt['cid']   = (int)$dbdat['cid'];
-			$catopt['cname']   = htmlspecialchars($dbdat['cname'], ENT_QUOTES);
+			$catopt['cname']   = $func->htmlspecialchars($dbdat['cname']);
 			$catopt['corder']   = (int)$dbdat['corder'];
 			$catopt['subcat']   = (int)$dbdat['subcat'];
 			$catopt['openarea']   = $op;

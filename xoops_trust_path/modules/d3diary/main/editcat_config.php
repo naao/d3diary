@@ -115,7 +115,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$category->readdb($mydirname);
 
 	$yd_category['cid']   = $category->cid;
-	$yd_category['cname']   = htmlspecialchars($category->cname, ENT_QUOTES);
+	$yd_category['cname']   = $func->htmlspecialchars($category->cname);
 	$yd_category['corder']   = $category->corder;
 	$yd_category['blogtype']   = $category->blogtype;
 	$yd_category['blogurl']   = $category->blogurl;
@@ -150,8 +150,8 @@ if(!empty($_POST['submit1']) and $cid>0){
 				$rtn = $func->get_xoopsuname($vpid);
 				$uname = $rtn['uname'];
 				$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
-				$unames[] = htmlspecialchars( $uname.'['.$vpid.'] ', ENT_QUOTES );
-				$names[] = htmlspecialchars( $name.'['.$vpid.'] ', ENT_QUOTES );
+				$unames[] = $func->htmlspecialchars( $uname.'['.$vpid.'] ' );
+				$names[] = $func->htmlspecialchars( $name.'['.$vpid.'] ' );
 			}
 		}
 		if( $mod_config['use_name'] == 1 ) {
@@ -177,7 +177,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$bc_para['name'] = (!empty($name)) ? $name : $uname ;
 	$bc_para['mode'] = "editcat_config";
 	$bc_para['bc_name'] = constant('_MD_CATEGORY_EDIT');
-	$bc_para['bc_name2'] = htmlspecialchars( $category->cname, ENT_QUOTES ) ;
+	$bc_para['bc_name2'] = $func->htmlspecialchars( $category->cname ) ;
 	
 	$breadcrumbs = $func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);

@@ -28,7 +28,7 @@ $mod_config =& $d3dConf->mod_config ;
 	$max_entry = (int)$mod_config['block_diarynum'];
 	$params['getnav'] = true ;	// not render but get navi
 
-	$params['order'] = htmlspecialchars( $func->getpost_param('odr'), ENT_QUOTES ) ;
+	$params['order'] = $func->htmlspecialchars( $func->getpost_param('odr') ) ;
 	$params['order'] = $params['order'] ? $params['order'] :'time' ; 
 
 	list( $blogger, $blogger2, $bloggernavi ) = $func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );

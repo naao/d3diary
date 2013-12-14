@@ -235,7 +235,7 @@ include XOOPS_ROOT_PATH."/header.php";
 	$bc_para['name'] = (!empty($yd_name)) ? $yd_name : $yd_uname ;
 	$bc_para['mode'] = $yd_param['mode'];
 	$bc_para['bid'] = $yd_data['bid'];
-	$bc_para['title'] = htmlspecialchars($yd_data['title'], ENT_QUOTES);
+	$bc_para['title'] = $func->htmlspecialchars($yd_data['title']);
 	
 	// category select requested category / or / diary's category itself
 	if(strcmp($bc_para['mode'], "category")==0){

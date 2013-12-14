@@ -53,6 +53,10 @@ function b_d3dside_friends_show( $options ){
 function b_d3dside_friends_edit( $options )
 {
 	$mydirname = empty( $options[0] ) ? 'd3diary' : $options[0] ;
+	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_side_fiends");
+	$func =& $d3dConf->func ;
+
 	$max_entry = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
 	$now_order = empty( $options[2] ) ? 'time' : trim( $options[2] ) ;
 	$this_template = empty( $options[3] ) ? 'db:'.$mydirname.'_block_side_friends.html' : trim( $options[3] ) ;
@@ -79,7 +83,7 @@ function b_d3dside_friends_edit( $options )
 		</select>
 		<br />
 		<label for='this_template'>"._MB_D3DIARY_THISTEMPLATE."</label>&nbsp;:
-		<input type='text' size='60' name='options[3]' id='this_template' value='".htmlspecialchars($this_template,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[3]' id='this_template' value='".$func->htmlspecialchars($this_template)."' />
 		<br />
 	\n" ;
 

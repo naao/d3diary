@@ -133,6 +133,11 @@ function b_d3diary_list_show( $options ){
 function b_d3diary_list_edit( $options )
 {
 	$mydirname = empty( $options[0] ) ? 'd3diary' : $options[0] ;
+	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_diarylist");
+	$func =& $d3dConf->func ;
+	$mod_config =& $d3dConf->mod_config ;
+
 	$max_entry = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
 	$now_order = empty( $options[2] ) ? 'time' : trim( $options[2] ) ;
 	$use_detail = empty( $options[3] ) ? false : true ;
@@ -190,15 +195,15 @@ function b_d3diary_list_edit( $options )
 		<label for='o4'>" ._MB_D3DIARY_MAXLENGTH."</label><input type='text' size='6' name='options[4]' id='o4' value='".$max_length."' style='text-align:right;' />
 		<br />
 		<label for='this_template'>"._MB_D3DIARY_THISTEMPLATE."</label>&nbsp;:
-		<input type='text' size='60' name='options[5]' id='this_template' value='".htmlspecialchars($this_template,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[5]' id='this_template' value='".$func->htmlspecialchars($this_template)."' />
 		<br />
 		<label for='o6'>" . sprintf( _MB_D3DIARY_DISPLAY_PERSONAL , "</label><input type='text' size='4' name='options[6]' id='o6' value='$max_entryby_person' style='text-align:right;' />" ) . "
 		<br />
 		<label for='o7'>"._MB_D3DIARY_QUERY_CATEGORY."</label>&nbsp;:
-		<input type='text' size='60' name='options[7]' id='o7' value='".htmlspecialchars($categories,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[7]' id='o7' value='".$func->htmlspecialchars($categories)."' />
 		<br />
 		<label for='o8'>"._MB_D3DIARY_QUERY_TAG."</label>&nbsp;:
-		<input type='text' size='60' name='options[8]' id='o8' value='".htmlspecialchars($tags,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[8]' id='o8' value='".$func->htmlspecialchars($tags)."' />
 		<br />
 		<label for='o9'>"._MB_D3DIARY_FSTRIPTAG."</label>&nbsp;:
 		<input type='radio' name='options[9]' id='o91' value='1' $f_strip_tagyes_checked /><label for='o91'>"._YES."</label>

@@ -161,7 +161,7 @@ if( $action > 0 ) {
 			$category->uid = $req_uid ;
 			$category->cid = $req_cid ;
 			$category->getchildren($mydirname) ;
-			$yd_param['cname'] = htmlspecialchars( $category->cname, ENT_QUOTES ) ;
+			$yd_param['cname'] = $func->htmlspecialchars( $category->cname ) ;
 			$yd_param['cids'] = $category->children ;
 		} else {
 			// for no-category's diary

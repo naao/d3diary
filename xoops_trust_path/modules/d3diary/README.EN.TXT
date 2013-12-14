@@ -6,7 +6,7 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 ** Necessary environment
 -Core
 -- XOOPS 2.0.16a-JP, JPEx
--- XOOPS Cube LegacyÅichecked on 2.1.8, 2,2.1Åj
+-- XOOPS Cube Legacy (checked on 2,2.2)
 -PHP
 -- PHP5.1 over
 -MySQL
@@ -100,6 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2013/12/13  ver0.31.0
+	- Adopt to htmlspecialchars after php5.4 and before php5.2.3.
+	- Fixed the fatal error on getting d3com object for comment integration blocks.
+
 2013/5/10  ver0.30.1
 	- Hyde the [mail post] word in case the e-mail post is not allowed also on other than index page.
 

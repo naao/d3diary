@@ -307,8 +307,8 @@ switch ( $eparam['mode'] ) {
 		}
 		$yd_data['uid'] = $req_uid;
 		$yd_data['cid'] = $diary->cid;
-		$yd_data['title'] = htmlSpecialChars($diary->title, ENT_QUOTES);
-		$yd_data['diary'] = htmlSpecialChars($diary->diary, ENT_QUOTES);
+		$yd_data['title'] = $func->htmlSpecialChars($diary->title);
+		$yd_data['diary'] = $func->htmlSpecialChars($diary->diary);
 
 		if ( ! ($diary->bid=$diary->insertdb($mydirname)) ) {
 			redirect_header( XOOPS_URL.'/modules/'.$mydirname.'/index.php',3,_MD_DB_ERR );
@@ -369,12 +369,12 @@ switch ( $eparam['mode'] ) {
 	}else{
 		$yd_data['error'] = $msg;
 		// input form
-		$yd_data['cname'] = htmlSpecialChars($cname, ENT_QUOTES);
+		$yd_data['cname'] = $func->htmlSpecialChars($cname);
 		$yd_data['bid'] = 0;
 		$yd_data['uid'] = $req_uid;
 		$yd_data['cid'] = $diary->cid;
-		$yd_data['title'] = htmlSpecialChars($diary->title, ENT_QUOTES);
-		$yd_data['diary'] = htmlSpecialChars($diary->diary, ENT_QUOTES);
+		$yd_data['title'] = $func->htmlSpecialChars($diary->title);
+		$yd_data['diary'] = $func->htmlSpecialChars($diary->diary);
 		$yd_data['photo_num'] = $num_photos;
 		$yd_data['openarea']=$diary->openarea;	// naao added
 		$yd_data['dohtml'] = $diary->dohtml;
@@ -465,7 +465,7 @@ switch ( $eparam['mode'] ) {
 		$yd_data['cid'] = $diary->cid;
 		$yd_data['title'] = htmlSpecialChars($diary->title, ENT_QUOTES);
 		$yd_data['dohtml'] = $diary->dohtml;
-		$yd_data['diary'] = $yd_data['diary4edit'] = htmlSpecialChars($diary->diary, ENT_QUOTES);
+		$yd_data['diary'] = $yd_data['diary4edit'] = $func->htmlSpecialChars($diary->diary);
 		$yd_data['openarea']=$diary->openarea;	// naao added
 		$yd_data['groups'] = $diary->vgids;
 		
@@ -563,7 +563,7 @@ switch ( $eparam['mode'] ) {
 		$arr_tags = array_unique($tags[1]);
 		$i=0;
 		foreach ($arr_tags as $_tag){
-			$entry_tags[$i]['tag'] = htmlspecialchars($d3dConf->myts->stripslashesGPC($_tag), ENT_QUOTES) ;
+			$entry_tags[$i]['tag'] = $func->htmlspecialchars($d3dConf->myts->stripslashesGPC($_tag)) ;
 			//$entry_tags[$i]['tag_urlenc'] = rawurlencode($_tag);
 			$i++;
 		}
@@ -663,7 +663,7 @@ include XOOPS_ROOT_PATH."/header.php";
 // private functions
 //
 function d3diary_get_category_foredit($mydirname, $uid){
-	global $xoopsDB, $myts, $mod_config;
+	global $xoopsDB, $myts, $mod_config, $func;
 	
 	// changed for common category (uid=0)
 	$sql = "SELECT *
@@ -677,7 +677,7 @@ function d3diary_get_category_foredit($mydirname, $uid){
 	while ( $dbdat = $xoopsDB->fetchArray($result) ) {
 		if($dbdat['blogtype'] != 100){
 			$catopt['cid']   = $dbdat['cid'];
-			$catopt['cname']   = htmlspecialchars($dbdat['cname'], ENT_QUOTES);
+			$catopt['cname']   = $func->htmlspecialchars($dbdat['cname']);
 			if (intval($mod_config['use_open_cat'])>=1){
 				if ($dbdat['subcat']==1) $catopt['cname'] = "&nbsp;--&nbsp;".$catopt['cname'] ;
 				switch ((int)$dbdat['openarea']) {
@@ -1032,22 +1032,22 @@ function d3diary_showform($mydirname){
 			$category->uid = $diary->uid;
 			$category->cid = intval($yd_data['cid']);
 			$category->readdb($mydirname);
-			$yd_data['cname'] = htmlSpecialChars($category->cname, ENT_QUOTES);
+			$yd_data['cname'] = $func->htmlSpecialChars($category->cname);
 		}else{
-			$yd_data['cname'] = htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('cname')), ENT_QUOTES);
+			$yd_data['cname'] = $func->htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('cname')));
 		}
-		$yd_data['title'] = htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('title')), ENT_QUOTES);
+		$yd_data['title'] = $func->htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('title')));
 		$yd_data['openarea'] = $func->getpost_param('openarea');
 		$yd_data['dohtml'] = $func->getpost_param('dohtml');
 		$yd_data['update_ping'] = intval($func->getpost_param('update_ping'));
 
 		$yd_data['diary'] = $func->stripPb_Tarea($myts->stripslashesGPC($func->getpost_param('diary')), $yd_data['dohtml']);
-		$yd_data['diary4edit']= htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('diary')), ENT_QUOTES);
+		$yd_data['diary4edit']= $func->htmlSpecialChars($myts->stripslashesGPC($func->getpost_param('diary')));
 
 	} else {
 		$yd_data['cid'] = $diary->cid;
-		$yd_data['title'] = htmlSpecialChars($diary->title, ENT_QUOTES);
-		$yd_data['diary'] = $yd_data['diary4edit'] =htmlSpecialChars($diary->diary, ENT_QUOTES);
+		$yd_data['title'] = $func->htmlSpecialChars($diary->title);
+		$yd_data['diary'] = $yd_data['diary4edit'] =$func->htmlSpecialChars($diary->diary);
 		$yd_data['openarea']=$diary->openarea;	// naao added
 		$yd_data['dohtml'] = $diary->dohtml;
 	}
@@ -1101,8 +1101,8 @@ function d3diary_showform($mydirname){
 					$rtn = $func->get_xoopsuname($vpid);
 					$uname = $rtn['uname'];
 					$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
-					$unames[] = htmlspecialchars( $uname.'['.$vpid.'] ', ENT_QUOTES );
-					$names[] = htmlspecialchars( $name.'['.$vpid.'] ', ENT_QUOTES );
+					$unames[] = $func->htmlspecialchars( $uname.'['.$vpid.'] ' );
+					$names[] = $func->htmlspecialchars( $name.'['.$vpid.'] ' );
 				}
 			}
 			if( $mod_config['use_name'] == 1 ) {
