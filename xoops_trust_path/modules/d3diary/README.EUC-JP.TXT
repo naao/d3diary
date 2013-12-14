@@ -8,7 +8,7 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 ** 必要な環境
 -コア
 -- XOOPS 2.0.16a-JP、JPEx
--- XOOPS Cube Legacy（2.1.8, 2,2.1で動作を確認）
+-- XOOPS Cube Legacy（2,2.2で動作を確認）
 -PHP
 -- PHP5.1.x以上
 -MySQL
@@ -96,6 +96,10 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2013/12/13  ver0.31.0
+	- php5.4以降のhtmlspecialchars仕様変更対応、php5.2.3未満の第4引数未対応への処理。
+	- 統合コメント表示ブロック(使用非推奨)のd3comオブジェクト取得不具合を修正。
+
 2013/5/10  ver0.30.1
 	- Indexページ以外の[メールで投稿]の文字もメール投稿が許可されていない状態で表示しないように変更。
 

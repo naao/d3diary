@@ -11,6 +11,11 @@ function d3diary_onupdate_base( $module , $mydirname )
 
 	global $msgs ; // TODO :-D
 
+	require dirname(__FILE__).'/class/d3diaryConf.class.php';
+
+	$d3dConf =& D3diaryConf::getInstance($mydirname, 0, "onupdate");
+	$func =& $d3dConf->func;
+
 	// for Cube 2.1
 	if( defined( 'XOOPS_CUBE_LEGACY' ) ) {
 		$root =& XCube_Root::getSingleton();
@@ -197,17 +202,17 @@ function d3diary_onupdate_base( $module , $mydirname )
 				$tplfile->setVar( 'tpl_lastimported' , 0 ) ;
 				$tplfile->setVar( 'tpl_type' , 'module' ) ;
 				if( ! $tplfile_handler->insert( $tplfile ) ) {
-					$msgs[] = '<span style="color:#ff0000;">ERROR: Could not insert template <b>'.htmlspecialchars($mydirname.'_'.$file).'</b> to the database.</span>';
+					$msgs[] = '<span style="color:#ff0000;">ERROR: Could not insert template <b>'.$func->htmlspecialchars($mydirname.'_'.$file).'</b> to the database.</span>';
 				} else {
 					$tplid = $tplfile->getVar( 'tpl_id' ) ;
-					$msgs[] = 'Template <b>'.htmlspecialchars($mydirname.'_'.$file).'</b> added to the database. (ID: <b>'.$tplid.'</b>)';
+					$msgs[] = 'Template <b>'.$func->htmlspecialchars($mydirname.'_'.$file).'</b> added to the database. (ID: <b>'.$tplid.'</b>)';
 					// generate compiled file
 					include_once XOOPS_ROOT_PATH.'/class/xoopsblock.php' ;
 					include_once XOOPS_ROOT_PATH.'/class/template.php' ;
 					if( ! xoops_template_touch( $tplid ) ) {
-						$msgs[] = '<span style="color:#ff0000;">ERROR: Failed compiling template <b>'.htmlspecialchars($mydirname.'_'.$file).'</b>.</span>';
+						$msgs[] = '<span style="color:#ff0000;">ERROR: Failed compiling template <b>'.$func->htmlspecialchars($mydirname.'_'.$file).'</b>.</span>';
 					} else {
-						$msgs[] = 'Template <b>'.htmlspecialchars($mydirname.'_'.$file).'</b> compiled.</span>';
+						$msgs[] = 'Template <b>'.$func->htmlspecialchars($mydirname.'_'.$file).'</b> compiled.</span>';
 					}
 				}
 			}

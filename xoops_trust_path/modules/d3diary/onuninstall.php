@@ -11,6 +11,11 @@ function d3diary_onuninstall_base( $module , $mydirname )
 
 	global $ret ; // TODO :-D
 
+	require dirname(__FILE__).'/class/d3diaryConf.class.php';
+
+	$d3dConf =& D3diaryConf::getInstance($mydirname, 0, "onuninstall");
+	$func =& $d3dConf->func;
+
 	// for Cube 2.1
 	if( defined( 'XOOPS_CUBE_LEGACY' ) ) {
 		$root =& XCube_Root::getSingleton();
@@ -27,15 +32,15 @@ function d3diary_onuninstall_base( $module , $mydirname )
 	$sql_file_path = dirname(__FILE__).'/sql/mysql.sql' ;
 	$prefix_mod = $db->prefix() . '_' . $mydirname ;
 	if( file_exists( $sql_file_path ) ) {
-		$ret[] = "SQL file found at <b>".htmlspecialchars($sql_file_path)."</b>.<br  /> Deleting tables...<br />";
+		$ret[] = "SQL file found at <b>".$func->htmlspecialchars($sql_file_path)."</b>.<br  /> Deleting tables...<br />";
 		$sql_lines = file( $sql_file_path ) ;
 		foreach( $sql_lines as $sql_line ) {
 			if( preg_match( '/^CREATE TABLE \`?([a-zA-Z0-9_-]+)\`? /i' , $sql_line , $regs ) ) {
 				$sql = 'DROP TABLE '.addslashes($prefix_mod.'_'.$regs[1]);
 				if (!$db->query($sql)) {
-					$ret[] = '<span style="color:#ff0000;">ERROR: Could not drop table <b>'.htmlspecialchars($prefix_mod.'_'.$regs[1]).'<b>.</span><br />';
+					$ret[] = '<span style="color:#ff0000;">ERROR: Could not drop table <b>'.$func->htmlspecialchars($prefix_mod.'_'.$regs[1]).'<b>.</span><br />';
 				} else {
-					$ret[] = 'Table <b>'.htmlspecialchars($prefix_mod.'_'.$regs[1]).'</b> dropped.<br />';
+					$ret[] = 'Table <b>'.$func->htmlspecialchars($prefix_mod.'_'.$regs[1]).'</b> dropped.<br />';
 				}
 			}
 		}

@@ -60,7 +60,7 @@ class D3diaryTag
 			if( $last_b != $dbdat['bid'] ){ $p=0;}
 			
 			$i= $dbdat['bid'];
-			$this->tags[$i][$p]['tag'] = htmlspecialchars($dbdat['tag_name'], ENT_QUOTES) ;
+			$this->tags[$i][$p]['tag'] = htmlspecialchars($dbdat['tag_name'], ENT_QUOTES, _CHARSET) ;
 			$this->tags[$i][$p]['tag_urlenc'] = rawurlencode($dbdat['tag_name']);
 			$this->tags[$i][$p]['bid'] = $dbdat['bid'] ;
 			$this->tags[$i][$p]['uid'] = $dbdat['uid'] ;

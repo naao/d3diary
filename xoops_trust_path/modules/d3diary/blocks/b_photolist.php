@@ -25,7 +25,7 @@ function b_d3d_photolist_show( $options ){
 	$_enc = _CHARSET;
 
 	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
-	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "b_diarylist");
+	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "b_photolist");
 	$func =& $d3dConf->func ;
 	$myts =& $d3dConf->myts;
 	$mod_config =& $d3dConf->mod_config ;
@@ -97,8 +97,8 @@ function b_d3d_photolist_show( $options ){
 //		$block['entry'] = $entry_temp;
 		$block['entry'] = $entry;
 		$block['yd_uid'] = $req_uid;
-		$block['yd_uname'] = !empty($yd_uname) ? htmlSpecialChars($yd_uname, ENT_QUOTES) : "" ;
-		$block['yd_name'] = !empty($yd_name) ? htmlSpecialChars($yd_name, ENT_QUOTES) : "" ;
+		$block['yd_uname'] = !empty($yd_uname) ? $func->htmlSpecialChars($yd_uname) : "" ;
+		$block['yd_name'] = !empty($yd_name) ? $func->htmlSpecialChars($yd_name) : "" ;
 		$block['lang'] = $lang;
 		$block['categories'] = implode(',', $params['categories']);
 		$block['tags'] = implode(',', $params['tags']);
@@ -127,6 +127,10 @@ function b_d3d_photolist_show( $options ){
 function b_d3d_photolist_edit( $options )
 {
 	$mydirname = empty( $options[0] ) ? 'd3diary' : $options[0] ;
+	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_photolist");
+	$func =& $d3dConf->func ;
+
 	$max_entry = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
 	$now_order = empty( $options[2] ) ? 'time' : trim( $options[2] ) ;
 	$maxsize = empty( $options[3] ) ? 0 : intval( $options[3] ) ;
@@ -192,10 +196,10 @@ function b_d3d_photolist_edit( $options )
 		<label for='o3'>" .sprintf( _MB_D3DIARY_MAXSIZE, "</label><input type='text' size='6' name='options[3]' id='o3' value='".$maxsize."' style='text-align:right;' />" ) . "
 		<br />
 		<label for='o4'>"._MB_D3DIARY_QUERY_CATEGORY."</label>&nbsp;:
-		<input type='text' size='60' name='options[4]' id='o4' value='".htmlspecialchars($categories,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[4]' id='o4' value='".$func->htmlspecialchars($categories)."' />
 		<br />
 		<label for='o5'>"._MB_D3DIARY_QUERY_TAG."</label>&nbsp;:
-		<input type='text' size='60' name='options[5]' id='o5' value='".htmlspecialchars($tags,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[5]' id='o5' value='".$func->htmlspecialchars($tags)."' />
 		<br />
 		<label for='o6'>"._MB_D3DIARY_SHOW_PHOTOINFO."</label>&nbsp;:
 		<input type='radio' name='options[6]' id='o61' value='1' $show_pinfoyes_checked /><label for='o61'>"._YES."</label>
@@ -208,9 +212,9 @@ function b_d3d_photolist_edit( $options )
 			$limitself_options
 		</select><br />
 		<label for='this_template'>"._MB_D3DIARY_THISTEMPLATE."</label>&nbsp;:
-		<input type='text' size='60' name='options[9]' id='this_template' value='".htmlspecialchars($this_template,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[9]' id='this_template' value='".$func->htmlspecialchars($this_template)."' />
 		<br />
-		<label for='o10'>".sprintf( _MB_D3DIARY_PHOTO_COLUMNS , "</label><input type='text' size='4' name='options[10]' id='o10' value='".htmlspecialchars($columns,ENT_QUOTES)."' style='text-align:right;' />" ) . "
+		<label for='o10'>".sprintf( _MB_D3DIARY_PHOTO_COLUMNS , "</label><input type='text' size='4' name='options[10]' id='o10' value='".$func->htmlspecialchars($columns)."' style='text-align:right;' />" ) . "
 		<br />"._MB_D3DIARY_PHOTO_COLUMNSDESC."<br />
 		<label for='o11'>"._MB_D3DIARY_SHOW_DIARYLINK."</label>&nbsp;:
 		<input type='radio' name='options[11]' id='o111' value='1' $show_entrylinkyes_checked /><label for='o111'>"._YES."</label>

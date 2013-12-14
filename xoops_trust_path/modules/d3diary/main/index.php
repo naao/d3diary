@@ -245,7 +245,6 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		} else {
 			$whr_tag= " AND t.tag_name='".$b_tag_noquote."'";
 		}
-		//$yd_param['req_tag'] = htmlSpecialChars( $b_tag, ENT_QUOTES );
 		$yd_param['req_tag'] = $b_tag ;
 		$yd_param['tag_mode'] = 1;
 
@@ -464,19 +463,19 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 				: $myts->makeTboxData4Show($dbdat['title']);
 		$_entry['url']=XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$dbdat['bid'];
 		$_entry['uid']=$dbdat['uid'];
-		$_user_avatar = htmlSpecialChars($dbdat['user_avatar'], ENT_QUOTES);
+		$_user_avatar = $func->htmlSpecialChars($dbdat['user_avatar']);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
 				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
 				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
 		
-		$_entry['uname']= htmlSpecialChars($dbdat['uname'], ENT_QUOTES);
+		$_entry['uname']= $func->htmlSpecialChars($dbdat['uname']);
 		$_entry['name']= !empty($dbdat['name']) ? 
-				htmlSpecialChars($dbdat['name'], ENT_QUOTES) : $_entry['uname'];
+				$func->htmlSpecialChars($dbdat['name']) : $_entry['uname'];
 		$_entry['view'] = $dbdat['view'];
 		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
-		$_entry['cname'] = isset($dbdat['cname']) ? htmlSpecialChars($dbdat['cname'], ENT_QUOTES) : constant('_MD_NOCNAME') ;
+		$_entry['cname'] = isset($dbdat['cname']) ? $func->htmlSpecialChars($dbdat['cname']) : constant('_MD_NOCNAME') ;
 
 		// openarea overrides
 		$_tmp_openarea=intval($openarea);
@@ -581,14 +580,14 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 			: $myts->makeTboxData4Show($dbdat['title']);
 		$_entry['url']=$dbdat['url'];
 		$_entry['uid']=intval($dbdat['uid']);
-		$_user_avatar = htmlSpecialChars($dbdat['user_avatar'], ENT_QUOTES);
+		$_user_avatar = $func->htmlSpecialChars($dbdat['user_avatar']);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
 				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
 				$_entry['avatarurl'] = XOOPS_UPLOAD_URL . "/" . $_user_avatar;
        			}
-		$_entry['uname']= htmlSpecialChars( $dbdat['uname'], ENT_QUOTES );
-		$_entry['name']= !empty($dbdat['name'] ) ? htmlSpecialChars( $dbdat['name'], ENT_QUOTES ) : "";
+		$_entry['uname']= $func->htmlSpecialChars( $dbdat['uname'] );
+		$_entry['name']= !empty($dbdat['name'] ) ? $func->htmlSpecialChars( $dbdat['name'] ) : "";
 		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$_entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 		$_entry['dohtml'] = 0;
@@ -665,8 +664,8 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 			$entry[$i]['com_num'] = $_com['com_num'];
 			$entry[$i]['unique_path'] = $_com['unique_path'];
 			$entry[$i]['com_uname'] = htmlSpecialChars($_com['uname'], ENT_QUOTES);
-			$entry[$i]['com_name'] = htmlSpecialChars($_com['name'], ENT_QUOTES);
-			$entry[$i]['com_guest_name'] = htmlSpecialChars($_com['guest_name'], ENT_QUOTES);
+			$entry[$i]['com_name'] = $func->htmlSpecialChars($_com['name']);
+			$entry[$i]['com_guest_name'] = $func->htmlSpecialChars($_com['guest_name']);
 			$entry[$i]['com_title'] = $myts->makeTboxData4Show($_com['title']);
 			$entry[$i]['com_datetime'] = $_com['datetime'];
 			$entry[$i]['newcom'] = $_com['newcom'];

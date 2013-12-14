@@ -69,14 +69,14 @@ if(!empty($_POST['submit1'])){
 
 	$dcfg->uid = $uid;
 
-	$dcfg->blogurl= htmlspecialchars($func->getpost_param('blogurl'), ENT_QUOTES);
+	$dcfg->blogurl= $func->htmlspecialchars($func->getpost_param('blogurl'));
 	$dcfg->blogtype= intval($func->getpost_param('blogtype'));
-	$dcfg->rss= htmlspecialchars($func->getpost_param('rss'), ENT_QUOTES);
+	$dcfg->rss= $func->htmlspecialchars($func->getpost_param('rss'));
 	$dcfg->openarea= intval($func->getpost_param('openarea'));
 	$dcfg->keep = intval($func->getpost_param('jump'));
 	if ($dcfg->blogtype==0 && $allow_mailpost==1) {
 		$dcfg->mailpost = intval($func->getpost_param('mailpost'));
-		$dcfg->address = htmlspecialchars($func->getpost_param('address'), ENT_QUOTES);
+		$dcfg->address = $func->htmlspecialchars($func->getpost_param('address'));
 		$dcfg->uptime = intval($func->getpost_param('uptime'));
 	} else {
 		$dcfg->mailpost = 0;
@@ -118,7 +118,7 @@ if(!empty($_POST['submit1'])){
 
 		$dcfg->deletedb($mydirname);
 		$dcfg->insertdb($mydirname);
-		redirect_header( htmlspecialchars($func->getpost_param('referrer'), ENT_QUOTES), 3,_MD_CONF_UPDATED );
+		redirect_header( $func->htmlspecialchars($func->getpost_param('referrer')), 3,_MD_CONF_UPDATED );
 	}
 
 

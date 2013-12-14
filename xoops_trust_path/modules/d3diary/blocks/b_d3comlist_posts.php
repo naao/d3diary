@@ -211,11 +211,11 @@ function b_d3diary_d3comlist_posts_show( $options ){
 				'post_time_formatted' => formatTimestamp( $post_row['post_time'] , 'm' ) ,
 				'uid' => intval( $post_row['uid'] ) ,
 				//'uname' => XoopsUser::getUnameFromId( $post_row['uid'] ) ,
-				'uname' => !empty($post_row['uname']) ? htmlspecialchars( $post_row['uname'], ENT_QUOTES ) : "" ,
-				'name' => !empty($post_row['name']) ? htmlspecialchars( $post_row['name'], ENT_QUOTES ) : "" ,
+				'uname' => !empty($post_row['uname']) ? $func->htmlspecialchars( $post_row['uname'] ) : "" ,
+				'name' => !empty($post_row['name']) ? $func->htmlspecialchars( $post_row['name'] ) : "" ,
 				'link_id' => intval( $post_row['topic_external_link_id'] ) ,
 				'post_text' => $temp_post_text ,
-				'guest_name' => !empty($post_row['guest_name']) ? htmlspecialchars( $post_row['guest_name'], ENT_QUOTES ) : 
+				'guest_name' => !empty($post_row['guest_name']) ? $func->htmlspecialchars( $post_row['guest_name'] ) : 
 						$GLOBALS['xoopsConfig']['anonymous'] ,
 				'can_display' => intval( $can_display ) ,
 			) ;
@@ -241,6 +241,10 @@ function b_d3diary_d3comlist_posts_show( $options ){
 function b_d3diary_d3comlist_posts_edit( $options )
 {
 	$mydirname = empty( $options[0] ) ? 'd3diary' : $options[0] ;
+	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_d3comlist_posts");
+	$func =& $d3dConf->func ;
+
 	$max_posts = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
 	$now_order = empty( $options[2] ) ? 'time' : trim( $options[2] ) ;
 	$request_uid = empty( $options[3] ) ? 0 : intval( $options[3] ) ;
@@ -301,7 +305,7 @@ function b_d3diary_d3comlist_posts_edit( $options )
 		<input type='radio' name='options[4]' id='o40' value='0' $use_detailno_checked /><label for='o40'>"._NO."</label>
 		<br />
 		<label for='this_template'>"._MB_D3DIARY_THISTEMPLATE."</label>&nbsp;:
-		<input type='text' size='60' name='options[5]' id='this_template' value='".htmlspecialchars($this_template,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[5]' id='this_template' value='".$func->htmlspecialchars($this_template)."' />
 		<br />
 		<hr />
 		

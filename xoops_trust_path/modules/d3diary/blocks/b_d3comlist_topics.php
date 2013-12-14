@@ -255,13 +255,13 @@ function b_d3diary_d3comlist_topics_show( $options ){
 			'last_post_time_formatted' => formatTimestamp($topic_row['topic_last_post_time'] , 'm' ) ,
 			'last_uid' => intval( $topic_row['topic_last_uid'] ) ,
 		//	'last_uname' => XoopsUser::getUnameFromId( $topic_row['topic_last_uid']) ,
-			'last_uname' => !empty($topic_row['uname']) ? htmlspecialchars( $topic_row['uname'], ENT_QUOTES ) : "" ,
-			'last_name' => !empty($topic_row['name']) ? htmlspecialchars( $topic_row['name'], ENT_QUOTES ) : "" ,
+			'last_uname' => !empty($topic_row['uname']) ? $func->htmlspecialchars( $topic_row['uname'] ) : "" ,
+			'last_name' => !empty($topic_row['name']) ? $func->htmlspecialchars( $topic_row['name'] ) : "" ,
 			'solved' => intval( $topic_row['topic_solved'] ) ,
 			'u2t_marked' => intval( $topic_row['u2t_marked'] ) ,
 			'link_id' => intval( $topic_row['topic_external_link_id'] ) ,
 			'post_text' => $temp_post_text ,
-			'guest_name' => !empty($topic_row['guest_name']) ? htmlspecialchars( $topic_row['guest_name'], ENT_QUOTES ) : 
+			'guest_name' => !empty($topic_row['guest_name']) ? $func->htmlspecialchars( $topic_row['guest_name'] ) : 
 					$GLOBALS['xoopsConfig']['anonymous'] ,
 			'can_display' => intval( $can_display ) ,
 		    ) ;
@@ -290,6 +290,10 @@ function b_d3diary_d3comlist_topics_show( $options ){
 function b_d3diary_d3comlist_topics_edit( $options )
 {
 	$mydirname = empty( $options[0] ) ? 'd3diary' : $options[0] ;
+	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+	$d3dConf = D3diaryConf::getInstance($mydirname, 0, "b_d3comlist_topics");
+	$func =& $d3dConf->func ;
+
 	$max_topics = empty( $options[1] ) ? 10 : intval( $options[1] ) ;
 	$show_fullsize = empty( $options[2] ) ? false : true ;
 	$now_order = empty( $options[3] ) ? 'time' : trim( $options[3] ) ;
@@ -375,7 +379,7 @@ function b_d3diary_d3comlist_topics_edit( $options )
 		<input type='radio' name='options[6]' id='o60' value='0' $use_detailno_checked /><label for='o60'>"._NO."</label>
 		<br />
 		<label for='this_template'>"._MB_D3DIARY_THISTEMPLATE."</label>&nbsp;:
-		<input type='text' size='60' name='options[7]' id='this_template' value='".htmlspecialchars($this_template,ENT_QUOTES)."' />
+		<input type='text' size='60' name='options[7]' id='this_template' value='".$func->htmlspecialchars($this_template)."' />
 		<br />
 		<hr />
 		

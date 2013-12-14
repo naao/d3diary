@@ -79,12 +79,13 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 	// module ID
 	$module_handler =& xoops_gethandler('module');
 	$this_module =& $module_handler->getByDirname($this->mydirname);
-	$this->mid = intval($this_module->getVar('mid'));
-	$this->module_name = $this_module->getVar('name');
-
-	// module config
-	$config_handler =& xoops_gethandler("config");
-	$this->mod_config = $config_handler->getConfigsByCat(0, $this->mid);
+	if (is_object($this_module)) {
+		$this->mid = (int)$this_module->getVar('mid');
+		$this->module_name = $this_module->getVar('name');
+		// module config
+		$config_handler =& xoops_gethandler("config");
+		$this->mod_config = $config_handler->getConfigsByCat(0, $this->mid);
+	}
 
 	// is_main
 	$constpref = "_MB_" . strtoupper( $this->mydirname ) ;
@@ -163,15 +164,15 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 		$this->debug_appendtime('d3dConf_construct');
 	//}
 
-	$this->page = htmlspecialchars( $this->func->getpost_param('page'), ENT_QUOTES ) ;
-	$this->q_mode = htmlspecialchars( $this->func->getpost_param('mode'), ENT_QUOTES ) ;
+	$this->page =$this->func-> htmlspecialchars( $this->func->getpost_param('page') ) ;
+	$this->q_mode = $this->func->htmlspecialchars( $this->func->getpost_param('mode') ) ;
 	$this->q_cid = (int)$this->func->getpost_param('cid') ;
 	$this->q_tag_noquote = rawurldecode( $this->func->getpost_param('tag_name') ) ;
-	$this->q_tag = htmlspecialchars( $this->q_tag_noquote , ENT_QUOTES ) ;
+	$this->q_tag = $this->func->htmlspecialchars( $this->q_tag_noquote ) ;
 	$this->q_year = (int)$this->func->getpost_param('year') ;
 	$this->q_month = (int)$this->func->getpost_param('month') ;
 	$this->q_day = (int)$this->func->getpost_param('day') ;
-	$this->q_odr = htmlspecialchars( $this->func->getpost_param('odr'), ENT_QUOTES ) ;
+	$this->q_odr = $this->func->htmlspecialchars( $this->func->getpost_param('odr') ) ;
 	$this->q_fr = (int)$this->func->getpost_param('fr') ;
 	$this->q_multidel = (int)$this->func->getpost_param('multidel') ;
 

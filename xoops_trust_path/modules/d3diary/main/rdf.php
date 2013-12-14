@@ -45,7 +45,7 @@ if (!empty($_cid)) {
 	}
 }
 	$_rss_ver = $func->getpost_param('ver');
-	$rss_ver  = !empty($_rss_ver) ? htmlSpecialChars($_rss_ver, ENT_QUOTES ) : "rss1" ;
+	$rss_ver  = !empty($_rss_ver) ?$func-> htmlSpecialChars( $_rss_ver ) : "rss1" ;
 
 require_once(XOOPS_ROOT_PATH.'/class/template.php');
 
@@ -61,18 +61,18 @@ $tpl = new XoopsTpl();
         $tzd2  = str_replace(":", "", substr( chunk_split( $_tzd, 3, ':' ), 0, 6 ));
 
 	global $xoopsModule;
-	$channel['mod_title'] = htmlSpecialChars($func->convert_encoding_utf8($xoopsModule->name()), ENT_QUOTES);
+	$channel['mod_title'] = $func->htmlSpecialChars($func->convert_encoding_utf8($xoopsModule->name()),ENT_QUOTES,"UTF-8");
 	if ($uname) {
-		$channel['title'] = htmlSpecialChars($func->convert_encoding_utf8($uname), ENT_QUOTES);
-		$channel['lang_title'] = htmlSpecialChars($func->convert_encoding_utf8(_MD_DIARY_PERSON), ENT_QUOTES);
+		$channel['title'] = $func->htmlSpecialChars($func->convert_encoding_utf8($uname),ENT_QUOTES,"UTF-8");
+		$channel['lang_title'] = $func->htmlSpecialChars($func->convert_encoding_utf8(_MD_DIARY_PERSON),ENT_QUOTES,"UTF-8");
 	} else {
 		$channel['title'] = "";
 		$channel['lang_title'] = "";
 	}
-	$channel['description'] =  htmlSpecialChars($func->convert_encoding_utf8($xoopsConfig['sitename'].' - '.$xoopsConfig['slogan']), ENT_QUOTES);
+	$channel['description'] = $func->htmlSpecialChars($func->convert_encoding_utf8($xoopsConfig['sitename'].' - '.$xoopsConfig['slogan']),ENT_QUOTES,"UTF-8");
 	$channel['language'] = _LANGCODE;
 	$channel['creator'] = "D3DIARY - XOOPS DIARY MODULE";
-	$channel['category'] = !empty($cname) ? htmlSpecialChars($func->convert_encoding_utf8($cname), ENT_QUOTES) : $channel['mod_title'] ;
+	$channel['category'] = !empty($cname) ? $func->htmlSpecialChars($func->convert_encoding_utf8($cname),ENT_QUOTES,"UTF-8") : $channel['mod_title'] ;
 	$channel['tzd'] = $tzd;
 	$channel['tzd2'] = $tzd2;
 
@@ -107,14 +107,14 @@ $tpl = new XoopsTpl();
 	$result = $xoopsDB->query($sql);
 	while ( $dbdat = $xoopsDB->fetchArray($result)){
 		$entry['title'] = empty( $dbdat['title'] ) ? constant('_MD_DIARY_NOTITLE') : $dbdat['title'];
-		$entry['title'] = htmlSpecialChars($func->convert_encoding_utf8($entry['title']), ENT_QUOTES);
+		$entry['title'] = $func->htmlSpecialChars($func->convert_encoding_utf8($entry['title']),ENT_QUOTES,"UTF-8");
 		$entry['uri']   = XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$dbdat['bid'];
-		$entry['link']  = htmlSpecialChars($entry['uri'], ENT_QUOTES);
+		$entry['link']  = $func->htmlSpecialChars($entry['uri'],ENT_QUOTES,"UTF-8");
 		$entry['uid']   = $dbdat['uid'];
 		if( $mod_config['use_name'] == 1 && !empty($dbdat['name'])) {
-			$entry['creator'] = htmlSpecialChars($func->convert_encoding_utf8($dbdat['name']), ENT_QUOTES);
+			$entry['creator'] = $func->htmlSpecialChars($func->convert_encoding_utf8($dbdat['name']),ENT_QUOTES,"UTF-8");
 		} else {
-			$entry['creator'] = htmlSpecialChars($func->convert_encoding_utf8($dbdat['uname']), ENT_QUOTES);
+			$entry['creator'] = $func->htmlSpecialChars($func->convert_encoding_utf8($dbdat['uname']),ENT_QUOTES,"UTF-8");
 		}
 		$entry['cid']   = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
@@ -122,8 +122,8 @@ $tpl = new XoopsTpl();
 		$entry['update'] = xoops_getUserTimestamp(mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]), $tzd);
 		$tmp = preg_split("/[-: ]/",$dbdat['create_time']);
 		$entry['tstamp'] = xoops_getUserTimestamp(mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]), $tzd);
-		$entry['description'] = htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 300, true, "UTF-8")), ENT_QUOTES);
-		$entry['diary'] = htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 0, false, "UTF-8")), ENT_QUOTES);
+		$entry['description'] = $func->htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 300, true, "UTF-8")),ENT_QUOTES,"UTF-8");
+		$entry['diary'] = $func->htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 0, false, "UTF-8")),ENT_QUOTES,"UTF-8");
 		$entries[]=$entry;
 	}
 

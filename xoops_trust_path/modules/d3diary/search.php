@@ -91,7 +91,7 @@ function d3diary_global_search_base($mydirname , $queryarray, $andor, $limit, $o
 		
 		$ret[$i]['image'] = "images/pencil.gif";
 		$ret[$i]['link'] = "index.php?page=detail&amp;bid=".$dbdat['bid'];
-		$ret[$i]['title'] = htmlspecialchars($dbdat['title'], ENT_QUOTES);
+		$ret[$i]['title'] = $func->htmlspecialchars($dbdat['title']);
 		$tmparray = preg_split("/[-: ]/", $dbdat['create_time']);
 		$ret[$i]['time'] = mktime($tmparray[3], $tmparray[4], $tmparray[5], $tmparray[1], $tmparray[2], $tmparray[0]);
 		$ret[$i]['uid'] = $dbdat['uid'];

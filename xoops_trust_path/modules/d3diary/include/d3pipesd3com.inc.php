@@ -56,7 +56,7 @@ class D3pipesBlockD3diaryd3comSubstance extends D3pipesBlockAbstract {
 
 	function reassign( $data )
 	{
-		$data = $this->unhtmlspecialchars( $data ) ; // d3 modules has a rule assigning escaped variables
+		$data = $this->unhtmlspecialchars( $data, ENT_QUOTES, _CHARSET ) ; // d3 modules has a rule assigning escaped variables
 
 		$entries = array() ;
 		if(!empty($data['topics'])){

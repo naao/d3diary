@@ -20,8 +20,12 @@ if (XOOPS_COMMENT_APPROVENONE != $xoopsModuleConfig['com_rule']) {
 	$comment_config = $xoopsModule->getInfo('comments');
 	$com_itemid = (trim($comment_config['itemName']) != '' && isset($_GET[$comment_config['itemName']])) ? intval($_GET[$comment_config['itemName']]) : 0;
 
+	require_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
+	$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "xoopscomment");
+	$func =& $d3dConf->func ;
+
 	if ($com_itemid > 0) {
-		$com_mode = isset($_GET['com_mode']) ? htmlspecialchars(trim($_GET['com_mode']), ENT_QUOTES) : '';
+		$com_mode = isset($_GET['com_mode']) ? $func->htmlspecialchars(trim($_GET['com_mode'])) : '';
 		if ($com_mode == '') {
 			if (is_object($xoopsUser)) {
 				$com_mode = $xoopsUser->getVar('umode');
@@ -101,7 +105,7 @@ if (XOOPS_COMMENT_APPROVENONE != $xoopsModuleConfig['com_rule']) {
 			foreach ($comment_config['extraParams'] as $extra_param) {
 			    if (isset(${$extra_param})) {
 			        $link_extra .= '&amp;'.$extra_param.'='.${$extra_param};
-			        $hidden_value = htmlspecialchars(${$extra_param}, ENT_QUOTES);
+			        $hidden_value = $func->htmlspecialchars(${$extra_param});
 			        $extra_param_val = ${$extra_param};
 			    } elseif (isset($_POST[$extra_param])) {
 			        $extra_param_val = $_POST[$extra_param];
@@ -110,7 +114,7 @@ if (XOOPS_COMMENT_APPROVENONE != $xoopsModuleConfig['com_rule']) {
 			    }
 			    if (isset($extra_param_val)) {
 			        $link_extra .= '&amp;'.$extra_param.'='.$extra_param_val;
-			        $hidden_value = htmlspecialchars($extra_param_val, ENT_QUOTES);
+			        $hidden_value = $func->htmlspecialchars($extra_param_val);
 					$navbar .= '<input type="hidden" name="'.$extra_param.'" value="'.$hidden_value.'" />';
 				}
 			}

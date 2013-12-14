@@ -109,7 +109,7 @@ function get_user_avatar($uids)
 	if(!empty($result)){
 		$user_avatar = "";
 		while ( $dbdat = $db->fetchArray($result)){
-			$user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
+			$user_avatar = $this->htmlspecialchars($dbdat['user_avatar']);
 			$uid = intval($dbdat['uid']);
 			if($user_avatar=="blank.gif" && file_exists(XOOPS_ROOT_PATH."/modules/user/images/no_avatar.gif")) {
 				$url_avatar[$uid] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
@@ -732,7 +732,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		$_entry['day']   = $this->myformatTimestamp($tstamp, "d");
 		$_entry['time']   = $this->myformatTimestamp($tstamp, "H:i");
 		$_entry['other']  = 0;
-			$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
+			$_user_avatar = $this->htmlspecialchars($dbdat['user_avatar']);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
 				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
@@ -799,7 +799,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		$_entry['day']   = $this->myformatTimestamp($tstamp, "d");
 		$_entry['time']   = $this->myformatTimestamp($tstamp, "H:i");
 		$_entry['other']  = 1;
-			$_user_avatar = htmlspecialchars($dbdat['user_avatar'], ENT_QUOTES);
+			$_user_avatar = $this->htmlspecialchars($dbdat['user_avatar']);
 			if($_user_avatar=="blank.gif" && $noavatar_exists) {
 				$_entry['avatarurl'] = XOOPS_URL . "/modules/user/images/no_avatar.gif";
 			} else {
@@ -959,13 +959,13 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 			
 			$yd_comment['bid']  =  $dbdat['topic_external_link_id'];
 			if ($dbdat['uid']) {
-				$yd_comment['uname'] = htmlSpecialChars($dbdat['uname'], ENT_QUOTES);
-				$yd_comment['name'] = (!empty($dbdat['name'])) ? htmlSpecialChars($dbdat['name'], ENT_QUOTES) : "";
+				$yd_comment['uname'] = $this->htmlSpecialChars($dbdat['uname']);
+				$yd_comment['name'] = (!empty($dbdat['name'])) ? $this->htmlSpecialChars($dbdat['name']) : "";
 				$yd_comment['guest_name'] = "";
 			} else {
 				$yd_comment['name'] = $yd_comment['uname'] = "";
 				$yd_comment['guest_name'] = !empty($dbdat['guest_name']) ? 
-					 htmlSpecialChars($dbdat['guest_name'], ENT_QUOTES) : $GLOBALS['xoopsConfig']['anonymous'];
+					 $this->htmlSpecialChars($dbdat['guest_name']) : $GLOBALS['xoopsConfig']['anonymous'];
 			}
 			$_yd_com[$yd_comment['com_id']] = $yd_comment;
 			$mytstamp[$yd_comment['com_id']] = intval($dbdat['post_time']);
@@ -1038,8 +1038,8 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 			$yd_comment['time']  = date("H:i", $dbdat['com_created']);
 			$yd_comment['bid']  =  $dbdat['com_itemid'];
 			if (!empty($dbdat['uname'])) {
-				$yd_comment['uname'] =  htmlSpecialChars($dbdat['uname'], ENT_QUOTES);
-				$yd_comment['name'] = (!empty($dbdat['name'])) ?  htmlSpecialChars($dbdat['name'], ENT_QUOTES) : "";
+				$yd_comment['uname'] =  $this->htmlSpecialChars($dbdat['uname']);
+				$yd_comment['name'] = (!empty($dbdat['name'])) ?  $this->htmlSpecialChars($dbdat['name']) : "";
 				$yd_comment['guest_name'] = "";
 			} else {
 				$yd_comment['uname'] = $yd_comment['name'] = "";
@@ -1150,8 +1150,8 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
 		$rtn2_ = array(); $_dat = array(); $blogger2_ids = array(); 
 		while( $dbdat = $db->fetchArray( $result ) ) {
 			$_dat['uid'] = (int)$dbdat['uid'];
-			$_dat['uname'] = htmlSpecialChars( $dbdat['uname'], ENT_QUOTES );
-			$_dat['name'] = htmlSpecialChars( $dbdat['name'], ENT_QUOTES );
+			$_dat['uname'] = $this->htmlSpecialChars( $dbdat['uname'] );
+			$_dat['name'] = $this->htmlSpecialChars( $dbdat['name'] );
 			$rtn2_[] = $_dat;
 			$blogger2_ids[] = $_dat['uid'];
 		}
@@ -1224,8 +1224,8 @@ function get_bloggerlist( $req_uid, $uid, $max_entry, $offset=0, $params=array()
 			$_dat['count'] = (int)$dbdat['count'];
 			$_dat['p_count'] = !empty($p_count[$_dat['uid']]) ? $p_count[$_dat['uid']] : 0 ;
 			$_dat['time'] = $dbdat['max_create_time'] ;
-			$_dat['uname'] = htmlSpecialChars( $dbdat['uname'], ENT_QUOTES );
-			$_dat['name'] = htmlSpecialChars( $dbdat['name'], ENT_QUOTES );
+			$_dat['uname'] = $this->htmlSpecialChars( $dbdat['uname'] );
+			$_dat['name'] = $this->htmlSpecialChars( $dbdat['name'] );
 			$_dat['hit'] = (int)$dbdat['hit'];
 			$rtn_[] = $_dat;
 		}
@@ -1428,8 +1428,8 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 		$photo['time'] = $dbdat['tstamp'] ;
 		$photo['title'] = $this->myts->makeTboxData4Show($dbdat['title']);
 		$photo['uid'] = (int)$dbdat['uid'];
-		$photo['uname'] = htmlSpecialChars( $dbdat['uname'], ENT_QUOTES );
-		$photo['name'] = htmlSpecialChars( $dbdat['name'], ENT_QUOTES );
+		$photo['uname'] = $this->htmlSpecialChars( $dbdat['uname'] );
+		$photo['name'] = $this->htmlSpecialChars( $dbdat['name'] );
 		$photo['cid'] = (int)$dbdat['cid'];
 		$photo['openarea'] = (int)$dbdat['openarea'];
 		
@@ -1493,7 +1493,7 @@ function manage_photos ( & $photoObj, & $diaryObj, & $psels, & $psel_names, $act
 			$photoObj->bid = $photo['bid'];
 			$photoObj->pid = $photo['pid'];
 			$photoObj->readdb( $this->mydirname );
-			$photoObj->info = htmlspecialchars( $params['pvinfo'][$i], ENT_QUOTES ) ;
+			$photoObj->info = $this->htmlspecialchars( $params['pvinfo'][$i] ) ;
 			$photoObj->updatedb( $this->mydirname );
 			$i++;
 		}  // end foreach $photos
@@ -1700,7 +1700,7 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 		$add_para[0]="";
 		$tmp_url[0] = XOOPS_URL."/modules/".$this->mydirname."/".$bc_para['path'];
 		$bc[$i] = array( 'name' => $bc_para['diary_title'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 
 	if(!empty($bc_para['mode'])){
 	    if(strcmp($bc_para['mode'], "comment")==0 ||
@@ -1709,14 +1709,14 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 		$bc_para['mode'] = "";
 		$tmp_url[$i]=$tmp_url[0].$add_para[$i-1];
 		$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ; }
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ; }
 	}
 	if ($uid>0) {
 		$i++;
 		$add_para[$i]="?req_uid=".(int)$uid;
 		$tmp_url[$i]=$tmp_url[$i-1].$add_para[$i];
 		$bc[$i] = array( 'name' => $bc_para['uname'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ; }
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ; }
 	$_t_strpos = strpos($path,'?');
 	$_capt = ($i==0 && empty($_t_strpos)) ? "?" : "&";
 	if(!empty($bc_para['mode'])){
@@ -1726,13 +1726,13 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 			$add_para[$i]=$_capt."mode=".$bc_para['mode']."&cid=".(int)$bc_para['cid'];
 			$tmp_url[$i]=$tmp_url[0].$add_para[$i-1].$add_para[$i];
 			$bc[$i] = array( 'name' => $bc_para['cname'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 	    		if(!empty($bc_para['bid'])) {
 				$i++;
 				$add_para[$i]=$_capt."bid=".(int)$bc_para['bid'];
 				$tmp_url[$i]= XOOPS_URL."/modules/".$this->mydirname."/index.php?page=detail".$add_para[$i];
 				$bc[$i] = array( 'name' => $bc_para['title'] ,
-						'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ; }
+						'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ; }
 			break;
 	    	case 'month' :
 			$i++;
@@ -1740,7 +1740,7 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 					"&month=".(int)$bc_para['month'];
 			$tmp_url[$i]=$tmp_url[0].$add_para[$i-1].$add_para[$i];
 			$bc[$i] = array( 'name' => (int)$bc_para['year'].'-'.(int)$bc_para['month'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			break;
 	    	case 'date' :
 			$i++;
@@ -1749,40 +1749,40 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 			$tmp_url[$i]=$tmp_url[0].$add_para[$i-1].$add_para[$i];
 			$bc[$i] = array( 'name' => (int)$bc_para['year'].'-'.(int)$bc_para['month'].
 					'-'.(int)$bc_para['day'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			break;
 	    	case 'usr_config' :
 			$i++;
 			$add_para[$i]="";
 			$tmp_url[$i]=$tmp_url[0].$add_para[$i-1].$add_para[$i];
 			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			break;
 	    	case 'editcat_config' :
 			$i++;
 			$add_para[$i]="";
 			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/index.php?page=editcategory";
 			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
-					'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+					'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			$i++;
 			$add_para[$i]="";
 			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/".$bc_para['path'];
 			$bc[$i] = array( 'name' => $bc_para['bc_name2'] ,
-					'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+					'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			break;
 	    	case 'edit' :
 			$i++;
 			$add_para[$i]="";
 			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/index.php?page=edit";
 			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			break;
 	    	default :
 			$i++;
 			$add_para[$i]="";
 			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/".$bc_para['path'];
 			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 		}
 	} else {
 	    if(!empty($bc_para['bid'])) {
@@ -1790,12 +1790,12 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 		$add_para[$i]=$_capt."mode=category&cid=".(int)$bc_para['cid'];
 		$tmp_url[$i]=$tmp_url[0].$add_para[$i-1].$add_para[$i];
 		$bc[$i] = array( 'name' => $bc_para['cname'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ;
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 		$i++;
 		$add_para[$i]=$_capt."bid=".(int)$bc_para['bid'];
 		$tmp_url[$i]= XOOPS_URL."/modules/".$this->mydirname."/index.php?page=detail".$add_para[$i];
 		$bc[$i] = array( 'name' => $bc_para['title'] ,
-				'url' => htmlSpecialChars($tmp_url[$i], ENT_QUOTES) ) ; }
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ; }
 	}
 	
 	$_t_strpos = strpos($path,'?');
@@ -1805,9 +1805,9 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 		$enc_tag = rawurlencode($bc_para['tag']);
 		$tmp_url[$i]=$tmp_url[$i-1].$_capt."tag_name=".$enc_tag;
 		$bc[$i] = array( 'name' => $bc_para['tag'] ,
-				'url' => htmlSpecialChars($tmp_url[$i]) ) ; }
+				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ; }
 	$tmp_url[0] = XOOPS_URL."/modules/".$this->mydirname."/index.php?page=diarylist";
-	$bc[0]['url'] = htmlSpecialChars($tmp_url[0], ENT_QUOTES);
+	$bc[0]['url'] = $this->htmlSpecialChars($tmp_url[0]);
 	$bc[$i]['url'] = "";	// remove final url
 	return $bc;
 
@@ -2263,6 +2263,34 @@ function htmlPurifier( $text )
 	return $text ;
 }
 
+// htmlspecialchars compat PHP <= 5.2.3
+public static function htmlspecialchars ($str, $flags = ENT_QUOTES, $encoding = null, $double_encode = true)
+{
+	static $php523 = null;
+	if (is_null($php523)) {
+		$php523 = version_compare(PHP_VERSION, '5.2.3', '>=');
+	}
+
+	if (is_null($encoding)) {
+		$encoding = (defined('_CHARSET'))? _CHARSET : '';
+		switch ( strtoupper($encoding) ) {
+			case 'EUCJP-WIN':
+			case 'EUCJP':
+				$encoding = 'EUC-JP';
+			break;
+		}
+	}
+
+	if ($php523) {
+		return htmlspecialchars($str, $flags, $encoding, $double_encode);
+	} else {
+		$ret = htmlspecialchars($str, $flags, $encoding);
+		if (! $double_encode) {
+			$ret = str_replace('&amp;amp;', '&amp;', $ret);
+		}
+	}
+}
+
 function get_d3comforums_can_read( $com_dirname, $uid=0 )
 {
 	global $xoopsUser ;
@@ -2338,6 +2366,7 @@ public function __construct( $params )
 	if( empty( $params['classname'] ) ) {
 		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
 		$this->d3comObj = new D3commentAbstract( $forum_dirname , '' ) ;
+		return ;
 	}
 
 	// search the class file
@@ -2359,6 +2388,7 @@ public function __construct( $params )
 	if( ! $params['classname'] || ! class_exists( $params['classname'] ) ) {
 		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
 		$this->d3comObj = new D3commentAbstract( $params['forum_dirname'] , $params['external_dirname'] ) ;
+		return ;
 	}
 
 	$this->d3comObj = new $params['classname']( $params['forum_dirname'] , 
