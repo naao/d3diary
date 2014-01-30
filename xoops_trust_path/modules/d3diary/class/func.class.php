@@ -1361,6 +1361,7 @@ function get_photolist( $req_uid=array(), $uid, $max_entry, $offset=0, $params=a
 
 	// get total photos count
 	$got_navi = array();
+	$where_ser_pids = '';
 	if ($max_entry) {
 
 		// *********** SQL temporary for get bids
