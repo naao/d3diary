@@ -64,7 +64,7 @@ document.observe("dom:loaded", function(){
 <{$smarty.const._MD_CAT_CONF}>&nbsp;<{$yd_cfg.cname}><br/>
 <br/>
 
-<form name="fm1" method='POST' action='index.php?page=editcat_config' onsubmit="return inputchk(this)">
+<form name="fm1" method='POST' action='index.php?page=editcat_config<{$query_req_uid}>' onsubmit="return inputchk(this)">
 <table class="outer" cellspacing="1">
 <tr>
 <th colspan=2>

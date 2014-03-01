@@ -19,9 +19,7 @@ include_once dirname( dirname(__FILE__) ).'/class/d3diaryConf.class.php';
 		exit();
 	}
 
-	$req_uid = $uid;
-
-$d3dConf = & D3diaryConf::getInstance($mydirname, $req_uid, "usr_config");
+$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "usr_config");
 $func =& $d3dConf->func ;
 $dcfg =& $d3dConf->dcfg;
 $myts =& $d3dConf->myts;
@@ -30,13 +28,37 @@ $gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
 //--------------------------------------------------------------------
-// GET Initial Valuses
+// GET Initial Values
 //--------------------------------------------------------------------
 
-$uname = $d3dConf->uname;
-$name = $d3dConf->name;
-// get permission unames for each groupPermission
-//$_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
+if( $uid<=0 ){
+    redirect_header(XOOPS_URL.'/user.php',2,_MD_IVUID_ERR);
+	exit();
+}
+
+$d3dConf->req_uid = $req_uid = 0<(int)$func->getpost_param('req_uid') ? (int)$func->getpost_param('req_uid') : $uid;
+$mPerm->ini_set();
+
+if ( $mPerm->isadmin && 0 < $d3dConf->req_uid ) {
+	$req_uid = $d3dConf->req_uid;
+	$query_req_uid = "&amp;req_uid=".$req_uid;
+	$rtn = $func->get_xoopsuname($req_uid);
+	$uname = $rtn['uname'];
+	$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+	$rtn = $func->get_xoopsuname($uid);
+	$myuname = $rtn['uname'];
+	$myname = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+} elseif ( !$mPerm->isadmin && 0 < $d3dConf->req_uid && $d3dConf->req_uid != $uid ) {
+	redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+	exit;
+} else {
+	$req_uid = $uid;
+	$query_req_uid = "";
+	$rtn = $func->get_xoopsuname($uid);
+	$uname = $rtn['uname'];
+	$name = $rtn['name'];
+}
+
 $_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 // check edit permission for access user's group
 if(!empty($_tempGperm['allow_edit'])){
@@ -52,7 +74,7 @@ if(!empty($_tempGperm['allow_edit'])){
 // check mailpost permission for access user's group
 $allow_mailpost = 0;
 if(!empty($_tempGperm['allow_mailpost'])){
-	if(isset($_tempGperm['allow_mailpost'][$uid])) {
+	if(isset($_tempGperm['allow_mailpost'][$req_uid])) {
 		$allow_mailpost = 1;
 	}
 }
@@ -67,7 +89,7 @@ include XOOPS_ROOT_PATH."/header.php";
 // change config
 if(!empty($_POST['submit1'])){
 
-	$dcfg->uid = $uid;
+	$dcfg->uid = $req_uid;
 
 	$dcfg->blogurl= $func->htmlspecialchars($func->getpost_param('blogurl'));
 	$dcfg->blogtype= intval($func->getpost_param('blogtype'));
@@ -88,7 +110,7 @@ if(!empty($_POST['submit1'])){
 	$dcfg->updated = time() - $dcfg->uptime;
 
 	if($dcfg->blogtype>0 and empty($dcfg->blogurl)){
-		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config',3,_MD_FAIL_UPDATED._MD_NODIARYURL);
+		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config'.$query_req_uid,3,_MD_FAIL_UPDATED._MD_NODIARYURL);
 		exit();
 	}
 
@@ -97,7 +119,7 @@ if(!empty($_POST['submit1'])){
 	
 	// $_url, $_rss are by ref value
 	if ( $func->get_ext_rssurl( $dcfg->blogtype, $_url, $_rss )!=true ) {
-		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config',3,_MD_FAIL_UPDATED._MD_NORSSURL);
+		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config'.$query_req_uid,3,_MD_FAIL_UPDATED._MD_NORSSURL);
 		exit();
 	} else {
 		$dcfg->blogurl = $_url;
@@ -108,7 +130,7 @@ if(!empty($_POST['submit1'])){
 
 	// check email for mailpost when it's enabled
 	if ( d3diary_check_existmail($mydirname, $uid, $dcfg->address) == true) {
-		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config',3,_MD_CONF_AL_EXISTMAIL);
+		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config'.$query_req_uid,3,_MD_CONF_AL_EXISTMAIL);
 	} else {
 
 		if($dcfg->blogtype==0){
@@ -130,7 +152,7 @@ if(!empty($_POST['submit1'])){
 	//--------------------------------------------------------------------
 	$sql = "SELECT *
 			  FROM ".$xoopsDB->prefix($mydirname.'_config').
-			  " WHERE uid='".$uid."'";
+			  " WHERE uid='".$req_uid."'";
 
 	$result = $xoopsDB->query($sql);
 
@@ -165,10 +187,12 @@ if(!empty($_POST['submit1'])){
 	$bc_para['mode'] = "usr_config";
 	$bc_para['bc_name'] = constant('_MD_CONF_LINK');
 	
-	$breadcrumbs = $func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $req_uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 $xoopsTpl->assign(array(
+		"req_uid" => $req_uid,
+		"query_req_uid" => $query_req_uid,
 		"yd_uid" => $uid,
 		"yd_uname" => $uname,
 		"yd_name" => $name,
@@ -181,7 +205,7 @@ $xoopsTpl->assign(array(
 		));
 
 
-// newentry¹¹¿·
+// newentry update
 function d3diary_update_newentry($mydirname, $uid)
 {
 	global $xoopsDB;

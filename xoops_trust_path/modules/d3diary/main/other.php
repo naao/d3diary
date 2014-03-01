@@ -24,6 +24,10 @@ $mPerm =& $d3dConf->mPerm ;
 $gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
+if ( $mPerm->isadmin && 0 < $req_uid ) {
+	$query_req_uid = "&amp;req_uid=".$req_uid;
+}
+
 $func->update_other();
 
 $uid = $d3dConf->uid;
@@ -51,7 +55,7 @@ $_tempGperm = $gPerm->getUidsByName( array('allow_mailpost') );
 // check mailpost permission for access user's group
 if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
 	$allow_mailpost = 0;
-	if(isset($_tempGperm['allow_mailpost'][$uid]) && $owner=1) {
+	if(isset($_tempGperm['allow_mailpost'][$req_uid])) {
 		$allow_mailpost = 1;
 	}
 }	unset($_tempGperm);
@@ -301,6 +305,8 @@ if ($d3dConf->dcfg->uid>0){
 }
 
 	$xoopsTpl->assign(array(
+			"req_uid" => $req_uid,
+			"query_req_uid" => $query_req_uid,
 			"yd_uid" => $d3dConf->dcfg->uid,
 			"yd_uname" => $yd_uname,
 			"yd_name" => $yd_name,

@@ -39,7 +39,7 @@ function inputchk(fm) {
 <br/>
 
 
-<form method='POST' action='index.php?page=editcategory' onsubmit="return inputchk(this)">
+<form method='POST' action='index.php?page=editcategory<{$query_req_uid}>' onsubmit="return inputchk(this)">
 <table class="outer" cellspacing="1">
 <tr>
 <th align="left" colspan=2>
@@ -69,7 +69,7 @@ function inputchk(fm) {
 <tr>
 <{section name=num loop=$yd_category}>
 <tr>
-<form method='POST' action='index.php?page=editcategory' style="display:inline;">
+<form method='POST' action='index.php?page=editcategory<{$query_req_uid}>' style="display:inline;">
 <td style="text-align:left;">
 <input type="text" name="corder" size="3" value="<{$yd_category[num].corder}>"/>
 </td>
@@ -84,12 +84,12 @@ function inputchk(fm) {
 </form>
 
 <td>
-<form method='POST' action='index.php?page=editcategory' style="display:inline;">
+<form method='POST' action='index.php?page=editcategory<{$query_req_uid}>' style="display:inline;">
 <input type="hidden" name="cid" value="<{$yd_category[num].cid}>" />
 <input type="submit" name="delsub" value="<{$smarty.const._MD_T_DEL}>" />
 </form>
 <{if $yd_use_open_cat}>
-<form method='POST' action='index.php?page=editcat_config' style="display:inline;">
+<form method='POST' action='index.php?page=editcat_config<{$query_req_uid}>' style="display:inline;">
 <input type="hidden" name="cid" value="<{$yd_category[num].cid}>" />
 <input type="submit" name="dispsub" value="<{$smarty.const._MD_CAT_CONF}>" />
 </form>

@@ -20,6 +20,12 @@ function b_d3dside_person_show( $options ){
 	$uid = $d3dConf->uid;
 	$req_uid = $d3dConf->req_uid; // overrided by d3dConf
 	//if( $req_uid > 0 || $uid > 0 ) {
+	if ( $mPerm->isadmin && 0 < $req_uid ) {
+		$query_req_uid = "&amp;req_uid=".$req_uid;
+	} else {
+		$query_req_uid = "";
+	}
+
 	if( $req_uid > 0 ) {
 		$yd_avaterurl = $func->get_user_avatar( array( $req_uid ) ) ;
 	
@@ -31,7 +37,7 @@ function b_d3dside_person_show( $options ){
 		$_tempGperm = $gPerm->getUidsByName( array('allow_mailpost') );
 		$allow_mailpost = 0;
 		if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
-			if(isset($_tempGperm['allow_mailpost'][$uid]) && $req_uid==$uid) {
+			if(isset($_tempGperm['allow_mailpost'][$req_uid])) {
 				$allow_mailpost = 1;
 			}
 		}	unset($_tempGperm);
@@ -47,13 +53,15 @@ function b_d3dside_person_show( $options ){
 
 		$block="";
 
+		$block['req_uid'] = $req_uid ;
+		$block['query_req_uid'] = $query_req_uid ;
 		$block['yd_avaterurl'] = $yd_avaterurl[$req_uid] ;
 		$block['yd_uid'] = $req_uid;
 		$block['yd_uname'] = $yd_uname;
 		$block['yd_name'] = $yd_name;
 		$block['yd_cid'] = (int)$func->getpost_param('cid');
 		$block['yd_counter'] = $func->get_count_diary($req_uid);
-		$block['yd_editperm'] = $mPerm->isauthor ? 1 : 0 ;
+		$block['yd_editperm'] = ($mPerm->isauthor || $mPerm->isadmin) ? 1 : 0 ;
 		$block['yd_owner'] = $mPerm->isauthor ? 1 : 0 ;
 		$block['yd_mailpost'] = $allow_mailpost;
 		$block['lang'] = $lang;

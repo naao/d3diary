@@ -42,7 +42,7 @@ $gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
 $uid = $d3dConf->uid;
-$d3dConf->req_uid = $req_uid = isset($_GET['req_uid']) ? (int)$_GET['req_uid'] : $uid;
+$d3dConf->req_uid = $req_uid = 0<(int)$func->getpost_param('req_uid') ? (int)$func->getpost_param('req_uid') : $uid;
 $mPerm->ini_set();
 
 if( $uid<=0 ){
@@ -113,6 +113,9 @@ if( !empty($post_val['phandle']) && $action == 5 && $diary->bid>0 ) {
 		$rtn = $func->get_xoopsuname($uid);
 		$myuname = $rtn['uname'];
 		$myname = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+	} elseif ( !$mPerm->isadmin && 0 < $d3dConf->req_uid && $d3dConf->req_uid != $uid ) {
+		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+		exit;
 	} else {
 		$req_uid = $uid;
 		$rtn = $func->get_xoopsuname($uid);
@@ -196,6 +199,12 @@ if( !empty($post_val['phandle']) && $action == 5 && $diary->bid>0 ) {
 // STEP 2: get registered diary and photos if existed
 	if($diary->bid>0){
 		$diary->readdb($mydirname);
+		//overrides req_uid
+		$req_uid = $diary->uid;
+		$rtn = $func->get_xoopsuname($req_uid);
+		$uname = $rtn['uname'];
+		$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+
 		if ( $eparam['is_prev'] == 1 ) { $diary->diary = $func->getpost_param('diary'); }
 		// get registered photos
 		list( $yd_data['photo_num'] , $yd_photo )= d3diary_readdb_photo($mydirname);
@@ -415,7 +424,7 @@ switch ( $eparam['mode'] ) {
 			$openarea_entry = intval($func->getpost_param('openarea'))!=0 ? 
 					intval($func->getpost_param('openarea')) : 0;
 			$category->cid = (int)$diary->cid;
-			$category->uid = $uid;
+			$category->uid = $diary->uid;
 			$category->readdb($mydirname);
 			$openarea_cat = intval($category->openarea)!=0 ? intval($category->openarea) : 0;
 			$vgids_cat = !empty($category->vgids) ? $category->vgids : "";
@@ -576,7 +585,7 @@ switch ( $eparam['mode'] ) {
 	
 	$d3diary_header .= '<script type="text/javascript" src="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=loader&src=tag.js"></script>'."\r\n";
 	if(!empty($_tempGperm['allow_ppermission'])){
-		if(isset($_tempGperm['allow_ppermission'][$uid])){
+		if(isset($_tempGperm['allow_ppermission'][$uid]) && isset($_tempGperm['allow_ppermission'][$req_uid])){
 			$d3diary_header .= '<script type="text/javascript" src="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=loader&src=prototype,suggest,log.js"></script>'."\r\n";
 		}
 	}
@@ -648,16 +657,16 @@ include XOOPS_ROOT_PATH."/header.php";
 			"mod_config" => $mod_config,
 			"charset" => _CHARSET,
 			"smilylist" => $smilylist,
-			"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$uid]) : false,
-			"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$uid]) : false,
+			"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$req_uid]) : false,
+			"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$req_uid]) : false,
 			"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? isset($_tempGperm['allow_regdate'][$uid]) : false,
     			"gticket_hidden" => $xoopsGTicket->getTicketHtml( __LINE__ , empty( $mod_config['gticket_timeout'] ) ? 1800 : (int)$mod_config['gticket_timeout'] , 'd3diary_edit')
 			));
 			
 	if(!empty($_tempGperm['allow_gpermission']) && ( $_oe == 10 || $_oe == 20 ))
-		{ $xoopsTpl->assign( 'allow_gpermission' , isset($_tempGperm['allow_gpermission'][$uid])); }
+		{ $xoopsTpl->assign( 'allow_gpermission' , isset($_tempGperm['allow_gpermission'][$req_uid])); }
 	if(!empty($_tempGperm['allow_ppermission']) && ( $_oe == 20 ))
-		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
+		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$req_uid])); }
 
 // 
 // private functions

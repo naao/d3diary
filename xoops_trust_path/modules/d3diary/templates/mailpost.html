@@ -1,15 +1,36 @@
+<{if $mod_config.show_breadcrumbs}>
+<div id="d3d_breadcrumbs">
+	<a href="<{$xoops_url}>/">TOP</a>
+	<{foreach from=$xoops_breadcrumbs key="i" item="item"}>
+	    <{* if $i!=0 *}>
+		&nbsp;>&nbsp;
+		<{if $item.url}>
+			<a href="<{$item.url}>"><{$item.name}></a>
+		<{else}>
+			<{$item.name}>
+		<{/if}>
+	    <{* /if *}>
+	<{/foreach}>
+</div><br/>
+<{/if}>
+
+<{if $mod_config.use_name==1 && $yd_name}><{$yd_name}>
+	<{else}><{$yd_uname}>
+	<{/if}><{$smarty.const._MD_DIARY_PERSON}><br/>
+<br/>
+
 STEP:<{$mpost_step}>
-<form name="MainForm" method="post" action="index.php?page=mailpost">
+<form name="MainForm" method="post" action="index.php?page=mailpost<{$query_req_uid}>">
 <ul style="list-style-position: outside">
 <{if $mpost_step == 1}>
 
 <p><{$smarty.const._MD_CONF_USEMAIL}></p>
 <ul>
-<li><a href="index.php?page=usr_config"><{$smarty.const._MD_T_TOTAL}><{$smarty.const._MD_T_EDIT}></a>&nbsp;[<{$smarty.const._MD_CONF_LINK}>]</li>
+<li><a href="index.php?page=usr_config<{$query_req_uid}>"><{$smarty.const._MD_T_TOTAL}><{$smarty.const._MD_T_EDIT}></a>&nbsp;[<{$smarty.const._MD_CONF_LINK}>]</li>
 <li>
 
 <a href="mailto:<{$mod_config.post_email_fulladd}>"><{$mod_config.post_email_fulladd}></a>&nbsp;<{$smarty.const._MD_MAILTO}></li>
-<li><a href="index.php?page=mailpost&amp;mpost_step=1"><{$smarty.const._MD_MAIL_OPENMANUAL}></a>&nbsp;<{$smarty.const._MD_MAIL_CASEMANUAL}></li>
+<li><a href="index.php?page=mailpost&amp;mpost_step=1<{$query_req_uid}>"><{$smarty.const._MD_MAIL_OPENMANUAL}></a>&nbsp;<{$smarty.const._MD_MAIL_CASEMANUAL}></li>
 </ul>
 
 <{elseif $mpost_step == 2}>

@@ -11,7 +11,7 @@ $category =& D3diaryCategory::getInstance();
 
 	global $xoopsUser ;
 	if (is_object( @$xoopsUser )){
-		$uid = intval($xoopsUser->getVar('uid'));
+		$uid = (int)$xoopsUser->getVar('uid');
 	} else {
 		$uid = 0 ;
 	}
@@ -21,9 +21,7 @@ $category =& D3diaryCategory::getInstance();
 		exit();
 	}
 
-	$req_uid = $uid;
-
-$d3dConf = & D3diaryConf::getInstance($mydirname, $req_uid, "editcategory");
+$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "editcategory");
 $func =& $d3dConf->func ;
 $myts =& $d3dConf->myts;
 $mPerm =& $d3dConf->mPerm ;
@@ -31,18 +29,43 @@ $gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
 //--------------------------------------------------------------------
-// GET Initial Valuses
+// GET Initial Values
 //--------------------------------------------------------------------
 
 $myname = "editcategory.php";
 
-$uname = $d3dConf->uname;
-$name = $d3dConf->name;
+if( $uid<=0 ){
+    redirect_header(XOOPS_URL.'/user.php',2,_MD_IVUID_ERR);
+	exit();
+}
+
+$d3dConf->req_uid = $req_uid = 0<(int)$func->getpost_param('req_uid') ? (int)$func->getpost_param('req_uid') : $uid;
+$mPerm->ini_set();
+
+if ( $mPerm->isadmin && 0 < $d3dConf->req_uid ) {
+	$req_uid = $d3dConf->req_uid;
+	$query_req_uid = "&amp;req_uid=".$req_uid;
+	$rtn = $func->get_xoopsuname($req_uid);
+	$uname = $rtn['uname'];
+	$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+	$rtn = $func->get_xoopsuname($uid);
+	$myuname = $rtn['uname'];
+	$myname = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+} elseif ( !$mPerm->isadmin && 0 < $d3dConf->req_uid && $d3dConf->req_uid != $uid ) {
+	redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+	exit;
+} else {
+	$req_uid = $uid;
+	$query_req_uid = "";
+	$rtn = $func->get_xoopsuname($uid);
+	$uname = $rtn['uname'];
+	$name = $rtn['name'];
+}
 
 $_tempGperm = $gPerm->getUidsByName( array('allow_edit') );
 // check edit permission by group
 if(!empty($_tempGperm['allow_edit'])){
-	if(!isset($_tempGperm['allow_edit'][$uid])) {
+	if(!isset($_tempGperm['allow_edit'][$uid]) || ($req_uid != $uid && !isset($_tempGperm['allow_edit'][$req_uid]))) {
 		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
 		exit();
 	}	unset($_tempGperm);
@@ -57,7 +80,7 @@ $common_cat=$func->getpost_param('common_cat') ? intval($func->getpost_param('co
 if ($common_cat==1){
 	$category->uid=0;
 } else {
-	$category->uid=$uid;
+	$category->uid=$req_uid;
 }
 $category->cid=intval($func->getpost_param('cid'));
 
@@ -81,19 +104,19 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 	$category->cname= strip_tags($func->getpost_param('cname'));
 	$category->subcat= intval($func->getpost_param('subcat'));
 	if(empty($category->cname)){
-		redirect_header("editcategory.php",2,_MD_CATEGORY_NONAME);exit();
+		redirect_header("editcategory.php".$query_req_uid,2,_MD_CATEGORY_NONAME);exit();
 	}
 	$category->updatedb($mydirname);
-	redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_UPDATED);
+	redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_CATEGORY_UPDATED);
 
 // create
 }elseif(!empty($_POST['createsub'])){
 	$category->cname= strip_tags($func->getpost_param('cname'));
 	if(empty($category->cname)){
-		redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_NONAME);exit();
+		redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_CATEGORY_NONAME);exit();
 	}
 	$category->insertdb($mydirname, $common_cat);
-	redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_CREATED);
+	redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_CATEGORY_CREATED);
 
 // delete
 }elseif(!empty($_POST['delsub'])){
@@ -105,11 +128,11 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 			WHERE cid='".$category->cid."'";
 	} else {
 		$sql = "UPDATE ".$xoopsDB->prefix($mydirname.'_diary')." SET cid='0'
-			WHERE uid='".$uid."' and cid='".$category->cid."'";
+			WHERE uid='".$req_uid."' and cid='".$category->cid."'";
 	}
 	$result = $xoopsDB->query($sql);
 
-	redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_DELETED);
+	redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_CATEGORY_DELETED);
 
 // swap  .. it's old and conventional function, to be removed in future
 }elseif(!empty($_POST['swapsub'])){
@@ -119,14 +142,14 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 	$category->cid=$cid1;
 	$category->readdb($mydirname);
 	if(empty($category->cname)){
-		redirect_header("index.php?page=editcategory",2,_MD_IVCID);exit();
+		redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_IVCID);exit();
 	}
 	$corder1=$category->corder;
 	
 	$category->cid=$cid2;
 	$category->readdb($mydirname);
 	if(empty($category->cname)){
-		redirect_header("index.php?page=editcategory",2,_MD_IVCID);exit();
+		redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_IVCID);exit();
 	}
 	$corder2=$category->corder;
 	
@@ -139,7 +162,7 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 	$category->corder=$corder2;
 	$category->updatedb($mydirname);
 	
-	redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_SWAPPED);
+	redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_CATEGORY_SWAPPED);
 
 // input form
 }else{
@@ -148,16 +171,18 @@ if(!empty($_POST['editsub']) and $category->cid>0){
 
 // breadcrumbs
 	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');
-	$bc_para['path'] = "index.php?page=editcategory";
+	$bc_para['path'] = "index.php";
 	$bc_para['uname'] = $uname;
 	$bc_para['name'] = (!empty($name)) ? $name : $uname ;
 	$bc_para['mode'] = "editcategory";
 	$bc_para['bc_name'] = constant('_MD_CATEGORY_EDIT');
 	
-	$breadcrumbs = $func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $req_uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 	
 $xoopsTpl->assign(array(
+		"req_uid" => $req_uid,
+		"query_req_uid" => $query_req_uid,
 		"yd_uid" => $uid,
 		"yd_uname" => $uname,
 		"yd_name" => $name,
@@ -171,13 +196,13 @@ $xoopsTpl->assign(array(
 		));
 
 function d3diary_assign_category_foredit2($mydirname){
-	global $uid, $myts, $xoopsDB, $xoopsTpl, $d3dConf, $mPerm;
+	global $req_uid, $myts, $xoopsDB, $xoopsTpl, $d3dConf, $mPerm;
 	
 	$yd_category = array();
 	$yd_common_cat = array();
 
 	$sql = "SELECT * FROM ".$xoopsDB->prefix($mydirname.'_category')."
-	          WHERE uid='".intval($uid)."' ORDER BY corder";
+	          WHERE uid='".intval($req_uid)."' ORDER BY corder";
 
 	$result = $xoopsDB->query($sql);
 
@@ -234,7 +259,7 @@ function d3diary_assign_category_foredit2($mydirname){
 		} elseif( $op == 20 ) {
 			$_tmp_pperms = isset($dbdat['vpids']) ? 
 					array_map("intval", explode( '|', trim( $dbdat['vpids'] ,'|' ))) : array();
-			if ($mPerm->isadmin || in_array( $uid, $_tmp_pperms )) {
+			if ($mPerm->isadmin || in_array( $req_uid, $_tmp_pperms )) {
 				$yd_common_cat[] = $_tmp_cat;
 				$i++;
 			}
@@ -248,10 +273,10 @@ function d3diary_assign_category_foredit2($mydirname){
 
 	// return modified corder
 	function d3diary_change_corder($mydirname, $cid, $oldorder, $neworder) {
-		global $uid, $xoopsDB, $d3dConf;
+		global $req_uid, $xoopsDB, $d3dConf;
 		
 		if ( $cid < 10000 ) {
-			$whr_uid = " uid='".$uid."'";
+			$whr_uid = " uid='".$req_uid."'";
 			$min_corder = 1;
 		} else {
 			$whr_uid = " uid='0'";
@@ -296,4 +321,3 @@ function d3diary_assign_category_foredit2($mydirname){
 	}
 
 ?>
-	
