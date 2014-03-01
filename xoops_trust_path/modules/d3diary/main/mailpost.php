@@ -90,7 +90,7 @@ if ( $mpost_step >= 1 ) {
 
 	// check mailpost manual use setting
 	if ( $dcfg->mailpost<1 || $dcfg->mailpost>2 ) {
-		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config'$query_req_uid,2,_MD_NOSET_MAILMANUAL);
+		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config'.$query_req_uid,2,_MD_NOSET_MAILMANUAL);
 		exit();
 	}
 
