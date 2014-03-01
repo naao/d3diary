@@ -20,6 +20,25 @@ $mPerm->ini_set();
 $gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
+if ( $mPerm->isadmin && 0 < $req_uid ) {
+	$query_req_uid = "&amp;req_uid=".$req_uid;
+	$rtn = $func->get_xoopsuname($req_uid);
+	$uname = $rtn['uname'];
+	$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+	$rtn = $func->get_xoopsuname($uid);
+	$myuname = $rtn['uname'];
+	$myname = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+} elseif ( !$mPerm->isadmin && 0 < $req_uid && $req_uid != $uid ) {
+	redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+	exit;
+} else {
+	$req_uid = $uid;
+	$query_req_uid = "";
+	$rtn = $func->get_xoopsuname($uid);
+	$uname = $rtn['uname'];
+	$name = $rtn['name'];
+}
+
 // overrides dcfg->uid
 $dcfg =& $d3dConf->dcfg;
 $dcfg->uid = $req_uid;
@@ -48,7 +67,7 @@ $chk_time= $func->getpost_param('chk_time');
 			exit();
 		}
 		// check mailpost permission by group
-		if(!isset($_tempGperm['allow_mailpost'][$uid])) {
+		if(!isset($_tempGperm['allow_mailpost'][$req_uid])) {
 			redirect_header(XOOPS_URL.'/index.php',2,_MD_NOPERM_MAILPOST);
 			exit();
 		}
@@ -64,12 +83,14 @@ $chk_time= $func->getpost_param('chk_time');
 		$reg_time = d3diary_reg_time($func->getpost_param('published'));
 	}
 
+$connected = 0;
+
 // check setting
 if ( $mpost_step >= 1 ) {
 
 	// check mailpost manual use setting
 	if ( $dcfg->mailpost<1 || $dcfg->mailpost>2 ) {
-		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config',2,_MD_NOSET_MAILMANUAL);
+		redirect_header(XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=usr_config'$query_req_uid,2,_MD_NOSET_MAILMANUAL);
 		exit();
 	}
 
@@ -149,13 +170,29 @@ require_once XOOPS_ROOT_PATH.'/header.php';
 			$yd_data['group_list'] = $group_list;
 		}
 
+// breadcrumbs
+	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');
+	$bc_para['path'] = "index.php";
+	$bc_para['uname'] = $uname;
+	$bc_para['name'] = (!empty($name)) ? $name : $uname ;
+	$bc_para['mode'] = "mailpost";
+	$bc_para['bc_name'] = constant('_MD_MAIL_OPENMANUAL');
+	
+	$breadcrumbs = $func->get_breadcrumbs( $req_uid, $bc_para['mode'], $bc_para );
+	//var_dump($breadcrumbs);
+
 	$xoopsTpl->assign(array(
+		"req_uid" => $req_uid,
+		"query_req_uid" => $query_req_uid,
+		"yd_uid" => $uid,
+		"yd_uname" => $uname,
+		"yd_name" => $name,
 		"mpost_step" => $mpost_step+1,
 		"mails" => $mPost->mails,
 		"got_mails" => $mPost->got_mails,
 		"yd_data" => $yd_data,
 		"yd_cfg" => $d3dConf->dcfg,
-		"catopt" => $func->get_categories($uid, $uid),
+		"catopt" => $func->get_categories($req_uid, $uid),
 		"yd_use_open_entry" => intval($mod_config['use_open_entry']),
 		"mydirname" => $mydirname,
 		"mod_config" => $mod_config,
@@ -163,7 +200,8 @@ require_once XOOPS_ROOT_PATH.'/header.php';
 		"err_msg" => $mPost->_err_msg,
 		"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$uid]) : false,
 		"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$uid]) : false,
-		"allow_regdate" => $allow_regdate
+		"allow_regdate" => $allow_regdate,
+		"xoops_breadcrumbs" => $breadcrumbs
 		));
 			
 	if(!empty($_tempGperm['allow_gpermission']) && ( $_oe == 10 || $_oe == 20 ))

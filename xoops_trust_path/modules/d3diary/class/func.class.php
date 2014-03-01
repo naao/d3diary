@@ -1754,22 +1754,23 @@ function get_breadcrumbs( $uid, $mode, $bc_para )
 			break;
 	    	case 'usr_config' :
 			$i++;
-			$add_para[$i]="";
-			$tmp_url[$i]=$tmp_url[0].$add_para[$i-1].$add_para[$i];
 			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
-				'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
+					'url' => "" ) ;
+			break;
+	    	case 'editcategory' :
+			$i++;
+			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
+					'url' => "" ) ;
 			break;
 	    	case 'editcat_config' :
 			$i++;
-			$add_para[$i]="";
-			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/index.php?page=editcategory";
+			$tmp_req_uid = $this->getpost_param('req_uid') ? '&req_uid='.(int) $this->getpost_param('req_uid') : '' ;
+			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/index.php?page=editcategory". $tmp_req_uid;
 			$bc[$i] = array( 'name' => $bc_para['bc_name'] ,
 					'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
 			$i++;
-			$add_para[$i]="";
-			$tmp_url[$i]=XOOPS_URL."/modules/".$this->mydirname."/".$bc_para['path'];
 			$bc[$i] = array( 'name' => $bc_para['bc_name2'] ,
-					'url' => $this->htmlSpecialChars($tmp_url[$i]) ) ;
+					'url' => "" ) ;
 			break;
 	    	case 'edit' :
 			$i++;

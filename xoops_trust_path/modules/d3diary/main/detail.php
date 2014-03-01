@@ -275,6 +275,7 @@ if($mod_config['menu_layout']<=1){
  	$d3diary_meta_description = preg_replace('/[\r\n\t]/','',$func->substrTarea($diary->diary, $yd_data['dohtml'], $mod_config['preview_charmax'] , true, "" ));
 
 	$xoopsTpl->assign(array(
+			"query_req_uid" => "&amp;req_uid=". $diary->uid,
 			"yd_uid" => $diary->uid,
 			"yd_uname" => $yd_uname,
 			"yd_name" => $yd_name,

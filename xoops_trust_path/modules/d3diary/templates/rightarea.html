@@ -12,29 +12,32 @@
 </div><!-- /item -->
 <{/if}>
 
-<{if $yd_owner==1 && $yd_editperm==1}>
+<{* if $yd_owner==1 && $yd_editperm==1 *}>
+<{if $yd_editperm==1}>
 <div class="item">
 <div class="itemHead">
 <{$smarty.const._MD_SETTING}><{$smarty.const._MD_T_EDIT}>
 </div><!-- /itemHead -->
 <div class="itemBody">
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=usr_config">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=usr_config<{$query_req_uid}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 />
 <{$smarty.const._MD_T_TOTAL}><{$smarty.const._MD_T_EDIT}>
 </a>
 <br />
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=editcategory">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=editcategory<{$query_req_uid}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 />
 <{$smarty.const._MD_CATEGORY}><{$smarty.const._MD_T_EDIT}>
 </a>
+<{if $yd_owner==1 }>
 <br />
 <a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=edit">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/pencil.gif" border=0 />
 <{$smarty.const._MD_NEWENTRY}>
 </a>
+<{/if}>
 <{if $yd_mailpost==1}>
 <br />
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=mailpost">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/index.php?page=mailpost<{$query_req_uid}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/arrow1.png" border=0 />
 <{$smarty.const._MD_MAIL_OPENMANUAL}>
 </a>

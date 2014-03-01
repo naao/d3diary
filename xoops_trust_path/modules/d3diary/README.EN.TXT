@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2014/3/1  ver0.40.0
+	- Enabled editing user's setting, category, category settings and mailpost by administrators. (thx holy)
+
 2013/12/13  ver0.31.0
 	- Adopt to htmlspecialchars after php5.4 and before php5.2.3.
 	- Fixed the fatal error on getting d3com object for comment integration blocks.

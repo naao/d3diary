@@ -10,8 +10,8 @@ $langman->read( 'modinfo.php' , $mydirname , $mytrustdirname , false ) ;
 $constpref = '_MI_' . strtoupper( $mydirname ) ;
 
 $modversion['name']        = $mydirname;
-$modversion['version']     = 0.31;
-$modversion['detailed_version'] = '0.31.0' ;
+$modversion['version']     = 0.40;
+$modversion['detailed_version'] = '0.40.0' ;
 $modversion['description'] = constant($constpref."_DIARY_DESC");
 $modversion['credits']     = 'Motion Create Inc. (http://www.mc8.jp/)';
 $modversion['author'] 	   = 'naaon (original-module "minidiary" by matoyan)';
@@ -687,9 +687,10 @@ if (is_object(@$GLOBALS['xoopsUser'])) {
 $modversion['sub'][] = array('name' => constant($constpref.'_PHOTOLIST'), 'url' => 'index.php?page=photolist');
 $modversion['sub'][] = array('name' => constant($constpref.'_COMMENT'), 'url' => 'index.php?page=viewcomment');
 if (is_object(@$GLOBALS['xoopsUser'])) {
+	$d3d_req_uid = isset($_GET['req_uid']) ? '&amp;req_uid='. (int)$_GET['req_uid'] : '' ;
 	$modversion['sub'][] = array('name' => constant($constpref.'_EDIT'), 'url' => 'index.php?page=edit');
-	$modversion['sub'][] = array('name' => constant($constpref.'_CONFIG'), 'url' => 'index.php?page=usr_config');
-	$modversion['sub'][] = array('name' => constant($constpref.'_CONFIG_CATEGORY'), 'url' => 'index.php?page=editcategory');
+	$modversion['sub'][] = array('name' => constant($constpref.'_CONFIG'), 'url' => 'index.php?page=usr_config'.$d3d_req_uid);
+	$modversion['sub'][] = array('name' => constant($constpref.'_CONFIG_CATEGORY'), 'url' => 'index.php?page=editcategory'.$d3d_req_uid);
 }
 
 $modversion['onInstall'] = 'oninstall.php' ;

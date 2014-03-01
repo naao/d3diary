@@ -11,7 +11,7 @@ $category =& D3diaryCategory::getInstance();
 
 	global $xoopsUser ;
 	if (is_object( @$xoopsUser )){
-		$uid = intval($xoopsUser->getVar('uid'));
+		$uid = (int)$xoopsUser->getVar('uid');
 	} else {
 		$uid = 0 ;
 	}
@@ -21,9 +21,7 @@ $category =& D3diaryCategory::getInstance();
 		exit();
 	}
 
-	$req_uid = $uid;
-
-$d3dConf = & D3diaryConf::getInstance($mydirname, $req_uid, "editcat_config");
+$d3dConf = & D3diaryConf::getInstance($mydirname, 0, "editcategory");
 $func =& $d3dConf->func ;
 $mod_config =& $d3dConf->mod_config ;
 $myts =& $d3dConf->myts;
@@ -31,13 +29,38 @@ $mPerm =& $d3dConf->mPerm ;
 $gPerm =& $d3dConf->gPerm ;
 
 //--------------------------------------------------------------------
-// GET Initial Valuses
+// GET Initial Values
 //--------------------------------------------------------------------
 
 $myname = "editcat_config.php";
 
-$uname = $d3dConf->uname;
-$name = $d3dConf->name;
+if( $uid<=0 ){
+    redirect_header(XOOPS_URL.'/user.php',2,_MD_IVUID_ERR);
+	exit();
+}
+
+$d3dConf->req_uid = $req_uid = 0<(int)$func->getpost_param('req_uid') ? (int)$func->getpost_param('req_uid') : $uid;
+$mPerm->ini_set();
+
+if ($mPerm->isadmin && 0 < $d3dConf->req_uid) {
+	$req_uid = $d3dConf->req_uid;
+	$query_req_uid = "&amp;req_uid=".$req_uid;
+	$rtn = $func->get_xoopsuname($req_uid);
+	$uname = $rtn['uname'];
+	$name = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+	$rtn = $func->get_xoopsuname($uid);
+	$myuname = $rtn['uname'];
+	$myname = (!empty($rtn['name'])) ? $rtn['name'] : "" ;
+} elseif ( !$mPerm->isadmin && 0 < $d3dConf->req_uid && $d3dConf->req_uid != $uid ) {
+	redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
+	exit;
+} else {
+	$req_uid = $uid;
+	$query_req_uid = "";
+	$rtn = $func->get_xoopsuname($uid);
+	$uname = $rtn['uname'];
+	$name = $rtn['name'];
+}
 
 // define Template
 $xoopsOption['template_main']= $mydirname.'_editcat_config.html';
@@ -49,7 +72,7 @@ include XOOPS_ROOT_PATH."/header.php";
 $_tempGperm = $gPerm->getUidsByName( array_keys($gPerm->gperm_config) );
 // check edit permission by group
 if(!empty($_tempGperm['allow_edit'])){
-	if(!isset($_tempGperm['allow_edit'][$uid])) {
+	if(!isset($_tempGperm['allow_edit'][$uid]) || ($req_uid != $uid && !isset($_tempGperm['allow_edit'][$req_uid]))) {
 		redirect_header(XOOPS_URL.'/user.php',2,_MD_NOPERM_EDIT);
 		exit();
 	}
@@ -58,14 +81,14 @@ if(!empty($_tempGperm['allow_edit'])){
 	exit();
 }
 
-// dort /rename / add / delete（ --> non nategory ）
+// dort /rename / add / delete --> non nategory
 $common_cat=$func->getpost_param('common_cat') ? intval($func->getpost_param('common_cat')) : 0 ;
 
 // uid overrides for common category
 if ($common_cat==1){
 	$category->uid=0;
 } else {
-	$category->uid=$uid;
+	$category->uid=$req_uid;
 }
 
 $cid = $category->cid=intval($func->getpost_param('cid'));
@@ -78,7 +101,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$category->rss=$func->getpost_param('rss');
 
 	if($category->blogtype>0 and empty($category->blogurl)){
-		redirect_header('index.php?page=editcat_config',3,_MD_FAIL_UPDATED._MD_NODIARYURL);
+		redirect_header('index.php?page=editcat_config'.$query_req_uid,3,_MD_FAIL_UPDATED._MD_NODIARYURL);
 		exit();
 	}
 
@@ -87,7 +110,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	
 	// $_url, $_rss are by ref value
 	if ( $func->get_ext_rssurl( $category->blogtype, $_url, $_rss )!=true ) {
-		redirect_header('index.php?page=editcat_config',3,_MD_FAIL_UPDATED._MD_NORSSURL);
+		redirect_header('index.php?page=editcat_config'.$query_req_uid,3,_MD_FAIL_UPDATED._MD_NORSSURL);
 		exit();
 	} else {
 		$category->blogurl = $_url;
@@ -104,11 +127,11 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$category->updatedb($mydirname);
 
 	if($d3dConf->dcfg->blogtype==0){
-		// このブログ
-		d3diary_update_newentry_cat($mydirname, $uid, $cid);
+		// update newentry
+		d3diary_update_newentry_cat($mydirname, $req_uid, $cid);
 	}
 
-	redirect_header("index.php?page=editcategory",2,_MD_CATEGORY_UPDATED);
+	redirect_header("index.php?page=editcategory".$query_req_uid,2,_MD_CATEGORY_UPDATED);
 
 // input form
 }else{
@@ -165,25 +188,28 @@ if(!empty($_POST['submit1']) and $cid>0){
 	// assign module header for tags
 	$d3diary_header = '<link rel="stylesheet" type="text/css" media="all" href="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=main_css" />'."\r\n";
 	if(!empty($_tempGperm['allow_ppermission'])){
-		if(isset($_tempGperm['allow_ppermission'][$uid])){
+		if(isset($_tempGperm['allow_ppermission'][$uid]) && isset($_tempGperm['allow_ppermission'][$req_uid])){
 			$d3diary_header .= '<script type="text/javascript" src="'.XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=loader&src=prototype,suggest,log.js"></script>'."\r\n";
 		}
 	}
 
 // breadcrumbs
 	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');
-	$bc_para['path'] = "index.php?page=editcat_config";
+	//$bc_para['path'] = "index.php?page=editcat_config";
+	$bc_para['path'] = "index.php";
 	$bc_para['uname'] = $uname;
 	$bc_para['name'] = (!empty($name)) ? $name : $uname ;
 	$bc_para['mode'] = "editcat_config";
 	$bc_para['bc_name'] = constant('_MD_CATEGORY_EDIT');
 	$bc_para['bc_name2'] = $func->htmlspecialchars( $category->cname ) ;
 	
-	$breadcrumbs = $func->get_breadcrumbs( $uid, $bc_para['mode'], $bc_para );
+	$breadcrumbs = $func->get_breadcrumbs( $req_uid, $bc_para['mode'], $bc_para );
 	//var_dump($breadcrumbs);
 
 
 $xoopsTpl->assign(array(
+		"req_uid" => $req_uid,
+		"query_req_uid" => $query_req_uid,
 		"yd_uid" => $uid,
 		"yd_uname" => $uname,
 		"yd_name" => $name,
@@ -199,18 +225,18 @@ $xoopsTpl->assign(array(
 		"xoops_breadcrumbs" => $breadcrumbs,
 		"xoops_module_header" => 
 			$xoopsTpl->get_template_vars( 'xoops_module_header' ).$d3diary_header,
-		"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$uid]) : false,
-		"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$uid]) : false,
+		"allow_edit" => !empty($_tempGperm['allow_edit']) ? isset($_tempGperm['allow_edit'][$req_uid]) : false,
+		"allow_html" => !empty($_tempGperm['allow_html']) ? isset($_tempGperm['allow_html'][$req_uid]) : false,
 		"allow_regdate" => !empty($_tempGperm['allow_regdate']) ? isset($_tempGperm['allow_regdate'][$uid]) : false
 		));
 		
 	if(!empty($_tempGperm['allow_gpermission']))
-		{ $xoopsTpl->assign( 'allow_gpermission' , isset($_tempGperm['allow_gpermission'][$uid])); }
+		{ $xoopsTpl->assign( 'allow_gpermission' , isset($_tempGperm['allow_gpermission'][$req_uid])); }
 	if(!empty($_tempGperm['allow_ppermission']))
-		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$uid])); }
+		{ $xoopsTpl->assign( 'allow_ppermission' , isset($_tempGperm['allow_ppermission'][$req_uid])); }
 	
 
-// newentry更新
+// newentry upadate
 function d3diary_update_newentry_cat($mydirname, $uid, $cid)
 {
 	global $xoopsDB;

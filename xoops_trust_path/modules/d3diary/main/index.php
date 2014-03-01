@@ -31,6 +31,10 @@ $mPerm =& $d3dConf->mPerm ;
 $gPerm =& $d3dConf->gPerm ;
 $mod_config =& $d3dConf->mod_config ;
 
+if ( $mPerm->isadmin && 0 < $req_uid ) {
+	$query_req_uid = "&amp;req_uid=".$req_uid;
+}
+
 // query values
 $uid = $d3dConf->uid;
 $req_cid = $d3dConf->q_cid;
@@ -101,7 +105,7 @@ if(!$mPerm->check_permission($req_uid, $dcfg->openarea)){
 	$allow_mailpost = 0;
 	if( $mod_config['use_mailpost']==1 && !empty($_tempGperm['allow_mailpost'])){
 		// check mailpost permission for access user's group
-		if(isset($_tempGperm['allow_mailpost'][$uid]) && $req_uid == $uid) {
+		if(isset($_tempGperm['allow_mailpost'][$req_uid])) {
 			$allow_mailpost = 1;
 		}
 
@@ -743,6 +747,8 @@ if($mod_config['menu_layout']<=1){
 }
 
 	$xoopsTpl->assign(array(
+			"req_uid" => $req_uid,
+			"query_req_uid" => $query_req_uid,
 			"yd_uid" => $req_uid,
 			"yd_uname" => $yd_uname,
 			"yd_name" => $yd_name,
