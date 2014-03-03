@@ -100,7 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
-2014/3/1  ver0.40.0
+2014/3/3  ver0.41.0
+	- When using group permission, to be shown and selectable not author's own groups, added preference items. (thx SAT)
+
+2014/3/1  ver0.40.0, ver0.40.1
 	- Enabled editing user's setting, category, category settings and mailpost by administrators. (thx holy)
 
 2013/12/13  ver0.31.0

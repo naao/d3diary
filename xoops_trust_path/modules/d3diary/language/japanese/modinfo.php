@@ -89,6 +89,11 @@ define($constpref."_USE_OPEN_ENTRY_Y","記事毎の権限設定：ON");
 define($constpref."_USE_OPEN_ENTRY_G","記事毎の権限設定：グループ指定まで可能");
 define($constpref."_USE_OPEN_ENTRY_P","記事毎の権限設定：グループ・メンバ指定まで可能");
 
+define($constpref."_GROUP_SHOW_ALL","全てのグループを権限設定グループセレクタに表示");
+define($constpref."_GROUP_SHOW_ALLDESC","権限のグループ指定をする場合に、全てのグループを権限設定グループセレクタに表示する場合は、「はい」。投稿者の所属グループのみ表示し他のグループは非表示とする場合は、「いいえ」とします。<br />どちらの場合も管理者には全てのグループが表示されます。");
+define($constpref."_GROUP_EXCLD_SEL","非表示とするグループ");
+define($constpref."_GROUP_EXCLD_SELDESC","全てのグループを表示に「はい」を選択した場合にも、表示を隠しておきたいグループがある場合はそのグループを選択します。<br />但し投稿者の所属グループは常に表示されます。また、サイト管理者と一般の登録ユーザーを選択しても意味を持たず、管理者には常に全グループが表示されます。");
+
 define($constpref."_USE_FRIEND","友人機能モジュールとの連携ON/OFF");
 define($constpref."_USE_FRIENDDESC","公開範囲を友人までとする含める機能を使うかどうか<br/><br/>※xsnsかmyfriendモジュールをインストールしていない<br/>場合は、ON設定にしないでください。");
 define($constpref."_USE_FRIEND_N","友人機能との連携：OFF");

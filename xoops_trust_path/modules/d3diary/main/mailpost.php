@@ -159,16 +159,11 @@ require_once XOOPS_ROOT_PATH.'/header.php';
 
 	}
 
-		$yd_data['group_list'] = array();
-		$_oe = (int)$mod_config['use_open_entry'];
-		if( $_oe == 10 || $_oe == 20 ) {
-			foreach ( $gPerm->group_list as $_gid => $_name) {
-		    	    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
-				$group_list[$_gid]['gname'] = $_name;
-			    }
-			}
-			$yd_data['group_list'] = $group_list;
-		}
+	$yd_data['group_list'] = array();
+	$_oe = (int)$mod_config['use_open_entry'];
+	if( $_oe == 10 || $_oe == 20 ) {
+		$yd_data['group_list'] = $func->get_grouplist4edit( $diary );
+	}
 
 // breadcrumbs
 	$bc_para['diary_title'] = $xoopsTpl->get_template_vars('xoops_modulename');

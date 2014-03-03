@@ -1087,17 +1087,10 @@ function d3diary_showform($mydirname){
 
 		$yd_data['group_list'] = array();
 		$_oe = (int)$mod_config['use_open_entry'];
-		if( $_oe == 10 || $_oe == 20 ) {
-			$g_selcted = explode( "|", trim( $diary->vgids ,"|" ) );
-			$group_list = array();
-			foreach ( $gPerm->group_list as $_gid => $_name) {
-		    	    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
-				$group_list[$_gid]['gname'] = $_name;
-				$group_list[$_gid]['gsel'] = (in_array( $_gid, $g_selcted )) ? 1 : 0;
-			    }
-			}
-			$yd_data['group_list'] = $group_list;
-		}
+
+	if( $_oe == 10 || $_oe == 20 ) {
+		$yd_data['group_list'] = $func->get_grouplist4edit( $diary );
+	}
 
 		if( $_oe == 20 ) {
 			$p_selcted = array_map("intval", explode( "|", trim( $diary->vpids ,"|" )) );

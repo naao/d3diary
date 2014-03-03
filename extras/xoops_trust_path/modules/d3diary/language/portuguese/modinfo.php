@@ -82,6 +82,11 @@ define($constpref."_USE_OPEN_CAT_N","Permitir a configuração de um blog externo 
 define($constpref."_USE_OPEN_CAT_G","Permissão de cada categoria: upto configuração do grupo & configuração do blog externo: ON");
 define($constpref."_USE_OPEN_CAT_P","Permissão de cada categoria: upto configuração do grupo e membro & configuração do blog externo<b></b>: ON");
 
+define($constpref."_GROUP_SHOW_ALL","Mostre todos os grupos &agrave; autoridade se agrupe seletor");
+define($constpref."_GROUP_SHOW_ALLDESC","Por fixar grupos de autoridade, selecione 'SIM' mostrar todos os grupos no seletor. Selecione 'NENHUM' esconder grupos com exceç&atilde;o dos próprios grupos de autor.<br /> Ambos caso é mesmo para administradores mostrarem todos os grupos.");
+define($constpref."_GROUP_EXCLD_SEL","Grupos escondidos");
+define($constpref."_GROUP_EXCLD_SELDESC","No caso de selecionou 'SIM' para 'espetáculo todos os grupos para o seletor, enxadinha de grupos selecionado n&atilde;o é listado.<br /> Mas os próprios grupos de autor s&atilde;o everytime listados e nem administradores nem os usuários gerais selecionaram n&atilde;o é válido e para administradores s&atilde;o listados todos os grupos.");
+
 define($constpref."_USE_OPEN_ENTRY","Permitir a configuração de cada post");
 define($constpref."_USE_OPEN_ENTRYDESC","Selecionar Habilitar para utilizar a configuração das permissões de cada post.");
 define($constpref."_USE_OPEN_ENTRY_Y","Configuração das permissões de cada post: ON");

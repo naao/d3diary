@@ -10,8 +10,8 @@ $langman->read( 'modinfo.php' , $mydirname , $mytrustdirname , false ) ;
 $constpref = '_MI_' . strtoupper( $mydirname ) ;
 
 $modversion['name']        = $mydirname;
-$modversion['version']     = 0.40;
-$modversion['detailed_version'] = '0.40.1' ;
+$modversion['version']     = 0.41;
+$modversion['detailed_version'] = '0.41.0' ;
 $modversion['description'] = constant($constpref."_DIARY_DESC");
 $modversion['credits']     = 'Motion Create Inc. (http://www.mc8.jp/)';
 $modversion['author'] 	   = 'naaon (original-module "minidiary" by matoyan)';
@@ -181,6 +181,25 @@ $modversion['config'][] = array(
 		  					  $constpref.'_USE_OPEN_ENTRY_G' => 10,
 		  					  $constpref.'_USE_OPEN_ENTRY_P' => 20)
 );
+
+$modversion['config'][] = array(
+	'name'			=> 'group_show_all' ,
+	'title'			=> $constpref.'_GROUP_SHOW_ALL' ,
+	'description'		=> $constpref.'_GROUP_SHOW_ALLDESC' ,
+	'formtype'		=> 'yesno' ,
+	'valuetype'		=> 'int' ,
+	'default'		=> '0'
+);
+
+$modversion['config'][] = array(
+	'name'			=> 'exlude_group_select' ,
+	'title'			=> $constpref.'_GROUP_EXCLD_SEL' ,
+	'description'		=> $constpref.'_GROUP_EXCLD_SELDESC' ,
+	'formtype'		=> 'group_multi' ,
+	'valuetype'		=> 'array' ,
+	'default'		=> array(1,2,3) ,
+	'options'		=> array()
+) ;
 
 $modversion['config'][] = array(
 	'name'			=> 'use_friend' ,

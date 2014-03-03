@@ -199,6 +199,31 @@ function countup_diary($uid, $bid=0)
 
 }
 
+// group list for edit, category edit and mailpost pages
+function get_grouplist4edit( $diary_or_cat ) {
+	$member_handler =& xoops_gethandler('member');
+	$xoops_group_list =& $member_handler->getGroupList();
+	$g_selcted = explode( "|", trim(  $diary_or_cat->vgids ,"|" ) );
+
+	$group_list = array();
+	if( $this->mod_config['group_show_all'] ) {
+		foreach ( $xoops_group_list as $_gid => $_name ) {
+			if($_gid >= 4 && ( in_array($_gid, $this->mPerm->mygids) || !in_array($_gid, $this->mod_config['exluded_group_select']) || $this->mPerm->isadmin  )){
+				$group_list[$_gid]['gname'] = $_name;
+				$group_list[$_gid]['gsel'] = (in_array( $_gid, $g_selcted )) ? 1 : 0;
+			}
+			}
+	} else {
+		foreach ( $this->gPerm->group_list as $_gid => $_name ) {
+			if($_gid >= 4 && ( in_array($_gid, $this->mPerm->mygids) || $this->mPerm->isadmin )){
+			$group_list[$_gid]['gname'] = $_name;
+			$group_list[$_gid]['gsel'] = (in_array( $_gid, $g_selcted )) ? 1 : 0;
+			}
+		}
+	}
+	return $group_list;
+}
+
 // category list
 function get_categories($req_uid, $uid, $block=false){
 

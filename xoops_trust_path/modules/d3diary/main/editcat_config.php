@@ -146,21 +146,11 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$yd_category['openarea']   = $category->openarea;
 	$yd_category['dohtml']   = $category->dohtml;
 
-	$_selcted = explode( "|", trim( $category->vgids ,"|" ) );
-
 	//var_dump($gPerm->group_list);
 	$yd_category['group_list'] = array();
 	$_oc = (int)$mod_config['use_open_cat'];
 	if( $_oc == 10 || $_oc == 20 ) {
-		$_selcted = explode( "|", trim( $category->vgids ,"|" ) );
-		$group_list = array();
-		foreach ( $gPerm->group_list as $_gid => $_name) {
-		    if($_gid >= 4 && (in_array($_gid, $mPerm->mygids) || $mPerm->isadmin)){
-			$group_list[$_gid]['gname'] = $_name;
-			$group_list[$_gid]['gsel'] = (in_array( $_gid, $_selcted )) ? 1 : 0;
-		    }
-		}
-		$yd_category['group_list'] = $group_list;
+		$yd_category['group_list'] = $func->get_grouplist4edit( $category );
 	}
 	if( $_oc == 20 ) {
 		$p_selcted = array_map("intval", explode( "|", trim( $category->vpids ,"|" )) );

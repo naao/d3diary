@@ -89,6 +89,11 @@ define($constpref."_USE_OPEN_ENTRY_Y","Authority setting for each entry:ON");
 define($constpref."_USE_OPEN_ENTRY_G","Authority setting for each entry:upto Group setting");
 define($constpref."_USE_OPEN_ENTRY_P","Authority setting for each entry:upto Group and Member setting");
 
+define($constpref."_GROUP_SHOW_ALL","Show all groups to the authority group selector");
+define($constpref."_GROUP_SHOW_ALLDESC","For setting authority groups, select 'YES' to show all groups in the selector. Select 'NO' to hide groups except for author's own groups.<br />Both case are same for administrators to show all groups.");
+define($constpref."_GROUP_EXCLD_SEL","Hidden groups");
+define($constpref."_GROUP_EXCLD_SELDESC","In case selected 'YES' for 'show all groups to the selector, selected groups hore are not listed. <br />But author's own groups are everytime listed, and neither administrators nor general users selected is not valid, and for administrators all groups are listed.");
+
 define($constpref."_USE_FRIEND","Cooperation setteing with Friend module");
 define($constpref."_USE_FRIENDDESC","Enable Authority setting includes Friend Cooperation function or not. <br/><br/>Remain OFF if you have not installed XSNS nor Myfirend module.");
 define($constpref."_USE_FRIEND_N","Cooperation with Friend module:OFF");
