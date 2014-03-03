@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2014/3/4  ver0.42.0
+	- Changed depricated function after php5.5 MySQL to MySQLi. (thx nao-pon)
+
 2014/3/3  ver0.41.0
 	- When using group permission, to be shown and selectable not author's own groups, added preference items. (thx SAT)
 

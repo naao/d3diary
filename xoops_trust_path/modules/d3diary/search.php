@@ -69,12 +69,17 @@ function d3diary_global_search_base($mydirname , $queryarray, $andor, $limit, $o
 
 	// because count() returns 1 even if a supplied variable
 	// is not an array, we must check if $querryarray is really an array
+	static $link = null;
+	if (is_null($link)) {
+		$link = (is_object($xoopsDB->conn) && get_class($xoopsDB->conn) === 'mysqli')? $xoopsDB->conn : false;
+	}
+
 	$count = count($queryarray);
 	if ( $count > 0 && is_array($queryarray) ) {
-		$queryarray[0]=mysql_real_escape_string($queryarray[0]);
+		$queryarray[0]= $link? mysqli_real_escape_string($link ,$queryarray[0]) : mysql_real_escape_string($queryarray[0]);
 		$sql .= " AND ((d.title LIKE '%$queryarray[0]%' OR d.diary LIKE '%$queryarray[0]%') ";
 		for ( $i = 1; $i < $count; $i++ ) {
-			$queryarray[$i]=mysql_real_escape_string($queryarray[$i]);
+			$queryarray[$i]= $link? mysqli_real_escape_string($link ,$queryarray[$i]) : mysql_real_escape_string($queryarray[$i]);
 			$sql .= " $andor ";
 			$sql .= " (d.title LIKE '%$queryarray[$i]%' OR d.diary LIKE '%$queryarray[$i]%') ";
 		}

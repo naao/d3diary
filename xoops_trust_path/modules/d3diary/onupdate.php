@@ -145,8 +145,18 @@ function d3diary_onupdate_base( $module , $mydirname )
 	
 	// 0.18
 	// modify photo `tstamp` column data type from timestamp to datetime
-	$result = mysql_query("SELECT `tstamp` FROM ".$db->prefix($mydirname."_photo")) ;
-	$field_type  = mysql_field_type($result, 0);
+	$result = $db->query("SELECT `tstamp` FROM ".$db->prefix($mydirname."_photo")) ;
+	static $link = null;
+	if (is_null($link)) {
+		//$db = XoopsDatabaseFactory::getDatabaseConnection();
+		$link = (is_object($db->conn) && get_class($db->conn) === 'mysqli')? $db->conn : false;
+	}
+	if ($link) {
+		$field_info  = mysqli_fetch_field_direct($result, 0);
+		$field_type  = $field_info->type;
+	} else {
+		$field_type  = mysql_field_type($result, 1);
+	}
 	if ( $field_type == "timestamp" ) {
 		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_photo")." modify `tstamp` datetime NOT NULL" ) ;
 		// for NULL tstamp, copy from diary's create_time
@@ -158,7 +168,7 @@ function d3diary_onupdate_base( $module , $mydirname )
 	
 	// 0.28 -> 0.29
 	// add indexes for tables
-	$check_sql = "SHOW INDEX FROM ".$db->prefix($mydirname."_category")." WHERE Column_name='idx_uid'" ;
+	$check_sql = "SHOW INDEX FROM ".$db->prefix($mydirname."_category")." WHERE Key_name='idx_uid'" ;
 	$result = $db->query( $check_sql );
 	$dbdat = $db->fetchArray($result);
 	if( ! $dbdat ) {

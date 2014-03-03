@@ -96,6 +96,9 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2014/3/4  ver0.42.0
+	- php5.5以降非推奨なMySQL関数をMySQLi対応にした。(thx nao-pon)
+
 2014/3/3  ver0.41.0
 	- グループ指定使用の際に、自身が所属しないグループを表示・設定可能なように一般設定項目を追加。(thx SAT)
 
