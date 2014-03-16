@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2014/3/16 ver 0.43.0
+	- Enabled tag query on RSS page.
+
 2014/3/4  ver0.42.0
 	- Changed depricated function after php5.5 MySQL to MySQLi. (thx nao-pon)
 
