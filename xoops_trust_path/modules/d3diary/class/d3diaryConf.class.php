@@ -345,6 +345,16 @@ function get_new_bids ( & $_bids )
 	$_bids = isset($this->shared['new_bids']) ? $this->shared['new_bids'] : array() ;
 }
 
+function set_new_entries ( $_entries )
+{
+	$this->shared['new_entries'] = $_entries;
+}
+
+function get_new_entries ( & $_entries )
+{
+	$_entries = isset($this->shared['new_entries']) ? $this->shared['new_entries'] : array() ;
+}
+
 function getpost_param( $pname )
 {
 	if(isset($_GET[$pname]))$pdat=$_GET[$pname];

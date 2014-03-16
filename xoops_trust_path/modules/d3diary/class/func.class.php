@@ -667,6 +667,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		}
 
 	$whr_timerange = "" ;
+	$whr_cid = "" ;
 	$whr_cat = "" ;
 	$whr_tag = "" ;
 	$table_tag = "" ;
@@ -684,6 +685,10 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 			}
             		$whr_cat = rtrim( $whr_cat, "OR " ). ")" ;
 		}
+		if(!empty($params['cids'])){
+			$whr_cid = " AND c.cid IN (".implode(',', $params['cids']).")";
+		}
+
 		if(!empty($params['tags'])){
 			$table_tag = "LEFT JOIN ".$db->prefix($this->mydirname.'_tag')." t ON d.bid=t.bid " ;
 			$whr_tag = " AND (" ;
@@ -700,7 +705,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c ".$on_uid." 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_config')." cfg ON d.uid=cfg.uid 
 			".$table_tag."
-			WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_timerange.$whr_cat.$whr_tag." 
+			WHERE ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_timerange.$whr_cid.$whr_cat.$whr_tag." 
 			ORDER BY create_time DESC LIMIT 0,".$maxnum;
 
 	$result = $db->query($sql);
@@ -793,7 +798,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 			INNER JOIN ".$db->prefix('users')." u USING(uid) 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_config')." cfg ON d.uid=cfg.uid 
 			LEFT JOIN ".$db->prefix($this->mydirname.'_category')." c ".$on_uid." 
-			WHERE d.blogtype>'0' AND ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_cat.$whr_timerange." 
+			WHERE d.blogtype>'0' AND ".$whr_uids.$whr_openarea.$whr_nofuture.$whr_cid.$whr_cat.$whr_timerange." 
 			ORDER BY create_time DESC LIMIT 0,".$maxnum;
 		//var_dump($sql);
 	$result = $db->query($sql);
@@ -842,6 +847,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 	}
 	
 	$this->d3dConf->set_new_bids ( $got_arr_bids );
+	$this->d3dConf->set_new_entries ( $entry );
 
 	return $entry;
 }

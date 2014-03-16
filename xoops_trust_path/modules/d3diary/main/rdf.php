@@ -17,14 +17,18 @@ $uid = 0; $uname = "";
 $_uid = $func->getpost_param('uid');
 if (!empty($_uid)) {
 	if( (int)$_uid > 0 ){
-		$uid = $_uid;
-		$ret = $func->get_xoopsuname($uid);
-		$uname = $ret['uname'];
-		$name = $ret['name'];
+		$uid = (int)$_uid;
+	}
+} elseif (!empty($func->req_uid)) {
+		$uid = (int)$func->req_uid;
+}
 
-		if( $mod_config['use_name'] == 1 && !empty($name)) {
-			$uname = $name;
-		}
+if( $uid > 0 ){
+	$ret = $func->get_xoopsuname($uid);
+	$uname = $ret['uname'];
+	$name = $ret['name'];
+	if( $mod_config['use_name'] == 1 && !empty($name)) {
+		$uname = $name;
 	}
 }
 
@@ -37,13 +41,21 @@ if (!empty($_cid)) {
 		$category->cid=$cid;
 		$category->getchildren($mydirname);
 		$cname = $category->cname;
-		if($category->children){
-			$whr_cid =" AND d.cid IN (".implode(",",$category->children).") ";
-		} else {
-			$whr_cid =" AND d.cid=".$cid;
-		}
 	}
 }
+	$params['cids'] = empty( $category->children ) ? (empty( $cid ) ? array() : array($cid)) : $category->children ;
+
+$b_tag_noquote = $d3dConf->q_tag_noquote;
+$b_tag = $d3dConf->q_tag;
+	$_entries = array();
+	if (!get_magic_quotes_gpc()) {
+		$params['tags'] = empty( $b_tag_noquote ) ? array() : explode( ',', addslashes($b_tag_noquote) ) ;
+	} else {
+		$params['tags'] = empty( $b_tag_noquote ) ? array() : explode( ',', $b_tag_noquote ) ;
+	}
+
+	$_entries = $func->get_blist ( $uid, 0, 30, true, $params );
+
 	$_rss_ver = $func->getpost_param('ver');
 	$rss_ver  = !empty($_rss_ver) ?$func-> htmlSpecialChars( $_rss_ver ) : "rss1" ;
 
@@ -76,55 +88,28 @@ $tpl = new XoopsTpl();
 	$channel['tzd'] = $tzd;
 	$channel['tzd2'] = $tzd2;
 
-	// for neglect future entry
-	$now = date( "Y-m-d H:i:s" );
-	$whr_ctime = " AND create_time<'".$now."'";
-
-	if( $mPerm->exerpt_ok_bymod == true ) {
-		$whr_openarea = "d.openarea<'100' ";
-	} else {
-		$whr_openarea = "(d.openarea='0' OR d.openarea IS NULL) AND (cfg.openarea='0' OR cfg.openarea IS NULL) 
-				AND (c.openarea='0' OR c.openarea IS NULL) ";
-	}
-	// query
-	$sql = "SELECT d.uid AS uid, d.bid AS bid, d.title AS title, d.diary AS diary, d.update_time AS update_time,
-			d.create_time AS create_time, d.dohtml as dohtml, u.uname, u.name, c.cid AS cid, c.cname AS cname 
-			FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
-			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
-			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_config'). " cfg ON d.uid=cfg.uid 
-			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
-			ON (d.cid=c.cid AND (d.uid=c.uid OR c.uid=0)) 
-			WHERE ".$whr_openarea.$whr_cid.$whr_ctime;
-
-	if($uid>0){
-		$sql .= " AND d.uid='".$uid."' ";
-	}
-	$sql .= " ORDER BY create_time DESC LIMIT 0,30";
-	
-
 	// item
 	$entry = array(); $entries = array();
-	$result = $xoopsDB->query($sql);
-	while ( $dbdat = $xoopsDB->fetchArray($result)){
-		$entry['title'] = empty( $dbdat['title'] ) ? constant('_MD_DIARY_NOTITLE') : $dbdat['title'];
+	foreach ($_entries as $entry){
+		$entry['title'] = empty( $entry['title'] ) ? constant('_MD_DIARY_NOTITLE') : $entry['title'];
 		$entry['title'] = $func->htmlSpecialChars($func->convert_encoding_utf8($entry['title']),ENT_QUOTES,"UTF-8");
-		$entry['uri']   = XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$dbdat['bid'];
+		$entry['uri']   = XOOPS_URL.'/modules/'.$mydirname.'/index.php?page=detail&bid='.$entry['bid'];
 		$entry['link']  = $func->htmlSpecialChars($entry['uri'],ENT_QUOTES,"UTF-8");
-		$entry['uid']   = $dbdat['uid'];
 		if( $mod_config['use_name'] == 1 && !empty($dbdat['name'])) {
-			$entry['creator'] = $func->htmlSpecialChars($func->convert_encoding_utf8($dbdat['name']),ENT_QUOTES,"UTF-8");
+			$entry['creator'] = $func->htmlSpecialChars($func->convert_encoding_utf8($entry['name']),ENT_QUOTES,"UTF-8");
 		} else {
-			$entry['creator'] = $func->htmlSpecialChars($func->convert_encoding_utf8($dbdat['uname']),ENT_QUOTES,"UTF-8");
+			$entry['creator'] = $func->htmlSpecialChars($func->convert_encoding_utf8($entry['uname']),ENT_QUOTES,"UTF-8");
 		}
-		$entry['cid']   = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
-		$entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
-		$tmp = preg_split("/[-: ]/",$dbdat['update_time']);
+		$entry['cid']   = isset($entry['cid']) ? intval($entry['cid']) : 0 ;
+		$entry['cname'] = isset($entry['cname']) ? $entry['cname'] : constant('_MD_NOCNAME') ;
+		$tmp = preg_split("/[-: ]/",$entry['update_time']);
 		$entry['update'] = xoops_getUserTimestamp(mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]), $tzd);
-		$tmp = preg_split("/[-: ]/",$dbdat['create_time']);
+		$tmp = preg_split("/[-: ]/",$entry['create_time']);
 		$entry['tstamp'] = xoops_getUserTimestamp(mktime($tmp[3],$tmp[4],$tmp[5],$tmp[1],$tmp[2],$tmp[0]), $tzd);
-		$entry['description'] = $func->htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 300, true, "UTF-8")),ENT_QUOTES,"UTF-8");
-		$entry['diary'] = $func->htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($dbdat['diary'], $dbdat['dohtml'], 0, false, "UTF-8")),ENT_QUOTES,"UTF-8");
+		$entry['description'] = $func->htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($entry['diary'], $entry['dohtml'], 300, true, "UTF-8")),ENT_QUOTES,"UTF-8");
+		$entry['diary'] = $func->htmlSpecialChars($func->convert_encoding_utf8($func->substrTarea($entry['diary'], $entry['dohtml'], 0, false, "UTF-8")),ENT_QUOTES,"UTF-8");
 		$entries[]=$entry;
+		
 	}
 
 	$channel['lastbuild'] = $entries[0]['tstamp'] ;

@@ -26,6 +26,9 @@ function b_d3dside_person_show( $options ){
 		$query_req_uid = "";
 	}
 
+	$b_tag_noquote = $d3dConf->q_tag_noquote;
+	$b_tag = $d3dConf->q_tag;
+
 	if( $req_uid > 0 ) {
 		$yd_avaterurl = $func->get_user_avatar( array( $req_uid ) ) ;
 	
@@ -64,6 +67,7 @@ function b_d3dside_person_show( $options ){
 		$block['yd_editperm'] = ($mPerm->isauthor || $mPerm->isadmin) ? 1 : 0 ;
 		$block['yd_owner'] = $mPerm->isauthor ? 1 : 0 ;
 		$block['yd_mailpost'] = $allow_mailpost;
+		$block['url4ex_date'] = $d3dConf->urluppr.$d3dConf->urlbase.$d3dConf->url4ex_date;
 		$block['lang'] = $lang;
 		$block['mydirname'] = $mydirname;
 		$block['mod_config'] = $mod_config ;

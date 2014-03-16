@@ -51,13 +51,13 @@
 <{/if}>
 
 <{$smarty.const._MD_LIST_VIEWDSC}>
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/rdf.php?ver=atom&amp;cid=<{$common_cid}>">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/rdf.php?ver=atom&amp;cid=<{$common_cid}><{if $yd_param.tag}>&amp;tag_name=<{$yd_param.tag}><{/if}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/rssatom.png" border=0 />
 </a>
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/rdf.php?ver=rss1&amp;cid=<{$common_cid}>">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/rdf.php?ver=rss1&amp;cid=<{$common_cid}><{if $yd_param.tag}>&amp;tag_name=<{$yd_param.tag}><{/if}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/rss10.png" border=0 />
 </a>
-<a href="<{$xoops_url}>/modules/<{$mydirname}>/rdf.php?ver=rss2&amp;cid=<{$common_cid}>">
+<a href="<{$xoops_url}>/modules/<{$mydirname}>/rdf.php?ver=rss2&amp;cid=<{$common_cid}><{if $yd_param.tag}>&amp;tag_name=<{$yd_param.tag}><{/if}>">
 <img src="<{$xoops_url}>/modules/<{$mydirname}>/images/rss20.png" border=0 />
 </a>
 <div class="boxNavi" style="text-align:center;">
