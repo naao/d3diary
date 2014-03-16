@@ -96,6 +96,9 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2014/3/16 ver 0.43.0
+	- RSS表示の際にタグによる絞り込みを有効とした。
+
 2014/3/4  ver0.42.0
 	- php5.5以降非推奨なMySQL関数をMySQLi対応にした。(thx nao-pon)
 
