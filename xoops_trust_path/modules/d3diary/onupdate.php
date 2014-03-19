@@ -155,7 +155,7 @@ function d3diary_onupdate_base( $module , $mydirname )
 		$field_info  = mysqli_fetch_field_direct($result, 0);
 		$field_type  = $field_info->type;
 	} else {
-		$field_type  = mysql_field_type($result, 1);
+		$field_type  = mysql_field_type($result, 0);
 	}
 	if ( $field_type == "timestamp" ) {
 		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_photo")." modify `tstamp` datetime NOT NULL" ) ;
