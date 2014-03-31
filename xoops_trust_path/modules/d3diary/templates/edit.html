@@ -237,7 +237,14 @@
 		<{else}>
 			<{assign var=editor value=bbcode}>
 		<{/if}>
-		<{xoops_dhtmltarea class=$editor name=diary id=diary cols=40 rows=15 value=$yd_data.diary4edit|htmlspecialchars_decode:$smarty.const.ENT_QUOTES editor=$editor}>
+		<{xoops_dhtmltarea class=$editor name=diary id=diary cols=40 rows=15 value=$yd_data.diary4edit|htmlspecialchars_decode:$smarty.const.ENT_QUOTES editor=$editor switcher="
+$('#dohtml').change(function(){
+	var obj = CKEDITOR.instances.diary,
+	conf = ckconfig_diary;
+	obj && obj.destroy();
+	conf = ($(this).val() == 0)? $.extend(conf, ckconfig_bbcode_diary) : $.extend(conf, ckconfig_html_diary);
+	CKEDITOR.replace('diary', conf);
+});"}>
 		<{if !$entry.contents4edit}>
 			<{if $editor == 'html'}>
 				<{assign var=dohtml value=1}>
@@ -296,10 +303,10 @@
 <{if $allow_html}>
 <div>
 <select name="dohtml" id="dohtml">
-<option value=0 <{if $yd_data.dohtml==0}>selected<{/if}>><{$smarty.const._MD_DO_HTML0}></option>
-<option value=1 <{if $yd_data.dohtml==1}>selected<{/if}>><{$smarty.const._MD_DO_HTML1}></option>
-<option value=2 <{if $yd_data.dohtml==2}>selected<{/if}>><{$smarty.const._MD_DO_HTML2}></option>
-<option value=3 <{if $yd_data.dohtml==3}>selected<{/if}>><{$smarty.const._MD_DO_HTML3}></option>
+<option value=0 <{if $dohtml==0}>selected<{/if}>><{$smarty.const._MD_DO_HTML0}></option>
+<option value=1 <{if $dohtml==1}>selected<{/if}>><{$smarty.const._MD_DO_HTML1}></option>
+<option value=2 <{if $dohtml==2}>selected<{/if}>><{$smarty.const._MD_DO_HTML2}></option>
+<option value=3 <{if $dohtml==3}>selected<{/if}>><{$smarty.const._MD_DO_HTML3}></option>
 </select>
 </div>
 <{else}>
