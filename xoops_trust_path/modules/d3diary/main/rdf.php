@@ -54,6 +54,7 @@ $b_tag = $d3dConf->q_tag;
 		$params['tags'] = empty( $b_tag_noquote ) ? array() : explode( ',', $b_tag_noquote ) ;
 	}
 
+	$params['no_external'] = true;
 	$_entries = $func->get_blist ( $uid, 0, 30, true, $params );
 
 	$_rss_ver = $func->getpost_param('ver');

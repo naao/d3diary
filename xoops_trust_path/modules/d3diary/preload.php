@@ -80,11 +80,11 @@ $('#dohtml').change(function(){
 	$('.diary_textarea_inserter').show();
 	switch($(this).val()) {
 		case '0':
-		case '3':
 			editor = 'bbcode'; break;
 		case '1':
 			$('.diary_textarea_inserter').hide();
 		case '2':
+		case '3':
 			editor = 'html'; break;
 	}
 	if ($('#diary').data('editor') != editor) {

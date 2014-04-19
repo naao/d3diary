@@ -774,7 +774,7 @@ function get_blist_tstamp($req_uid, $uid, $maxnum=7, $dosort=true, & $mytstamp, 
 		$first_date =  $_entry['create_time'];
 	}
 	
-    if (empty($params['tags'])) {
+    if (empty($params['tags']) && (!isset($params['no_external']))) {
 	// newentries (other)
 	if (!empty($first_date)) {
 		$whr_nofuture = " AND d.create_time>'" . $first_date . "' " . $whr_nofuture ;
