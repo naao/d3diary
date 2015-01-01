@@ -258,13 +258,13 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		$yd_param['tag_mode'] = $func->getpost_param('tag_mode') ;
 		$yd_param['tag_mode'] = !empty($yd_param['tag_mode']) ? 1 : 0 ;
 	}
-	$charmax = intval($mod_config['preview_charmax']);
-	$diarynum = intval($mod_config['block_diarynum']);
+	$charmax = (int)($mod_config['preview_charmax']);
+	$diarynum = (int)($mod_config['block_diarynum']);
 
 	$openarea = $yd_param['openarea'];
 
 	$whr_time = " ";
-	$whr_uids="d.uid='".intval($req_uid)."'";
+	$whr_uids="d.uid='".(int)($req_uid)."'";
  	if( $yd_param['friend'] ==1 ){
     		if (!empty($mPerm->req_friends)) {
 			$whr_uids="d.uid IN (".implode(',',$mPerm->req_friends).")";
@@ -421,7 +421,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 	// get entries on selected offset
 	$whr_uids="u".ltrim($whr_uids,"d");
 	$sql = "SELECT d.diary, d.create_time, d.cid, d.title, d.bid, d.openarea AS openarea, d.dohtml, 
-			d.view, u.uname, u.name, u.uid, u.user_avatar, c.cname, c.openarea AS openarea_cat 
+			d.view, u.uname, u.name, u.uid, u.user_avatar, c.cname, c.openarea AS openarea_cat, c.showoption 
 			FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
 			INNER JOIN ".$xoopsDB->prefix('users')." u ON u.uid=d.uid AND ".$whr_uids." 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
@@ -496,7 +496,12 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		$first_date =  $dbdat['create_time'];
 
 		$_entry['dohtml'] = intval($dbdat['dohtml']);
-		$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], $charmax);
+		if ($mod_config['enable_showoption']==1 && $dbdat['showoption'] %2 ==1) {
+			// show all entry detail
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], 0);
+		} else {
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], $charmax);
+		}
 		$_entry['other']=0;
 		
 		$entry[$i] = $_entry;	unset($_entry);
@@ -553,7 +558,7 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 
 		//actual other entries
 		$sql = "SELECT  d.diary, d.create_time, d.title, d.url, u.uname, u.name, u.uid, u.user_avatar, 
-			c.cid, c.cname, c.openarea AS openarea_cat 
+			c.cid, c.cname, c.openarea AS openarea_cat, c.showoption  
 			FROM ".$xoopsDB->prefix($mydirname.'_newentry')." d 
 			INNER JOIN ".$xoopsDB->prefix('users')." u ON u.uid=d.uid AND ".$whr_uids." 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
@@ -596,9 +601,12 @@ list( $arr_weeks, $arr_monthes, $arr_dclass, $arr_wclass ) = $func->initBoxArr()
 		$_entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 		$_entry['dohtml'] = 0;
 		
-		//$_entry['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
-
-		$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], $charmax);
+		if ($mod_config['enable_showoption']==1 && $dbdat['showoption'] %2 ==1) {
+			// show all entry detail
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], 0);
+		} else {
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], $charmax);
+		}
 
 		// openarea overrides
 		$_tmp_openarea = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;

@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2015/1/1 ver 0.45.0
+	- enable showing whole diary on the personal index pages and diarylist page.
+
 2014/4/19 ver 0.44.0
 	- support ckeditor4 params['switcher'] (thx nao-pon)
 	- disable external entries for rss.

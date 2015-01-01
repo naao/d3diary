@@ -99,6 +99,16 @@ document.observe("dom:loaded", function(){
 <br />
 <{if $common_cat !=1}><{$smarty.const._MD_CONF_BSELECTDESC}><br /><br /><{/if}>
 
+<{if $mod_config.enable_showoption}>
+<tr><td><{$smarty.const._MD_CATEGORY_SHOWOPTION}></td>
+<td><select name="showoption" id="showoption">
+<option value=0 <{if $yd_cfg.showoption==0}> selected="selected"<{/if}>><{$smarty.const._MD_CATEGORY_SHOWOPTION0}></option>
+<option value=1 <{if $yd_cfg.showoption==1}> selected="selected"<{/if}>><{$smarty.const._MD_CATEGORY_SHOWOPTION1}></option>
+<option value=3 <{if $yd_cfg.showoption==3}> selected="selected"<{/if}>><{$smarty.const._MD_CATEGORY_SHOWOPTION3}></option>
+</select>
+</td></tr>
+<{/if}>
+
 <div id="groups" style="display:<{if $yd_cfg.openarea==10 || $yd_cfg.openarea==20}>block<{else}>none<{/if}>">
 <{if $allow_gpermission || $allow_ppermission}><br />
 <{$smarty.const._MD_PERMED_VGROUP}><br />

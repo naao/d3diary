@@ -192,6 +192,14 @@ function d3diary_onupdate_base( $module , $mydirname )
 			ADD KEY `acctime` (`acctime`)" ) ;
 	}
 
+	// 0.44 -> 0.45
+	// add show whole detail on the index page
+	$check_sql = "SELECT showoption FROM ".$db->prefix($mydirname."_category") ;
+	if( ! $db->query( $check_sql ) ) {
+		$db->queryF( "ALTER TABLE ".$db->prefix($mydirname."_category")." 
+			ADD `showoption` tinyint(1) unsigned NOT NULL default '0' AFTER openarea" ) ;
+	}
+	
 	// TEMPLATES (all templates have been already removed by modulesadmin)
 	$tplfile_handler =& xoops_gethandler( 'tplfile' ) ;
 	$tpl_path = dirname(__FILE__).'/templates' ;

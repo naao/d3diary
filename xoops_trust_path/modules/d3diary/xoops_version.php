@@ -10,8 +10,8 @@ $langman->read( 'modinfo.php' , $mydirname , $mytrustdirname , false ) ;
 $constpref = '_MI_' . strtoupper( $mydirname ) ;
 
 $modversion['name']        = $mydirname;
-$modversion['version']     = 0.44;
-$modversion['detailed_version'] = '0.44.0' ;
+$modversion['version']     = 0.45;
+$modversion['detailed_version'] = '0.45.0' ;
 $modversion['description'] = constant($constpref."_DIARY_DESC");
 $modversion['credits']     = 'Motion Create Inc. (http://www.mc8.jp/)';
 $modversion['author'] 	   = 'naaon (original-module "minidiary" by matoyan)';
@@ -314,6 +314,15 @@ $modversion['config'][] = array(
 ) ;
 
 $modversion['config'][] = array(
+	'name'			=> 'enable_showoption' ,
+	'title'			=> $constpref.'_ENABLE_SHOWOPTION' ,
+	'description'		=> $constpref.'_ENABLE_SHOWOPTION_DSC' ,
+	'formtype'		=> 'yesno' ,
+	'valuetype'		=> 'int' ,
+	'default'		=> '0'
+) ;
+
+$modversion['config'][] = array(
 	'name'			=> 'enc_from' ,
 	'title'			=> $constpref.'_ENC_FROM' ,
 	'description'		=> $constpref.'_ENC_FROMDSC' ,
@@ -403,6 +412,33 @@ $modversion['config'][] = array(
 	'formtype'		=> 'textbox',
 	'valuetype'		=> 'text',
 	'default'		=> ''
+);
+
+$modversion['config'][] = array(
+	'name'			=> 'trackback_approval' ,
+	'title'			=> $constpref.'_TB_APPROVAL' ,
+	'description'		=>$constpref.'_TB_APPROVALDSC' ,
+	'formtype'		=>'yesno' ,
+	'valuetype'		=>'int' ,
+	'default'		=>'0'
+);
+
+$modversion['config'][] = array(
+	'name'			=> 'trackback_ticket' ,
+	'title'			=> $constpref.'_TB_TICKET' ,
+	'description'		=>$constpref.'_TB_TICKETDSC' ,
+	'formtype'		=>'yesno' ,
+	'valuetype'		=>'int' ,
+	'default'		=>'0'
+);
+
+$modversion['config'][] = array(
+	'name'			=> 'notify_approver' ,
+	'title'			=> $constpref.'_TB_NOT_ADMIN' ,
+	'description'		=>$constpref.'_TB_NOT_ADMINDSC' ,
+	'formtype'		=>'yesno' ,
+	'valuetype'		=>'int' ,
+	'default'		=>'0'
 );
 
 $modversion['config'][] = array(

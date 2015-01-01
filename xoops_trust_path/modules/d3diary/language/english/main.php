@@ -49,6 +49,10 @@ define("_MD_CATEGORY_CREATED","Category is subscribed.");
 define("_MD_CATEGORY_DELETED","Category is deleted.");
 define("_MD_CATEGORY_DELCONFIRM","will be deleted. Really do ?");
 define("_MD_CATEGORY_REQ","Category name is not specified.");
+define("_MD_CATEGORY_SHOWOPTION","Show option of list pages");
+define("_MD_CATEGORY_SHOWOPTION0","Shrink diary on all list pages");
+define("_MD_CATEGORY_SHOWOPTION1","Show whole diary on the personal index pages");
+define("_MD_CATEGORY_SHOWOPTION3","Show whole diary on the personal index pages and diarylist page");
 define("_MD_CATEGORY_HTML","Enable HTML default");
 define("_MD_CATEGORY_HTMLDSC","On a new diary form, when select a category with default HTML enabled here, the HTML checkbox will be true.");
 

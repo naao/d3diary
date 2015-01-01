@@ -49,6 +49,10 @@ define("_MD_CATEGORY_CREATED","A categoria foi subscrita.");
 define("_MD_CATEGORY_DELETED","A categoria foi excluída.");
 define("_MD_CATEGORY_DELCONFIRM","Você deseja realmente excluir?");
 define("_MD_CATEGORY_REQ","O nome da categoria não foi especificada.");
+define("_MD_CATEGORY_SHOWOPTION","Mostre a opção de páginas de lista");
+define("_MD_CATEGORY_SHOWOPTION0","Encolha o diário em todas as páginas de lista");
+define("_MD_CATEGORY_SHOWOPTION1","Mostre o diário inteiro nas páginas de índice pessoais");
+define("_MD_CATEGORY_SHOWOPTION3","Mostre o diário inteiro nas páginas de índice pessoais e página diarylist");
 define("_MD_CATEGORY_HTML","Habilitar padrão HTML");
 define("_MD_CATEGORY_HTMLDSC","Em um novo formulário do Diário, quando selecionar uma categoria com padrão HTML habilitada aqui, a caixa de seleção do HTML será verdadeira.");
 

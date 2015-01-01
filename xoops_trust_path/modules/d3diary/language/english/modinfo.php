@@ -134,6 +134,8 @@ define($constpref."_USE_UPDATEPING_DSC","Select YES for using update ping" );
 define($constpref."_UPDATEPING","Update ping servers URL" );
 define($constpref."_UPDATEPING_DSC","devide each URL by break" );
 define($constpref."_UPDATEPING_SERVERS","http://ping.rss.drecom.jp/\nhttp://blog.goo.ne.jp/XMLRPC" );
+define($constpref."_ENABLE_SHOWOPTION","Show options of list pages" );
+define($constpref."_ENABLE_SHOWOPTION_DSC","Show options of whole diary on the personal index pages and diarylist page" );
 define($constpref."_ENC_FROM" , "Internal encoding translation for RSS Feed");
 define($constpref."_ENC_FROMDSC" , "Normally 'default' is applicable, if RSS feed is garbleed, 'xoops_chrset' or 'auto' may be better.");
 define($constpref.'_PERM_CLASS' , 'Class name for view permission');
@@ -160,6 +162,12 @@ define($constpref."_USE_SIMPLECOMMENT","Comment mode");
 define($constpref."_USE_SIMPLECOMMENTDESC","You can use Easy Comment Form instead of XOOPS original comment form. <br/><br/> Guest cannot write using Easy Comment Form. ");
 define($constpref."_USE_SIMPLECOMMENT_Y","Use Easy Comment Form");
 define($constpref."_USE_SIMPLECOMMENT_N","Use XOOPS original comment form");
+
+define($constpref."_TB_APPROVAL","トラックバック受付は承認を必要とする");
+define($constpref."_TB_TICKET","チケット式トラックバックURLを使う");
+define($constpref."_TB_TICKETDSC","Javascriptが使えないユーザーには無効ですので注意してください。生存時間はデフォルトで1日。");
+define($constpref."_TB_NOT_ADMIN","トラックバックがあったら通知する");
+define($constpref."_TB_NOT_ADMINDSC","モジュール管理ユーザー宛に通知します。");
 
 //d3comment integration
 define($constpref."_COM_DIRNAME","Directory name for d3forum comment integration");

@@ -118,6 +118,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	}
 
 	$category->openarea=intval($func->getpost_param('openarea'));
+	$category->showoption=intval($func->getpost_param('showoption'));
 	$category->dohtml=intval($func->getpost_param('dohtml'));
 	$chk_vgids= $func->getpost_param('vgids');
 	$category->vgids = $chk_vgids ? "|".implode("|", array_map("intval" ,$chk_vgids))."|" : "";
@@ -145,6 +146,7 @@ if(!empty($_POST['submit1']) and $cid>0){
 	$yd_category['rss']   = $category->rss;
 	$yd_category['openarea']   = $category->openarea;
 	$yd_category['dohtml']   = $category->dohtml;
+	$yd_category['showoption']   = $category->showoption;
 
 	//var_dump($gPerm->group_list);
 	$yd_category['group_list'] = array();

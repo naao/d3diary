@@ -9,6 +9,7 @@ CREATE TABLE category (
   `blogurl` text,
   `rss` text,
   `openarea` tinyint(3) unsigned NOT NULL,
+  `showoption` tinyint(3) unsigned NOT NULL default '0',
   `dohtml` tinyint(1) unsigned NOT NULL,
   `vgids` varchar(255) default NULL,
   `vpids` varchar(255) default NULL,

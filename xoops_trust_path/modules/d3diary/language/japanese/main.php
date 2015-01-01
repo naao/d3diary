@@ -49,6 +49,10 @@ define("_MD_CATEGORY_CREATED","カテゴリーを登録しました");
 define("_MD_CATEGORY_DELETED","カテゴリーを削除しました");
 define("_MD_CATEGORY_DELCONFIRM","を削除します。よろしいですか？");
 define("_MD_CATEGORY_REQ","カテゴリー名が記入されていません");
+define("_MD_CATEGORY_SHOWOPTION","記事リストページオプション");
+define("_MD_CATEGORY_SHOWOPTION0","全て本文を短縮する");
+define("_MD_CATEGORY_SHOWOPTION1","個人indexページのみ本文全文を表示する");
+define("_MD_CATEGORY_SHOWOPTION3","個人indexページ・diarylistページとも本文全文を表示する");
 define("_MD_CATEGORY_HTML","HTMLを初期値で有効");
 define("_MD_CATEGORY_HTMLDSC","新規の日記を作成時、ここを有効にしたカテゴリを選択するとHTML表示有効にチェックが入ります。");
 

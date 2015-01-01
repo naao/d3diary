@@ -134,6 +134,8 @@ define($constpref."_USE_UPDATEPING_DSC","更新ping送信の許可を指定します。" );
 define($constpref."_UPDATEPING","更新pingサーバー" );
 define($constpref."_UPDATEPING_DSC","更新pingサーバーを指定します。改行で区切ります。" );
 define($constpref."_UPDATEPING_SERVERS","http://ping.rss.drecom.jp/\nhttp://blog.goo.ne.jp/XMLRPC" );
+define($constpref."_ENABLE_SHOWOPTION","記事リストページオプションを表示する" );
+define($constpref."_ENABLE_SHOWOPTION_DSC","各人Indexページ・diaryリストページでの全文表示オプションをカテゴリー毎に設定可能としますか。" );
 define($constpref."_ENC_FROM" , "RSSフィードへの変換用の内部エンコード");
 define($constpref."_ENC_FROMDSC" , "通常は'default'でOKですが、RSSフィードが文字化けする場合は、'xoops_chrset'や'auto'をお試しください。");
 define($constpref.'_PERM_CLASS' , '閲覧権限処理クラス名');
@@ -155,6 +157,12 @@ define($constpref."_POST_EMAIL_FULLADD","メール送信先アドレス");
 define($constpref."_POST_EMAIL_FULLADDDSC","取込み用のメール送信先アドレス。説明ページへの表示用で、制御には使われません。");
 define($constpref."_POST_DETECT_ORDER","メール文字列エンコード検出順指定");
 define($constpref."_POST_DETECT_ORDERDSC","メール文字列エンコードの検出順を指定します。<br />空欄は'auto'を意味し、これで文字化けする場合、'ISO-2022-JP, UTF-8, UTF-7, ASCII, EUC-JP, JIS, SJIS, eucJP-win, SJIS-win'の中から列挙してみます。<br />例：'ISO-2022-JP, UTF-8, JIS, EUC-JP, eucJP-win, SJIS'");
+
+define($constpref."_TB_APPROVAL","トラックバック受付は承認を必要とする");
+define($constpref."_TB_TICKET","チケット式トラックバックURLを使う");
+define($constpref."_TB_TICKETDSC","Javascriptが使えないユーザーには無効ですので注意してください。生存時間はデフォルトで1日。");
+define($constpref."_TB_NOT_ADMIN","トラックバックがあったら通知する");
+define($constpref."_TB_NOT_ADMINDSC","モジュール管理ユーザー宛に通知します。");
 
 define($constpref."_USE_SIMPLECOMMENT","コメントの表示モード");
 define($constpref."_USE_SIMPLECOMMENTDESC","従来のXOOPS標準のコメントを使う代わりに、<br/>簡易的なコメントフォームを使うことができます。<br/><br/>※簡易フォームの場合、匿名投稿はできません。");

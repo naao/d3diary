@@ -47,6 +47,7 @@ class D3diaryCategory
 				$this->blogurl   = $dbdat['blogurl'];
 				$this->rss   = $dbdat['rss'];
 				$this->openarea   = $dbdat['openarea'];
+				$this->showoption   = $dbdat['showoption'];
 				$this->dohtml   = $dbdat['dohtml'];
 				$this->vgids   = $dbdat['vgids'];
 				$this->vpids   = $dbdat['vpids'];
@@ -78,6 +79,7 @@ class D3diaryCategory
 					$this->blogurl   = $dbdat['blogurl'];
 					$this->rss   = $dbdat['rss'];
 					$this->openarea   = $dbdat['openarea'];
+					$this->showoption   = $dbdat['showoption'];
 					$this->dohtml   = $dbdat['dohtml'];
 					$this->vgids   = $dbdat['vgids'];
 					$this->vpids   = $dbdat['vpids'];
@@ -161,7 +163,7 @@ class D3diaryCategory
 
         if (!get_magic_quotes_gpc()) {
 			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_category')."
-					(uid, cid, cname, corder, subcat, blogtype, blogurl, rss, openarea, dohtml, vgids, vpids)
+					(uid, cid, cname, corder, subcat, blogtype, blogurl, rss, openarea, showoption, dohtml, vgids, vpids)
 					VALUES (
 					'".addslashes($this->uid)."',
 					'".addslashes($this->cid)."',
@@ -172,13 +174,14 @@ class D3diaryCategory
 					'".addslashes($this->blogurl)."',
 					'".addslashes($this->rss)."',
 					'".addslashes($this->openarea)."',
+					'".addslashes($this->showoption)."',
 					'".addslashes($this->dohtml)."',
 					'".addslashes($this->vgids)."',
 					'".addslashes($this->vpids)."'
 					)";
 		} else {
 			$sql = "INSERT INTO ".$xoopsDB->prefix($mydirname.'_category')."
-					(uid, cid, cname, corder, subcat, blogtype, blogurl, rss, openarea, dohtml, vgids, vpids)
+					(uid, cid, cname, corder, subcat, blogtype, blogurl, rss, openarea, showoption, dohtml, vgids, vpids)
 					VALUES (
 					'".$this->uid."',
 					'".$this->cid."',
@@ -189,6 +192,7 @@ class D3diaryCategory
 					'".$this->blogurl."',
 					'".$this->rss."',
 					'".$this->openarea."',
+					'".$this->showoption."',
 					'".$this->dohtml."',
 					'".$this->vgids."',
 					'".$this->vpids."'
@@ -210,6 +214,7 @@ class D3diaryCategory
 					blogurl='".addslashes($this->blogurl)."',
 					rss='".addslashes($this->rss)."',
 					openarea='".addslashes($this->openarea)."',
+					showoption='".addslashes($this->showoption)."',
 					dohtml='".addslashes($this->dohtml)."',
 					vgids='".addslashes($this->vgids)."',
 					vpids='".addslashes($this->vpids)."'
@@ -223,6 +228,7 @@ class D3diaryCategory
 					blogurl='".$this->blogurl."',
 					rss='".$this->rss."',
 					openarea='".$this->openarea."',
+					showoption='".$this->showoption."',
 					dohtml='".$this->dohtml."',
 					vgids='".$this->vgids."',
 					vpids='".$this->vpids."'

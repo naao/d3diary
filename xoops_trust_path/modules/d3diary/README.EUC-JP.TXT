@@ -96,6 +96,9 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2015/1/1 ver 0.45.0
+	- 各人Indexページと全体diarylistページでの記事全文表示選択を可能とした。
+
 2014/4/19 ver 0.44.0
 	- ckeditor4 で CKEditor を利用時に、コンテンツタイプのセレクトボックスに連動してエディタを切り替えるようにした。(thx nao-pon)
 	- rss 配信に外部ブログが混入するので修正。

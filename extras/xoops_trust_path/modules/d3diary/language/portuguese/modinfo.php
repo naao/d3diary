@@ -134,6 +134,8 @@ define($constpref."_USE_UPDATEPING_DSC","Selecione SIM para usar ping atualizado
 define($constpref."_UPDATEPING","Atualizar URL dos servidores do ping" );
 define($constpref."_UPDATEPING_DSC","dividir cada URL por break" );
 define($constpref."_UPDATEPING_SERVERS","http://ping.rss.drecom.jp/\nhttp://blog.goo.ne.jp/XMLRPC" );
+define($constpref."_ENABLE_SHOWOPTION","Mostre opções de páginas de lista" );
+define($constpref."_ENABLE_SHOWOPTION_DSC","Mostre opções do diário inteiro nas páginas de índice pessoais e página diarylist" );
 define($constpref."_ENC_FROM","Tradução do código interno para a distribuição de RSS");
 define($constpref."_ENC_FROMDSC","Normalmente 'padrão' é aplicável. Se a distribuição RSS for alterada, 'xoops_chrset' ou 'auto' pode ser melhor.");
 define($constpref."_PERM_CLASS","Nome da classe para as permissão de vizualização");

@@ -274,7 +274,7 @@ if($mod_config['menu_layout']==1){
 
 	$sql = "SELECT d.diary, d.create_time, d.cid, d.title, d.bid, d.openarea AS openarea, d.dohtml, 
 			d.view, d.vgids AS vgids, d.vpids AS vpids, u.uid, u.uname, u.name, u.user_avatar, 
-			c.cid, c.cname, c.openarea AS openarea_cat, c.vgids AS vgids_cat, c.vpids AS vpids_cat 
+			c.cid, c.cname, c.openarea AS openarea_cat, c.showoption , c.vgids AS vgids_cat, c.vpids AS vpids_cat 
 			FROM ".$xoopsDB->prefix($mydirname.'_diary')." d 
 			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c ON ((c.uid=d.uid or c.uid='0') and d.cid=c.cid) 
@@ -289,6 +289,7 @@ if($mod_config['menu_layout']==1){
 	}else{
 		$yd_param['use_d3comment']=false;
 	}
+	$charmax = (int)($mod_config['preview_charmax']);
 
 	$entry = array(); $got_bids = array(); $mytstamp=array(); $is1st=1;
 	while($dbdat = $xoopsDB->fetchArray($result)){
@@ -350,8 +351,12 @@ if($mod_config['menu_layout']==1){
 		$first_date =  $dbdat['create_time'];
 
 		$_entry['dohtml'] = intval($dbdat['dohtml']);
-		$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], 
-			intval($mod_config['preview_charmax']));
+		if ($mod_config['enable_showoption']==1 && $dbdat['showoption'] / 2 >=1) {
+			// show all entry detail
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], 0);
+		} else {
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], $charmax);
+		}
 		$_entry['other']=0;
 		$entry[$i] = $_entry;	unset($_entry);
 
@@ -391,7 +396,7 @@ if($mod_config['menu_layout']==1){
 			$where_other = rtrim( $where_other, 'OR ' );
 
 		$sql = "SELECT  d.diary, d.create_time, d.title, d.url, u.uname, u.name, u.uid, u.user_avatar, 
-			c.cid, c.cname, c.openarea AS openarea_cat 
+			c.cid, c.cname, c.openarea AS openarea_cat, c.showoption 
 			FROM ".$xoopsDB->prefix($mydirname.'_newentry')." d 
 			INNER JOIN ".$xoopsDB->prefix('users')." u USING(uid) 
 			LEFT JOIN ".$xoopsDB->prefix($mydirname.'_category')." c 
@@ -434,10 +439,14 @@ if($mod_config['menu_layout']==1){
 		$_entry['cid'] = isset($dbdat['cid']) ? intval($dbdat['cid']) : 0 ;
 		$_entry['cname'] = isset($dbdat['cname']) ? $dbdat['cname'] : constant('_MD_NOCNAME') ;
 
-//		$_entry['diary'] = $func->substrTarea($dbdat['diary'], 0, 
-//					intval($mod_config['preview_charmax']));
-		$_entry['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
-					
+		//$_entry['diary'] = mb_substr(strip_tags($dbdat['diary']),0,(int)$mod_config['preview_charmax'], _CHARSET)."...";
+		if ($mod_config['enable_showoption']==1 && $dbdat['showoption'] / 2 >=1) {
+			// show all entry detail
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], 0);
+		} else {
+			$_entry['diary'] = $func->substrTarea($dbdat['diary'], $_entry['dohtml'], $charmax)."...";
+		}
+
 		// openarea overrides
 		$_tmp_op = isset($openarea[$dbdat['uid']]) ? intval($openarea[$dbdat['uid']]) : 0 ;
 		$_entry['openarea']=$_tmp_op;
