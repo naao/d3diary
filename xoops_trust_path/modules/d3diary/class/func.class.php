@@ -2398,7 +2398,7 @@ public function __construct( $params )
 
 	if( empty( $params['classname'] ) ) {
 		require_once $mytrustdirpath.'/class/D3commentAbstract.class.php' ;
-		$this->d3comObj = new D3commentAbstract( $forum_dirname , '' ) ;
+		$this->d3comObj = new D3commentAbstract( $params['forum_dirname'] , '' ) ;
 		return ;
 	}
 

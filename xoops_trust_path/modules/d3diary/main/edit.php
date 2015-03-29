@@ -344,14 +344,20 @@ switch ( $eparam['mode'] ) {
 		$openarea_entry = intval($func->getpost_param('openarea'))!=0 ? 
 					intval($func->getpost_param('openarea')) : 0;
 		$category->cid = (int)$diary->cid;
-		$category->uid = $uid;
+		// fixed bug 2015-3-29
+		if( 10000 <= $category->cid ) {
+			$category->uid = 0;
+		} else {
+			$category->uid = $uid;
+		}
 		$category->readdb($mydirname);
 		$openarea_cat = intval($category->openarea)!=0 ? intval($category->openarea) : 0;
 		$vgids_cat = !empty($category->vgids) ? $category->vgids : "";
 		$vpids_cat = !empty($category->vpids) ? $category->vpids : "";
 
 		// 1st parameter $openarea is byref
-		$users2notify = $mPerm->get_users_can_read_entry( $openarea, $yd_data['openarea'], $openarea_cat, 								$diary->vgids, $diary->vpids, $vgids_cat, $vpids_cat );
+		$users2notify = $mPerm->get_users_can_read_entry( $openarea, $yd_data['openarea'], $openarea_cat, 
+							$diary->vgids, $diary->vpids, $vgids_cat, $vpids_cat );
 
 		$not_handler =& D3NotificationHandler::getInstance() ;
 		
@@ -424,7 +430,12 @@ switch ( $eparam['mode'] ) {
 			$openarea_entry = intval($func->getpost_param('openarea'))!=0 ? 
 					intval($func->getpost_param('openarea')) : 0;
 			$category->cid = (int)$diary->cid;
-			$category->uid = $diary->uid;
+			// fixed bug 2015-3-29
+			if( 10000 <= $category->cid ) {
+				$category->uid = 0;
+			} else {
+				$category->uid = $uid;
+			}
 			$category->readdb($mydirname);
 			$openarea_cat = intval($category->openarea)!=0 ? intval($category->openarea) : 0;
 			$vgids_cat = !empty($category->vgids) ? $category->vgids : "";

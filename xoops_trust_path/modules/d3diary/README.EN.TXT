@@ -100,6 +100,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2015/3/29 ver 0.46.0
+	- Fixed bug: In case set category as group perission or personnel permission , event notified to
+			users without permission when submit an entry with the categry permission. 
+	- fixed a notice
+
 2015/1/1 ver 0.45.0
 	- enable showing whole diary on the personal index pages and diarylist page.
 
