@@ -434,7 +434,7 @@ switch ( $eparam['mode'] ) {
 			if( 10000 <= $category->cid ) {
 				$category->uid = 0;
 			} else {
-				$category->uid = $uid;
+				$category->uid = $diary->uid;
 			}
 			$category->readdb($mydirname);
 			$openarea_cat = intval($category->openarea)!=0 ? intval($category->openarea) : 0;
