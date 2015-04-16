@@ -11,6 +11,7 @@ class D3pipesBlockD3diaryd3comSubstance extends D3pipesBlockAbstract {
 	{
 		// parse and check option for this class
 		$params = array_map( 'trim' , explode( '|' , $this->option ) ) ;
+		$params = array_pad($params, 8, '');
 		if( empty( $params[0] ) ) {
 			$this->errors[] = _MD_D3PIPES_ERR_INVALIDDIRNAMEINBLOCK."\n($this->pipe_id)" ;
 			return false ;
@@ -30,8 +31,8 @@ class D3pipesBlockD3diaryd3comSubstance extends D3pipesBlockAbstract {
 				4 => empty( $params[4] ) ? 0 : intval( $params[4] ) , // use_detail
 				5 => '' , //template
 				6 => empty( $params[5] ) ? 10 : intval( $params[5] ) , // use_aggregation
-				7 => preg_replace( '/[^0-9,]/' , '' , @$params[6] ) , // category limitation
-				8 => preg_replace( '/[^0-9,]/' , '' , @$params[7] ) , // forum limitation
+				7 => preg_replace( '/[^0-9,]/' , '' , $params[6] ) , // category limitation
+				8 => preg_replace( '/[^0-9,]/' , '' , $params[7] ) , // forum limitation
 			) ;
 		} else {
 			$this->func_name = 'b_d3diary_d3comlist_topics_show' ;
@@ -46,8 +47,8 @@ class D3pipesBlockD3diaryd3comSubstance extends D3pipesBlockAbstract {
 				6 => empty( $params[4] ) ? 0 : intval( $params[4] ) , // use_detail
 				7 => '' , //template
 				8 => empty( $params[5] ) ? 10 : intval( $params[5] ) , // use_aggregation
-				9 => preg_replace( '/[^0-9,]/' , '' , @$params[6] ) , // category limitation
-				10 => preg_replace( '/[^0-9,]/' , '' , @$params[7] ) , // forum limitation
+				9 => preg_replace( '/[^0-9,]/' , '' , $params[6] ) , // category limitation
+				10 => preg_replace( '/[^0-9,]/' , '' , $params[7] ) , // forum limitation
 			) ;
 		}
 
