@@ -24,8 +24,8 @@ function fetchSummary( $external_link_id )
 {
 	global $xoopsDB;
 
-	$db =& Database::getInstance() ;
-	$myts =& MyTextSanitizer::getInstance();
+	$db =& $this->d3dConf->db;
+	$myts =& $this->d3dConf->myts;
 	
 	$entryID = intval( $external_link_id ) ;
 	

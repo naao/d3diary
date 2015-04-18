@@ -96,6 +96,10 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2015/4/18 ver 0.47.0
+	- php5.6対応でLegacyのNon-static methodエラー対処で追加された、MytextsanitizerのsGgetInstance()
+	　メソッドに対応した。
+
 2015/3/29 ver 0.46.1
 	- バグ修正：カテゴリー設定でグループ指定・メンバー指定したカテゴリーを選択しても、書き込み通知が
 		権限の無いユーザーにも送信されてしまう不具合を修正

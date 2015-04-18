@@ -42,7 +42,7 @@ class D3pipesBlockD3diarylistSubstance extends D3pipesBlockAbstract {
  
 	function reassign( $data )
 	{
-		$myts =& MyTextSanitizer::getInstance();
+		(method_exists('MyTextSanitizer', 'sGetInstance') and $myts =& MyTextSanitizer::sGetInstance()) || $myts =& MyTextSanitizer::getInstance();
 		$entries = array() ;
 		foreach( $data['entry'] as $item ) {
 				$ctime = preg_split("/[-: ]/", $item['create_time']);

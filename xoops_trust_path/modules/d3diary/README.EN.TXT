@@ -100,6 +100,10 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2015/4/18 ver 0.47.0
+	- Adopted the procedure sGgetInstance() of Mytextsanitizer which added Legacy for php5.6 
+	  to avoid Non-static method error.
+
 2015/3/29 ver 0.46.1
 	- Fixed bug: In case set category as group perission or personnel permission , event notified to
 			users without permission when submit an entry with the categry permission. 

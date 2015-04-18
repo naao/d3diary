@@ -40,7 +40,7 @@ function ini_set()
 	$this->mPerm = & $this->d3dConf->mPerm;
 	$this->gPerm = & $this->d3dConf->gPerm;
 	
-	$this->myts =& MyTextSanitizer::getInstance();
+	$this->myts = & $this->d3dConf->myts;
 
 	list( $this->arr_weeks, $this->arr_monthes, $this->arr_dclass, $this->arr_wclass ) = $this->initBoxArr();
 	
