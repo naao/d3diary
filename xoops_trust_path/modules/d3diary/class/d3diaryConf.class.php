@@ -133,7 +133,7 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 		$perm_class = empty( $this->mod_config['permission_class'] ) ? 'd3diaryPermission' : 
 			preg_replace( '/[^0-9a-zA-Z_]/' , '' , $this->mod_config['permission_class'] ) ;
 
-		$this->myts =& MyTextSanitizer::getInstance();
+		(method_exists('MyTextSanitizer', 'sGetInstance') and $this->myts =& MyTextSanitizer::sGetInstance()) || $this->myts =& MyTextSanitizer::getInstance();
 
 		require_once dirname(__FILE__).'/'.$perm_class.'.class.php' ;
 		require_once dirname(__FILE__).'/groupperm.class.php' ;
