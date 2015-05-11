@@ -74,9 +74,14 @@ class D3diaryPreloadBase extends XCube_ActionFilter
 ($('#dohtml').val() == '1') && $('.diary_textarea_inserter').hide();
 $('#dohtml').change(function(){
 	var obj = CKEDITOR.instances.diary,
-		conf = ckconfig_diary,
-		editor;
-	editor = $('#diary').data('editor');
+		ta = $('#diary'),
+		conf = ta.data('ckconfig'),
+		editor = ta.data('editor');
+	if (!conf) { // for ckeditor < 0.61
+		ta.data('ckconfig', ckconfig_diary);
+		ta.data('ckconfig_html', ckconfig_html_diary);
+		ta.data('ckconfig_bbcode', ckconfig_bbcode_diary);
+	}
 	$('.diary_textarea_inserter').show();
 	switch($(this).val()) {
 		case '0':
@@ -87,11 +92,12 @@ $('#dohtml').change(function(){
 		case '3':
 			editor = 'html'; break;
 	}
-	if ($('#diary').data('editor') != editor) {
-		$('#diary').data('editor', editor);
+	if (ta.data('editor') != editor) {
+		ta.data('editor', editor);
 		obj && obj.destroy();
-		(editor == 'bbcode')? $.extend(conf, ckconfig_bbcode_diary) : $.extend(conf, ckconfig_html_diary);
+		(editor == 'bbcode')? $.extend(conf, ta.data('ckconfig_bbcode')) : $.extend(conf, ta.data('ckconfig_html'));
 		CKEDITOR.replace('diary', conf);
+		ta.data('ckon_restore') && ta.data('ckon_restore')();
 	}
 });
 EOD;
