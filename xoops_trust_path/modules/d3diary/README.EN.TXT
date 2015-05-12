@@ -100,6 +100,11 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2015/5/12 ver 0.48.0
+	- fix JavaScript error on edit form　（thx nao-pon)
+		http://www.naaon.com/modules/d3forum/index.php?topic_id=1360#post_id5568
+	- correction for module ckeditor4 version >= 0.61　（thx nao-pon)
+
 2015/4/18 ver 0.47.0
 	- Adopted the procedure sGgetInstance() of Mytextsanitizer which added Legacy for php5.6 
 	  to avoid Non-static method error.
