@@ -584,7 +584,7 @@ function d3diary_inputchk(fm){
 	if ( fm.title.value == "") {
 		alert("\n<{$smarty.const._MD_DIARY_AL_NOTITLE}>");
 		return false;
-	} else if ( fm.fck_loaded.value !=1 && fm.diary.value == "") {
+	} else if ( (!fm.fck_loaded || fm.fck_loaded.value !=1) && fm.diary.value == "") {
 		alert("\n<{$smarty.const._MD_DIARY_AL_NOBODY}>");
 		return false;
 	} else {
