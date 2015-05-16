@@ -2321,6 +2321,7 @@ public static function htmlspecialchars ($str, $flags = ENT_QUOTES, $encoding = 
 		if (! $double_encode) {
 			$ret = str_replace('&amp;amp;', '&amp;', $ret);
 		}
+		return $ret;
 	}
 }
 

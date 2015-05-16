@@ -96,9 +96,12 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2015/5/16 ver 0.49.0
+	- php5.2.3未満の環境で編集が出来ない、プレビューができないなどの不具合の修正。(thx Masa-p, you-tin)
+	http://www.naaon.com/modules/d3forum/index.php?post_id=5562
+
 2015/5/12 ver 0.48.0
 	- 編集画面でJavascriptエラーが出ていたので修正　（thx nao-pon)
-		http://www.naaon.com/modules/d3forum/index.php?topic_id=1360#post_id5568
 	- ckeditor4 モジュール version 0.61 以上向けに修正　（thx nao-pon)
 
 2015/4/18 ver 0.47.0
