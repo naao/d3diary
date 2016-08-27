@@ -12,8 +12,16 @@ require_once( $langmanpath ) ;
 $langman =& D3LanguageManager::getInstance() ;
 $langman->read( 'main.php' , $mydirname , $mytrustdirname ) ;
 
+// sanitizer class for input validation vulnerabilities
+require_once dirname(__FILE__).'/class/sanitizer.class.php';
+$sani = new D3diarySanitizer();
 
-$page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] ) ;
+if ( $san_line = $sani->san_eval(@$_GET['page'] ) != 1){
+	$page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] ) ;
+} else {
+	die( 'wrong request '.$page ) ;
+}
+
 if( empty( $page ) ) {
 	preg_match( '/[?&]page\=([a-zA-Z0-9_-]+)/' , @$_SERVER['REQUEST_URI'] , $regs ) ;
 	$page = @$regs[1] ;

@@ -10,6 +10,7 @@ var $mPerm = null ;	// (Global) Permission instance
 var $gPerm = null ;	// Group and Member Permission instance
 var $func = null ;	// function
 var $dcfg  = null ;	// diary config instance
+var $sani  = null ;	//sanitizer instance
 var $mPost  = null ;	// mail post instance
 var $mid = 0 ;
 var $mod_config ;
@@ -139,6 +140,7 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 		require_once dirname(__FILE__).'/groupperm.class.php' ;
 		require_once dirname(__FILE__).'/func.class.php' ;
 		include_once dirname(__FILE__).'/diaryconfig.class.php';
+		require_once dirname(__FILE__).'/sanitizer.class.php';
 
 		$this->mPerm = new $perm_class($this) ;
 		$this->gPerm = new D3dGperm($this) ;
@@ -153,6 +155,9 @@ public function __construct($mydirname, $req_uid=0, $caller="")
 		$this->dcfg = new DiaryConfig();
 		$this->dcfg->uid = $this->req_uid;
 		$this->dcfg->readdb($this->mydirname);
+
+		// sanitizer class for input validation vulnerabilities
+		$this->sani = new D3diarySanitizer();
 
 		// mail post class
 		if ($this->caller == "mailpost" || $this->caller == "index") {

@@ -16,8 +16,16 @@ while( ob_get_level() ) {
 	ob_end_clean() ;
 }
 
+// sanitizer class for input validation vulnerabilities
+require_once dirname(__FILE__).'/../class/sanitizer.class.php';
+$sani = new D3diarySanitizer();
+
 // 変数初期化
-$src = preg_replace('/[^\w.%, -]+/', '', $_GET['src']);
+if ( $san_line = $sani->san_eval($_GET['src'] ) != 1){
+	$src = preg_replace( '/[^\w.%, -]+/' , '' , $_GET['src'] );
+} else {
+	die( 'wrong request '.$lib ) ;
+}
 $src = str_replace(' ', ',', $src);
 
 $nocache = (isset($_GET['nc']));

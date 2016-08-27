@@ -39,9 +39,7 @@ if( $gPerm->use_pp ==1 ) {
 
 if ($q !== "") {
 	
-	if ($use_mb) {
-		$q = mb_convert_encoding($q, $enc, 'UTF-8');
-	}
+	$q = setEncoding($q, $enc, 'UTF-8');
 	$q = addslashesGPC($q);
 
 	if ($mod_config['use_name'] == 1) {
@@ -85,16 +83,17 @@ if ($q !== "") {
 }
 
 $oq = '"'.str_replace('"','\"',$oq).'"';
+$oq = setEncoding($oq, 'UTF-8');	// don't set no3 argment
+
 if ($mod_config['use_name'] == 1) {
 	$ret = join(", ", $names);
 } else {
 	$ret = join(", ", $unames);
 }
 
-if ($use_mb) {
-	$ret = mb_convert_encoding($ret, 'UTF-8', $enc);
-}
+$ret = setEncoding($ret, 'UTF-8');	// don't set no3 argment
 $ret = 'this.setSuggest(' . $oq . ',new Array(' . $ret . '));';
+$ret = setEncoding($ret, 'UTF-8');	// don't set no3 argment
 
 // clear output buffer
 while( ob_get_level() ) {
@@ -117,4 +116,17 @@ function addslashesGPC($str) {
 	}
 	return $str;
 }
+
+function setEncoding($str, $newEncoding, $currentEncoding) {
+	if (XOOPS_USE_MULTIBYTES == 1) {
+		$encodingList = mb_list_encodings();
+		if(!$currentEncoding){
+			$currentEncoding = mb_detect_encoding($str, $encodingList);
+		}
+		$changeEncoding = mb_convert_encoding($str, $newEncoding, $currentEncoding);
+		return $changeEncoding;
+	}
+	return utf8_encode($str);
+}
+
 ?>

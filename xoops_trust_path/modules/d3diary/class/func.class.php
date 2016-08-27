@@ -1708,13 +1708,10 @@ function stripPb_Tarea($tex, $html = 0)
 	$t_conv = $this->myts->displayTarea($tex,$dohtml,1,$bbcode,$bbcode,$dobr);
 
 	$pattern = array('/\[\[YT:([0-9a-z_-]+)\]\]/i','/\[\[ND:([0-9a-z_-]+)\]\]/i','/\[clearfloat\]/i');
-	$replacement1 = '<br /><object width="425" height="344">'.
-		'<param name="movie" value="http://www.youtube.com/v/$1&hl=ja&fs=1"></param>'.
-		'<param name="allowFullScreen" value="true"></param>'.
-		'<embed src="http://www.youtube.com/v/$1&hl=ja&fs=1"'.
-		'type="application/x-shockwave-flash" allowfullscreen="true" width="425" height="344"></embed>'.
-		'</object><br />';
-	$replacement2 = '<br /><script type="text/javascript" src="http://ext.nicovideo.jp/thumb_watch/$1?w=490&h=307"></script><noscript><a href="http://www.nicovideo.jp/watch/$1">Jump to Video</a></noscript><br />';
+	$replacement1 = '<br /><iframe class="youtube-player" type="text/html" width="425" height="344" '.
+					'src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen>'.
+					'</iframe><br />';
+ 	$replacement2 = '<br /><script type="text/javascript" src="http://ext.nicovideo.jp/thumb_watch/$1?w=490&h=307"></script><noscript><a href="http://www.nicovideo.jp/watch/$1">Jump to Video</a></noscript><br />';
 	$replacement = array( $replacement1, $replacement2, "<div style='clear:both;'></div>");
  	$t_conv = preg_replace($pattern,$replacement,$t_conv);
  	$_tex = str_replace($this->d3dConf->pbreak,"",$t_conv);

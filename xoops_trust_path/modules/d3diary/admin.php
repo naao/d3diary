@@ -23,11 +23,22 @@ if( ! file_exists( $langmanpath ) ) die( 'install the latest altsys' ) ;
 require_once( $langmanpath ) ;
 $langman =& D3LanguageManager::getInstance() ;
 
+// sanitizer class for input validation vulnerabilities
+require_once dirname(__FILE__).'/class/sanitizer.class.php';
+$sani = new D3diarySanitizer();
 
 if( ! empty( $_GET['lib'] ) ) {
 	// common libs (eg. altsys)
-	$lib = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , $_GET['lib'] ) ;
-	$page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] ) ;
+	if ( $san_line = $sani->san_eval($_GET['lib'] ) != 1){
+		$lib = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , $_GET['lib'] );
+	} else {
+		die( 'wrong request '.$lib ) ;
+	}
+	if ( $san_line = $sani->san_eval(@$_GET['page'] ) != 1){
+		$page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] );
+	} else {
+		die( 'wrong request '.$page ) ;
+	}
 
 	// check the page can be accessed (make controllers.php just under the lib)
 	$controllers = array() ;
@@ -41,7 +52,7 @@ if( ! empty( $_GET['lib'] ) ) {
 	} else if( file_exists( XOOPS_TRUST_PATH.'/libs/'.$lib.'/index.php' ) ) {
 		include XOOPS_TRUST_PATH.'/libs/'.$lib.'/index.php' ;
 	} else {
-		die( 'wrong request' ) ;
+		die( 'wrong request '.$page.' '.$lib  ) ;
 	}
 } else {
 	// load language files (main.php & admin.php)
@@ -49,14 +60,18 @@ if( ! empty( $_GET['lib'] ) ) {
 	$langman->read( 'main.php' , $mydirname , $mytrustdirname ) ;
 
 	// fork each pages of this module
-	$page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] ) ;
-	
+	if ( $san_line = $sani->san_eval(@$_GET['page'] ) != 1){
+		$page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] );
+	} else {
+		die( 'wrong request '.$page ) ;
+	}
+
 	if( file_exists( "$mytrustdirpath/admin/$page.php" ) ) {
 		include "$mytrustdirpath/admin/$page.php" ;
 	} else if( file_exists( "$mytrustdirpath/admin/index.php" ) ) {
 		include "$mytrustdirpath/admin/index.php" ;
 	} else {
-		die( 'wrong request' ) ;
+		die( 'wrong request '.$page ) ;
 	}
 }
 
