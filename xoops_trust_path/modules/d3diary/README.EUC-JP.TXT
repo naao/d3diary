@@ -96,6 +96,9 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2016/9/22 ver 0.50.1
+	- correction of include/imgresize.php on ver0.50.0
+
 2016/8/27 ver 0.50.0
 	- Youtube の埋め込みオブジェクトのhtml5移行に伴う、iframeへの変更。
 	- Vulnerability REPORT への対応 (thx M.F.Al-Gh, UCL University, UK)

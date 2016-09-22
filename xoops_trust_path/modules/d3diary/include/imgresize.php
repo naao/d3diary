@@ -47,13 +47,11 @@ if(!is_file($fname)){
 
 // resize ,save 
 $ftype=strrchr($fname, "."); // extention
-if( strcasecmp($ftype, ".png")==0 && $d3dCOnf->sani->san_mix($fname, 'imagecreatefrompng', null) == 0 ){
+if( strcasecmp($ftype, ".png")==0 && $d3dConf->sani->san_mix($fname, 'imagecreatefrompng', dirname($fname)) == 0 ){
 	$src_id = imagecreatefrompng($fname);
-}elseif(strcasecmp($ftype, ".jpg")==0 or strcasecmp($ftype, ".jpeg")==0){
-	if( $d3dCOnf->sani->san_mix($fname, 'imagecreatefromjpeg', null) == 0 ){
-		$src_id = imagecreatefromjpeg($fname);
-	}
-}elseif(strcasecmp($ftype, ".gif")==0 && $d3dCOnf->sani->san_mix($fname, 'imagecreatefromgif', null) == 0 ){
+}elseif((strcasecmp($ftype, ".jpg")==0 or strcasecmp($ftype, ".jpeg")==0) && $d3dConf->sani->san_mix($fname, 'imagecreatefromjpeg', dirname($fname)) == 0 ){
+	$src_id = imagecreatefromjpeg($fname);
+}elseif(strcasecmp($ftype, ".gif")==0 && $d3dConf->sani->san_mix($fname, 'imagecreatefromgif', dirname($fname)) == 0 ){
 	$src_id = imagecreatefromgif($fname);
 }
 
@@ -85,7 +83,6 @@ exit();
 function print_emptyimg(){
 	
 	header("Content-type: image/gif\n\n");
-	//readfile(XOOPS_ROOT_PATH."/modules/minidiary/images/blank.gif");
 	readfile(XOOPS_ROOT_PATH."/modules/".$mydirname."/images/blank.gif");
 }
 

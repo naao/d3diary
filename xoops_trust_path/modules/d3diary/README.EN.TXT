@@ -100,6 +100,9 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
+2016/9/22 ver 0.50.1
+	- correction of include/imgresize.php on ver0.50.0
+
 2016/8/27 ver 0.50.0
 	- Changed Youtube embedded object to iframe to adopt for html5.
 	- correction for Vulnerability REPORT (thx M.F.Al-Gh, UCL University, UK)
