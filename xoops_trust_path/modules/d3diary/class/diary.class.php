@@ -20,7 +20,7 @@ class D3diaryDiary
 	public function __construct(){
 	}
 
-    function &getInstance()
+    public static function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
