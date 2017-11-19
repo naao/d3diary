@@ -14,7 +14,7 @@ class D3diaryTag
 	public function __construct(){
 	}
 
-    function &getInstance()
+    public static function &getInstance()
     {
         static $instance;
         if (!isset($instance)) {
