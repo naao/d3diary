@@ -100,7 +100,7 @@ D3diary is a fork version of minidiary that is made to be reproduced by the D3(d
 - Trackback function
 
 ** Changed history
-2019/8/10 ver 0.51.1
+2019/8/11 ver 0.51.2
 	- correction of class/func.class.php and files in blocks folder for php7.3
 	- fixed bug failed database update. (thx hiro)
 	 http://www.naaon.com/modules/d3forum/index.php?topic_id=1396
