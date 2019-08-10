@@ -49,7 +49,7 @@ function b_d3dside_category_show( $options ){
 		$constpref = '_MB_' . strtoupper( $mydirname ) ;
 		$lang['edit'] = constant($constpref.'_CATEGORY_EDIT');
 
-		$block="";
+		$block=array();
 
 		$block['catopt'] = $catopt;
 		$block['yd_uid'] = $req_uid;

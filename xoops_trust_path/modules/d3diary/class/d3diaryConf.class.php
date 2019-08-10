@@ -301,7 +301,7 @@ function execute( $request )
 	// abstract (must override it)
 }
 
-public static function & getInstance($mydirname, $req_uid=0, $caller="")
+function & getInstance($mydirname, $req_uid=0, $caller="")
 {
 	static $instance ;
 	if( ! isset( $instance[$mydirname] ) ) {

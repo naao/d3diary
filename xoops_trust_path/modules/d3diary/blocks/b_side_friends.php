@@ -20,7 +20,7 @@ function b_d3dside_friends_show( $options ){
 	
 	//if( $req_uid > 0 || $uid > 0 ) {
 	if( $req_uid > 0 ) {
-		$block="";
+		$block=array();
 		if ( $mPerm->d3d_conf['use_friend'] === true ) {
 			list( $yd_friends, $yd_friendsnavi ) =  $func->get_friends ($mPerm->req_friends);
 

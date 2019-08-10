@@ -289,7 +289,7 @@ switch ( $eparam['mode'] ) {
 		$diary->diary = $func->getpost_param('diary');
 	}
 	$diary->cid=$func->getpost_param('cid');
-	$diary->openarea=$func->getpost_param('openarea');
+	$diary->openarea=(int)$func->getpost_param('openarea');
 	$chk_vgids= $func->getpost_param('vgids');		
 	$diary->vgids = $chk_vgids ? "|".implode("|", array_map("intval" ,$chk_vgids))."|" : "";
 	$chk_vpids= $func->getpost_param('vpids');		

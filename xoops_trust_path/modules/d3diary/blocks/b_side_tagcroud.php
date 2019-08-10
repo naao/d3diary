@@ -78,7 +78,7 @@ function b_d3dside_tagcroud_show( $options ){
 		$lang = array();
 		//$lang['title'] = constant('_MD_CTITLE');
 
-		$block="";
+		$block=array();
 
 		$block['tagCloud'] = $tagCloud;
 		$block['use_tag'] = $mod_config['use_tag'];

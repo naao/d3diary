@@ -32,7 +32,7 @@ function b_d3dside_comment_show( $options ){
 		$constpref = "_MB_" . strtoupper( $mydirname ) ;
 		$lang['more'] = constant($constpref.'_COMMENT_LIST');
 
-		$block="";
+		$block=array();
 
 		$block['yd_comment'] = $yd_comment;
 		$block['yd_com_key'] = $yd_com_key;

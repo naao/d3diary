@@ -96,6 +96,11 @@ d3diaryは、minidiaryモジュールをD3（duplicatable V3）仕様で
 - トラックバック機能
 
 **更新履歴
+2019/8/10 ver 0.51.0
+	-class/func.class.php 及び blocks フォルダ内ファイルの php7.3対応
+	- データベースアップデート失敗の修正 (thx hiro)
+	 http://www.naaon.com/modules/d3forum/index.php?topic_id=1396
+
 2016/9/22 ver 0.50.1
 	- correction of include/imgresize.php on ver0.50.0
 

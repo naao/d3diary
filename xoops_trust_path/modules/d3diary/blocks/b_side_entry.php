@@ -40,7 +40,7 @@ function b_d3dside_entry_show( $options ){
 		$constpref = "_MB_" . strtoupper( $mydirname ) ;
 		$lang['more'] = constant($constpref.'_MORE');
 
-		$block="";
+		$block=array();
 
 		$block['yd_list'] = $entry;
 		$block['yd_uid'] = $req_uid;

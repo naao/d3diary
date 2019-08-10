@@ -27,7 +27,7 @@ function b_d3diary_bloggerlist_show( $options ){
 
 	list( $blogger, $blogger2, $bloggernavi ) = $func->get_bloggerlist ( $req_uid, $uid, $max_entry, $offset, $params );
 
-	$block="";
+	$block=array();
 
 	$block['blogger'] = $blogger;
 	$block['blogger2'] = $blogger2;

@@ -107,7 +107,7 @@ function b_d3diary_list_show( $options ){
 		$lang['no_comments'] = constant($constpref.'_NO_COMMENTS');
 		$lang['more'] = constant($constpref.'_MORE');
 
-	$block="";
+	$block=array();
 		$block['entry'] = $entry_temp;
 		$block['yd_uid'] = $d3dConf->req_uid;
 		$block['lang'] = $lang;

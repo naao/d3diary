@@ -51,7 +51,7 @@ function b_d3dside_calendar_show( $options ){
 		$lang = array();
 		//$lang['title'] = constant('_MD_CTITLE');
 
-		$block="";
+		$block=array();
 
 		$block['yd_calender'] = $yd_calender;
 		$block['yd_year'] = $year;

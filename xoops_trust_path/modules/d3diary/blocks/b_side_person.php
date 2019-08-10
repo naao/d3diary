@@ -54,7 +54,7 @@ function b_d3dside_person_show( $options ){
 		$lang['write'] = constant('_MD_NEWENTRY');
 		$lang['mailpost'] = constant('_MD_MAIL_OPENMANUAL');
 
-		$block="";
+		$block=array();
 
 		$block['req_uid'] = $req_uid ;
 		$block['query_req_uid'] = $query_req_uid ;

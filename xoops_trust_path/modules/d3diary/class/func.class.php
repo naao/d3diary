@@ -985,7 +985,7 @@ function get_commentlist($req_uid, $uid, $maxnum=30, $only_count=false, $dosort=
 			$yd_comment['month'] = date("m", $dbdat['post_time']);
 			$yd_comment['day']   = date("d", $dbdat['post_time']);
 			$yd_comment['time']  = date("H:i", $dbdat['post_time']);
-			if((mktime()-60*60*24*7)<$dbdat['post_time']){ $yd_comment['newcom'] = 1; }
+			if((time()-60*60*24*7)<$dbdat['post_time']){ $yd_comment['newcom'] = 1; }
 			else{	$yd_comment['newcom'] = 0; }
 			
 			$yd_comment['bid']  =  $dbdat['topic_external_link_id'];
@@ -1988,6 +1988,7 @@ function getTagCloud ( $where = null, $min_size = 80, $max_size = 160, $max_entr
 	$step = ($max_size - $min_size)/($spread);
 
 	// loop through our tag array
+	$ret = array();
 	$arr_keys = array_keys($tags);
 	$arr_values = array_values($tags);
 	$last_idx = ($count < $max_entry) ? $count : $max_entry ;
@@ -2121,7 +2122,7 @@ function update_other_cat($uid){
 		$rss_url=$line['rss'];
 		$rss = d3d_mgp_fetch_rss($rss_url);
 		//var_dump($rss);	// test
-		$yd_data="";
+		$yd_data=array();
 		if(empty($rss)){break;}
 		foreach ($rss->items as $item) {
 	    		$yd_data['title'] = $item['title'];

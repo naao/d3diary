@@ -50,7 +50,7 @@ function b_d3dside_mlist_show( $options ){
 		$lang['year'] = constant($constpref.'_YEAR');
 		$lang['month'] = constant($constpref.'_MONTH');
 
-		$block="";
+		$block=array();
 
 		$block['yd_monlist'] = $yd_monlist;
 		$block['yd_monthnavi'] = $yd_monthnavi;
