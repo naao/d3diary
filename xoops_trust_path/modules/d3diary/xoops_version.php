@@ -11,7 +11,7 @@ $constpref = '_MI_' . strtoupper( $mydirname ) ;
 
 $modversion['name']        = $mydirname;
 $modversion['version']     = 0.51;
-$modversion['detailed_version'] = '0.51.2' ;
+$modversion['detailed_version'] = '0.51.3' ;
 $modversion['description'] = constant($constpref."_DIARY_DESC");
 $modversion['credits']     = 'Motion Create Inc. (http://www.mc8.jp/)';
 $modversion['author'] 	   = 'naaon (original-module "minidiary" by matoyan)';

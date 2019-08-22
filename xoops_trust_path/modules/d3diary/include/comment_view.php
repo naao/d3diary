@@ -64,7 +64,7 @@ if (XOOPS_COMMENT_APPROVENONE != $xoopsModuleConfig['com_rule']) {
 		// flat view only
 		$comments =& $comment_handler->getByItemId($xoopsModule->getVar('mid'), $com_itemid, $com_dborder);
 		include_once XOOPS_ROOT_PATH.'/class/commentrenderer.php';
-		$renderer =& XoopsCommentRenderer::instance($xoopsTpl);
+		$renderer = new XoopsCommentRenderer($xoopsTpl);
 		$renderer->setComments($comments);
 		$renderer->renderFlatView($admin_view);
 

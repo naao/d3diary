@@ -284,7 +284,7 @@ if(strcmp($yd_param['mode'], "category")==0){
 			$yd_comment['month'] = date("m", $dbdat['post_time']);
 			$yd_comment['day']   = date("d", $dbdat['post_time']);
 			$yd_comment['time']  = date("H:i", $dbdat['post_time']);
-			if((mktime()-60*60*24*7)<$dbdat['post_time']){
+			if((time()-60*60*24*7)<$dbdat['post_time']){
 				$yd_comment['newcom'] = 1;
 			}else{	$yd_comment['newcom'] = 0; }
 			
